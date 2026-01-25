@@ -1,0 +1,58 @@
+[project]
+name = "echoes-backend"
+version = "0.1.0"
+description = "Echoes - A turn-based RPG backend integrated with Twitch"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    # FastAPI & Server
+    "fastapi>=0.109.0",
+    "uvicorn[standard]>=0.27.0",
+    "python-multipart>=0.0.6",
+    
+    # Database
+    "sqlalchemy[asyncio]>=2.0.25",
+    "asyncpg>=0.29.0",
+    "alembic>=1.13.1",
+    
+    # Validation & Settings
+    "pydantic>=2.5.0",
+    "pydantic-settings>=2.1.0",
+    
+    # Authentication
+    "python-jose[cryptography]>=3.3.0",
+    "passlib[bcrypt]>=1.7.4",
+    
+    # HTTP Client (for Twitch OAuth)
+    "httpx>=0.26.0",
+    
+    # Redis (future caching)
+    "redis>=5.0.1",
+    
+    # Utilities
+    "python-dotenv>=1.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "black>=24.1.0",
+    "ruff>=0.1.14",
+    "mypy>=1.8.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 100
+select = ["E", "F", "I", "N", "W"]
+ignore = ["E501"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
