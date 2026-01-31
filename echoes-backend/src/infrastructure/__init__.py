@@ -1,1 +1,0 @@
-"""Echoes Backend - Infrastructure package."""

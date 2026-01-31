@@ -1,0 +1,14 @@
+{
+  "laceration": {
+    "code": "laceration",
+    "name": "Lacération",
+    "tags": ["debuff", "bleed"],
+    "tick": {
+      "trigger": "on_turn_end",
+      "effect": {
+        "opcode": "damage",
+        "params": { "formula": "T_MAX_HP * 0.03", "label": "saignement" }
+      }
+    }
+  }
+}
