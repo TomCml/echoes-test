@@ -1,10 +1,12 @@
 import os
 from fastapi import FastAPI
 from infisical_sdk import InfisicalSDKClient
-from routes.items import router as items_router
-from routes.battle import router as battle_router
-from routes.login import router as login_router
-from core.database import Base, engine
+
+# Imports from the new layered architecture
+from app.api.routes.items import router as items_router
+from app.api.routes.battle import router as battle_router
+from app.api.routes.login import router as login_router
+from app.core.database import Base, engine
 
 app = FastAPI()
 
