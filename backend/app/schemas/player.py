@@ -41,6 +41,9 @@ class PlayerRead(BaseModel):
     class Config:
         from_attributes = True
 
+# Alias pour compatibilité
+PlayerResponse = PlayerRead
+
 class PlayerUpdate(BaseModel):
     username: Optional[str] = None
     level: Optional[int] = None

@@ -83,7 +83,7 @@ def remove_item_from_player(
 
 
 def get_player_inventory_with_details(
-    db: Session, 
+    db: Session,
     player_id: int
 ) -> List[dict]:
     """
@@ -91,7 +91,7 @@ def get_player_inventory_with_details(
     """
     inventory = inventory_repo.get_by_player(db, player_id)
     result = []
-    
+
     for inv in inventory:
         item_data = item_repo.load_item(inv.item_id)
         result.append({
@@ -100,5 +100,41 @@ def get_player_inventory_with_details(
             "quantity": inv.quantity,
             "item_details": item_data
         })
-    
+
     return result
+
+
+def equip_item(db: Session, player_id: int, item_uid: str) -> dict:
+    """
+    Équipe un item pour un joueur.
+    Vérifie que le joueur existe, que l'item existe, et que le joueur le possède.
+    """
+    player = player_repo.get_by_id(db, player_id)
+    if not player:
+        return {"error": "Player not found", "status": 404}
+
+    item_data = item_repo.load_item(item_uid)
+    if not item_data:
+        return {"error": "Item data not found", "status": 404}
+
+    inventories = inventory_repo.get_by_player(db, player_id)
+    inventory_item = next((inv for inv in inventories if inv.item_id == item_uid), None)
+    if not inventory_item:
+        return {"error": "Player does not possess this item", "status": 400}
+
+    # TODO: Implémenter la logique d'équipement (slots, modification des stats)
+    logger.info(f"Player {player_id} equipped item {item_uid}")
+    return {"message": f"Item {item_uid} equipped", "item": item_data}
+
+
+def unequip_item(db: Session, player_id: int, item_uid: str) -> dict:
+    """
+    Déséquipe un item pour un joueur.
+    """
+    player = player_repo.get_by_id(db, player_id)
+    if not player:
+        return {"error": "Player not found", "status": 404}
+
+    # TODO: Implémenter la logique de déséquipement
+    logger.info(f"Player {player_id} unequipped item {item_uid}")
+    return {"message": f"Item {item_uid} unequipped"}
