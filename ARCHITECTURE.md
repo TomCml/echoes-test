@@ -255,34 +255,127 @@ Définitions des statuts. Actuellement :
 
 ---
 
+## Écarts entre la doc de design et le code actuel
+
+La doc dans `/Echoes/` décrit une architecture cible bien plus complète. Voici les écarts majeurs.
+
+### Modèle de données : Code vs Design
+
+| Concept Design (UML/SQL) | Code actuel | Écart |
+|---|---|---|
+| `users` + `players` séparés (UUID) | `players` seul (Integer PK, twitch_id direct) | **Pas de table users.** Le player contient directement le twitch_id. Le design prévoit une séparation User/Player avec UUIDs. |
+| `item_blueprints` + `weapon_blueprints` + `equipment_blueprints` + `consumable_blueprints` (héritage en DB) | `weapons` + `spells` en DB, items en JSON | **Système hybride.** Les items sont des JSON files, pas des blueprints en DB. Le design prévoit tout en DB avec héritage. |
+| `item_instances` (items possédés avec level/XP propre) | `inventories` (player_id + item_id + quantity) | **Pas d'instances levellable.** L'inventaire actuel est un simple compteur, pas d'item_level/item_xp. |
+| `player_equipment_loadout` (7 slots nommés) | Rien — equip/unequip sont des TODO | **Pas de loadout.** Aucun tracking d'équipement. |
+| `combat_sessions` (persisté en DB avec état complet) | `Battle` dataclass (runtime only, pas persisté) | **Combats pas persistés.** Le Battle est en mémoire uniquement. |
+| `combat_logs` (table avec turn, actor, damage, crit, echo) | `Battle.log: List[str]` | **Logs = strings.** Le design prévoit des logs structurés en DB. |
+| `combat_spell_cooldowns` (persisté en DB) | `Entity.cds: Dict` (runtime) | **Cooldowns en mémoire** uniquement. |
+| `monster_blueprints` + `monster_abilities` (stats, scaling, IA, loot) | `monsters` (stats basiques, pas d'abilities) | **Monstres simplistes.** Pas de scaling, pas d'IA, pas de loot tables. |
+| `status_definitions` (en DB, avec icon, max_stacks, stackable flag) | `statuses.json` (fichier JSON) | **Statuts en JSON.** Le design les veut en DB. |
+| `dungeons` + `dungeon_monster_sequence` + `player_dungeon_progress` | Rien | **Pas de donjons.** |
+| `achievements` + `player_achievements` | Rien | **Pas d'achievements.** |
+| `quests` + `player_quests` | Modèle Quest existe mais aucune route/service | **Quêtes orphelines.** |
+| `leaderboard_entries` | Rien | **Pas de leaderboard.** |
+| `loot_tables` + `loot_table_entries` | Rien | **Pas de loot.** |
+| `StatsBlock` (MAX_HP, HP, AD, AP, ARMOR, MR, SPEED, CRIT_CHANCE, CRIT_DAMAGE) | `Stats(MAX_HP, HP, AD, DEF)` | **Stats trop simples.** Il manque AP, MR, SPEED, CRIT_CHANCE, CRIT_DAMAGE dans le domain. Le Player SQLAlchemy les a, mais pas l'Entity de combat. |
+| `DamageType`: PHYSICAL, MAGIC, TRUE, MIXED, STASIS | `DamageType`: PHYSICAL, MAGICAL, TRUE, HEALING | **Enums désalignés.** MIXED et STASIS manquent, HEALING n'est pas dans le design. |
+| `SpellType`: BASIC, SKILL, ULTIMATE | Pas implémenté | **Pas de type de sort.** |
+| `EquipmentSlot`: 7 slots | Pas implémenté | **Pas de slots.** |
+| `Rarity`: COMMON → LEGENDARY | Pas implémenté | **Pas de raretés.** |
+| Echo system (gain par attaque/sort, coût pour ultimate) | `echo_current/echo_max` sur Player, `build_gauge` opcode existe | **Partiellement là.** Le gauge "echo" existe dans le moteur mais pas la logique de coût/ultimate. |
+
+### Effets : existants vs prévus (UML note)
+
+| Opcode | Implémenté | Prévu dans le design |
+|---|---|---|
+| `damage` | Oui | Oui |
+| `apply_status` | Oui | Oui |
+| `build_gauge` | Oui | Oui |
+| `bonus_damage_if_target_has_status` | Oui | Oui |
+| `heal` | Non | Oui |
+| `modify_stat` | Non | Oui |
+| `remove_status` | Non | Oui |
+| `echo_gain` | Non (via build_gauge) | Oui (dédié) |
+| `shield` | Non | Oui |
+
+### Phases du planning backend vs avancement
+
+| Phase | Description | Statut |
+|---|---|---|
+| Phase 1 | Infrastructure DB (SQLAlchemy + Alembic) | **Fait** |
+| Phase 2 | Modèles combat (Player, Monster, Weapon, Spell) | **Partiellement fait** — modèles existent mais pas alignés avec le design |
+| Phase 3 | Repository Layer (CRUD) | **Fait** pour player, inventory, item |
+| Phase 4 | Schemas Pydantic | **Fait** pour player, inventory, item, quest, title |
+| Phase 5 | Services (Echo, Equipment, Damage, Initiative, Combat) | **Partiellement fait** — damage_service et battle_service existent, pas d'initiative/echo service |
+| Phase 6 | API Endpoints | **Partiellement fait** — battle, items, login, players, inventory. Manque: monsters, equipment détaillé |
+| Phase 7 | Seed Data | **Partiellement fait** — 1 item JSON + 1 status JSON. Manque: monstres, armes starter |
+| Phase 8 | Tests combat | **Pas fait** |
+| Phase 9+ | WebSocket, Leaderboards, Full Inventory, Shop, Quests, Auth, PubSub, Dungeons | **Pas fait** |
+
+---
+
 ## Où continuer le projet
 
-### Priorité 1 — Compléter le système de combat
-- [ ] **Battle loop complète** : le `battle_service.start_battle()` actuel ne fait qu'exécuter un seul sort. Il faut implémenter la boucle de combat avec alternance de tours, cooldowns, et choix de sorts. Regarder la version Gemini de `battle_service.py` pour l'inspiration de la boucle while.
-- [ ] **Charger `statuses.json`** dans `Battle.status_defs` au démarrage d'un combat pour que `status_engine.end_turn()` puisse résoudre les ticks.
-- [ ] **Passives** : implémenter le trigger `on_hit` pour exécuter les passifs d'un item à chaque attaque.
-- [ ] **Cooldowns** : intégrer `Entity.cds` dans la logique de sélection de sort.
+### Décision architecturale à prendre d'abord
 
-### Priorité 2 — Système d'équipement
-- [ ] **Slots d'équipement** : ajouter un modèle ou un champ sur Player pour tracker les items équipés (arme, armure, accessoire...).
-- [ ] **Modifier les stats** : quand un item est équipé, appliquer ses bonus aux stats du joueur.
-- [ ] **Compléter `equip_item()` et `unequip_item()`** dans `inventory_service.py`.
+Le code actuel utilise un **système hybride** :
+- Items = fichiers JSON (blueprints)
+- Players/Inventory = DB (SQLAlchemy)
+- Combat = runtime (dataclasses en mémoire)
 
-### Priorité 3 — Fonctionnalités manquantes
-- [ ] **Routes quêtes** : les models/schemas existent mais aucune route ni service.
-- [ ] **Routes monstres** : pareil, le modèle Monster existe mais pas d'API.
-- [ ] **PvE** : combats contre des monstres (adapter `battle_service` pour accepter un Monster comme cible).
-- [ ] **Historique de combat** : sauvegarder les résultats en DB.
+Le design dans `/Echoes/Architecture/` prévoit **tout en DB** (item_blueprints, combat_sessions, status_definitions...).
 
-### Priorité 4 — Infra et qualité
-- [ ] **Alembic migrations** : s'assurer que les migrations sont à jour avec les modèles.
-- [ ] **Tests** : aucun test actuellement. Le moteur d'effets est très testable unitairement.
-- [ ] **WebSocket** : les dépendances socket.io sont là mais rien n'est implémenté. Pour le combat en temps réel ?
-- [ ] **Auth** : les dépendances JWT (python-jose, passlib) sont là mais pas utilisées. Implémenter un vrai système de tokens.
+**Tu dois décider :** rester en hybride JSON+DB (plus simple, plus rapide à itérer sur les items) ou migrer vers le schéma SQL complet du design ? Les deux sont viables pour le MVP.
+
+### Priorité 1 — Aligner le domain engine avec le design
+- [ ] **Enrichir `Stats`** : ajouter AP, MR, SPEED, CRIT_CHANCE, CRIT_DAMAGE au dataclass Stats dans `domain.py`
+- [ ] **Enrichir `player_to_entity()`** : mapper toutes les stats du Player SQLAlchemy vers le Stats complet
+- [ ] **Aligner `DamageType`** : ajouter MIXED, STASIS. Décider du sort de HEALING.
+- [ ] **Ajouter SpellType** (BASIC, SKILL, ULTIMATE) si les sorts doivent avoir un type
+
+### Priorité 2 — Boucle de combat complète
+- [ ] **Battle loop** : implémenter la boucle tour par tour dans `battle_service.start_battle()` — alternance joueur/monstre, sélection de sort, cooldowns, initiative (speed)
+- [ ] **Charger `statuses.json`** dans `Battle.status_defs` au lancement du combat
+- [ ] **Passives on_hit** : exécuter les passifs de l'arme à chaque attaque
+- [ ] **Echo system** : gain par attaque basique (10) et par sort (5), coût pour ultimates
+- [ ] **Cooldowns** : vérifier `Entity.cds` avant de lancer un sort, set CD après usage
+
+### Priorité 3 — Système d'équipement
+- [ ] **Table `player_equipment_loadout`** : ajouter le modèle SQLAlchemy avec les 7 slots (weapon_primary, weapon_secondary, head, armor, artifact, blessing, consumable)
+- [ ] **Compléter `equip_item()` / `unequip_item()`** : valider le slot, mettre à jour le loadout, recalculer les stats
+- [ ] **`get_total_stats()`** : agréger stats de base du player + bonus des items équipés
+
+### Priorité 4 — PvE et monstres
+- [ ] **Enrichir le modèle Monster** : scaling par niveau, abilities (JSON), loot_table reference
+- [ ] **Routes `/monsters`** : CRUD + endpoint pour instancier un MonsterEntity
+- [ ] **Adapter `battle_service`** : accepter un Monster comme adversaire (pas seulement un Player)
+- [ ] **Loot** : après victoire, roller la loot table et distribuer les items
+
+### Priorité 5 — Persistance du combat
+- [ ] **Table `combat_sessions`** : persister l'état du combat en DB (pour reprendre après déconnexion, pour l'historique)
+- [ ] **Table `combat_logs`** : logs structurés (turn, actor, spell_id, damage, crit, echo)
+- [ ] **Endpoint `GET /combat/{id}/state`** : récupérer l'état d'un combat en cours
+
+### Priorité 6 — Fonctionnalités secondaires
+- [ ] **Quests** : routes + service pour le système de quêtes (modèle déjà là)
+- [ ] **Achievements** : nouveau modèle + service
+- [ ] **Leaderboards** : nouveau modèle + endpoint
+- [ ] **Donjons** : séquence de monstres avec boss final
+- [ ] **Auth Twitch OAuth2** : JWT tokens, middleware d'authentification
+- [ ] **WebSocket** : combat en temps réel via socket.io
+
+### Nouveaux effets à implémenter (dans `engine/effects/`)
+- [ ] `heal` — soins (formule)
+- [ ] `modify_stat` — buff/debuff temporaire de stats
+- [ ] `remove_status` — retirer un statut spécifique
+- [ ] `echo_gain` — gain d'Echo dédié (ou garder build_gauge)
+- [ ] `shield` — bouclier absorbant les dégâts
 
 ### Fichiers clés à modifier en premier
-1. `app/services/battle_service.py` — Boucle de combat complète
-2. `app/services/inventory_service.py` — Logique d'équipement
-3. `app/engine/effects/` — Ajouter de nouveaux effets
-4. `data/items/` — Ajouter de nouveaux items
-5. `data/statuses.json` — Ajouter de nouveaux statuts
+1. `app/engine/domain.py` — Enrichir Stats (AP, MR, SPEED, CRIT)
+2. `app/services/battle_service.py` — Boucle de combat complète
+3. `app/services/inventory_service.py` — Logique d'équipement avec loadout
+4. `app/engine/effects/` — Nouveaux opcodes (heal, shield, modify_stat)
+5. `app/models/` — Nouveaux modèles (loadout, combat_session) ou enrichir les existants
+6. `data/items/` — Ajouter de nouveaux items
+7. `data/statuses.json` — Ajouter de nouveaux statuts (burn, freeze, stun...)
