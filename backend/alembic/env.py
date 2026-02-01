@@ -8,16 +8,16 @@ from alembic import context
 from infisical_sdk import InfisicalSDKClient
 
 # Import our models' Base for autogenerate support
-from core.database import Base
+from app.core.database import Base
 
 # Import all models so Alembic can detect them
-from models.player import Player
-from models.inventory import Inventory
-from models.quest import Quest
-from models.title import Title
-from models.monster import Monster
-from models.equipement import Weapon, Spell
-from models.player_shop import PlayerShop
+from app.models.player import Player
+from app.models.inventory import Inventory
+from app.models.quest import Quest
+from app.models.title import Title
+from app.models.monster import Monster
+from app.models.equipement import Weapon, Spell
+from app.models.player_shop import PlayerShop
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

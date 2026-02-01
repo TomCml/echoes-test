@@ -1,7 +1,7 @@
 import math
 import logging
 from typing import Dict, Any, List
-from models.player import Player
+from app.models.player import Player
 
 logger = logging.getLogger(__name__)
 

@@ -1,10 +1,12 @@
 import os
 from fastapi import FastAPI
 from infisical_sdk import InfisicalSDKClient
-from routes.items import router as items_router
-from routes.battle import router as battle_router
-from routes.login import router as login_router
-from core.database import Base, engine
+from app.api.routes.items import router as items_router
+from app.api.routes.battle import router as battle_router
+from app.api.routes.login import router as login_router
+from app.api.routes.inventory import router as inventory_router
+from app.api.routes.players import router as players_router
+from app.core.database import Base, engine
 
 app = FastAPI()
 
@@ -13,6 +15,8 @@ client = InfisicalSDKClient(host=os.getenv("INFISICAL_API_URL"), token=os.getenv
 app.include_router(items_router, prefix="/items", tags=["items"])
 app.include_router(battle_router, prefix="/battle", tags=["battle"])
 app.include_router(login_router, prefix="/login", tags=["login"])
+app.include_router(inventory_router, prefix="/inventory", tags=["inventory"])
+app.include_router(players_router, prefix="/players", tags=["players"])
 
 @app.get("/health")
 def health():
