@@ -1,7 +1,7 @@
 from app.engine.combat import register, eval_formula, apply_damage
 from app.engine.domain import Battle, Entity
 from typing import Dict, Any
-import random
+
 
 @register("damage")
 def eff_damage(b: Battle, src: Entity, tgt: Entity, p: Dict[str, Any]):
@@ -11,7 +11,7 @@ def eff_damage(b: Battle, src: Entity, tgt: Entity, p: Dict[str, Any]):
     amount = base * roll
     can_crit = bool(p.get("can_crit", False))
     label = p.get("label", "damage")
-    if can_crit and b.rng.random() < 0.2:
-        amount *= 1.5
+    if can_crit and b.rng.random() < src.stats.CRIT_CHANCE:
+        amount *= src.stats.CRIT_DAMAGE
         label += " (crit)"
     apply_damage(b, tgt, amount, label)

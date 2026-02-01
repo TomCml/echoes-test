@@ -25,65 +25,91 @@ def player_to_entity(player) -> Entity:
             MAX_HP=player.health_points,
             HP=player.health_points,
             AD=player.attack_damage,
-            DEF=player.armor
+            AP=player.ability_power or 0,
+            ARMOR=player.armor or 0,
+            MR=player.magic_resistance or 0,
+            SPEED=player.speed or 0,
+            CRIT_CHANCE=(player.crit_chance or 0) / 100.0,
+            CRIT_DAMAGE=1.5,
         )
     )
 
 
+def monster_to_entity(monster) -> Entity:
+    """Convertit un Monster SQLAlchemy en Entity du moteur."""
+    level_bonus_hp = int((monster.scaling_hp or 0) * (monster.level - 1))
+    level_bonus_ad = int((monster.scaling_ad or 0) * (monster.level - 1))
+    level_bonus_armor = int((monster.scaling_armor or 0) * (monster.level - 1))
+
+    hp = monster.hp_max + level_bonus_hp
+    return Entity(
+        id=f"monster_{monster.monster_id}",
+        name=monster.name,
+        stats=Stats(
+            MAX_HP=hp,
+            HP=hp,
+            AD=monster.attack_damage + level_bonus_ad,
+            AP=monster.ability_power or 0,
+            ARMOR=(monster.armor or 0) + level_bonus_armor,
+            MR=monster.magic_resistance or 0,
+            SPEED=monster.speed or 0,
+        ),
+        tags={"boss"} if monster.is_boss else set(),
+    )
+
+
 def start_battle(
-    db: Session, 
-    player_id: int, 
-    target_id: int, 
-    item_id: str, 
+    db: Session,
+    player_id: int,
+    target_id: int,
+    item_id: str,
     spell_code: str
 ) -> Dict[str, Any]:
     """
     Démarre un combat entre deux joueurs.
-    
-    Args:
-        db: Session SQLAlchemy
-        player_id: ID du joueur attaquant
-        target_id: ID de la cible
-        item_id: ID de l'item à utiliser
-        spell_code: Code du sort à lancer
-    
-    Returns:
-        Dict avec les résultats du combat
     """
     # 1. Load players from DB
     player = player_repo.get_by_id(db, player_id)
     if not player:
         return {"error": f"Player {player_id} not found"}
-    
+
     target = player_repo.get_by_id(db, target_id)
     if not target:
         return {"error": f"Target {target_id} not found"}
-    
+
     # 2. Load item JSON
     item = item_repo.load_item(item_id)
     if not item:
         return {"error": f"Item {item_id} not found"}
-    
+
     # 3. Find spell
     spell = None
     for s in item.get("spells", []):
         if s.get("code") == spell_code:
             spell = s
             break
-    
+
     if not spell:
         return {"error": f"Spell '{spell_code}' not found in item"}
-    
+
     # 4. Convert to engine entities
     src = player_to_entity(player)
     tgt = player_to_entity(target)
-    
-    # 5. Create battle and run effects
-    battle = Battle(a=src, b=tgt)
+
+    # 5. Load status definitions
+    import json
+    from pathlib import Path
+    statuses_path = Path("./data/statuses.json")
+    status_defs = {}
+    if statuses_path.exists():
+        status_defs = json.loads(statuses_path.read_text(encoding="utf-8"))
+
+    # 6. Create battle and run effects
+    battle = Battle(a=src, b=tgt, status_defs=status_defs)
     effects_list = spell.get("effects", [])
     run_effects(battle, src, tgt, effects_list)
-    
-    # 6. Return results
+
+    # 7. Return results
     return {
         "success": True,
         "attacker": src.name,

@@ -2,13 +2,25 @@ from dataclasses import dataclass, field
 from typing import Dict, Any, List, Set
 import random
 
+
 @dataclass
 class Stats:
     MAX_HP: int
     HP: int
     AD: int
-    DEF: int
-  
+    AP: int = 0
+    ARMOR: int = 0
+    MR: int = 0
+    SPEED: int = 0
+    CRIT_CHANCE: float = 0.0
+    CRIT_DAMAGE: float = 1.5
+
+    @property
+    def DEF(self) -> int:
+        """Alias rétrocompat — certaines formules utilisent DEF."""
+        return self.ARMOR
+
+
 @dataclass
 class Entity:
     id: str
@@ -18,6 +30,7 @@ class Entity:
     statuses: Dict[str, Dict[str, Any]] = field(default_factory=dict)  # code -> {remaining, stacks}
     gauges: Dict[str, int] = field(default_factory=dict)
     cds: Dict[str, int] = field(default_factory=dict)
+
 
 @dataclass
 class Battle:

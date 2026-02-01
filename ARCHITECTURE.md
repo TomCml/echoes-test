@@ -148,7 +148,8 @@ C'est le coeur du système de combat. Utilise des **dataclasses** (POO légère)
 ```python
 @dataclass
 class Stats:
-    MAX_HP, HP, AD, DEF
+    MAX_HP, HP, AD, AP, ARMOR, MR, SPEED, CRIT_CHANCE, CRIT_DAMAGE
+    DEF -> property alias de ARMOR
 
 @dataclass
 class Entity:
@@ -188,10 +189,14 @@ Chaque fichier enregistre un opcode via `@register("opcode")`. L'`__init__.py` i
 
 | Fichier | Opcode | Description |
 |---|---|---|
-| `damage.py` | `damage` | Dégâts avec formule, variance, crit |
+| `damage.py` | `damage` | Dégâts avec formule, variance, crit (utilise CRIT_CHANCE/CRIT_DAMAGE de l'Entity) |
 | `apply_status.py` | `apply_status` | Applique un statut avec chance de résistance |
 | `bonus_damage_if_target_has_status.py` | `bonus_damage_if_target_has_status` | Dégâts bonus % AD si la cible a un statut |
 | `build_gauge.py` | `build_gauge` | Incrémente une jauge (conditionnel à un statut) |
+| `heal.py` | `heal` | Soins via formule, cap à MAX_HP |
+| `modify_stat.py` | `modify_stat` | Buff/debuff temporaire d'une stat (AD, ARMOR, etc.) |
+| `remove_status.py` | `remove_status` | Retire un statut spécifique de la cible |
+| `shield.py` | `shield` | Bouclier absorbant via gauge "shield" (consommé par apply_damage) |
 | `base.py` | *(pas d'opcode)* | Helper `percent_bonus_from_ad()` |
 
 **Pour ajouter un nouvel effet :**
@@ -208,12 +213,16 @@ Chaque fichier enregistre un opcode via `@register("opcode")`. L'`__init__.py` i
 |---|---|---|
 | `player.py` | `players` | Joueur avec toutes les stats RPG (HP, AD, AP, armor, MR, crit, dodge, speed, life steal, spell vamp), progression (level, XP, gold), système Echo, intégration Twitch |
 | `inventory.py` | `inventories` | Lien joueur ↔ item (item_id = référence JSON), quantité |
-| `equipement.py` | `weapons`, `spells` | Armes avec bonus stats, sorts avec type de dégât/coût/cooldown/effets JSON |
-| `monster.py` | `monsters` | Monstres PvE avec stats et récompenses |
+| `equipement.py` | `weapons`, `spells` | Armes avec bonus stats, sorts avec type de dégât/coût/cooldown/effets JSON. Spell a un `spell_type` (BASIC/SKILL/ULTIMATE). |
+| `monster.py` | `monsters` | Monstres PvE avec stats complètes (HP, AD, AP, armor, MR, speed), scaling par niveau, abilities JSON, récompenses min/max gold, flag boss |
+| `loadout.py` | `player_equipment_loadout` | 7 slots d'équipement (weapon_primary, weapon_secondary, head, armor, artifact, blessing, consumable) — référence des item_id JSON |
+| `combat_session.py` | `combat_sessions` | Session de combat persistée (état joueur/adversaire, statuts, jauges, timestamps) |
+| `combat_log.py` | `combat_logs` | Logs structurés (turn, actor, spell, damage, crit, echo, type de dégât) |
 | `quest.py` | `quests` | Quêtes avec type (Unique/Repeatable) et catégorie |
 | `title.py` | `titles` | Titres de joueur |
 | `player_shop.py` | `player_shop` | Shop joueur (structure minimale) |
-| `damage_types.py` | *(enum)* | `DamageType`: PHYSICAL, MAGICAL, TRUE, HEALING |
+| `damage_types.py` | *(enum)* | `DamageType`: PHYSICAL, MAGICAL, TRUE, MIXED, STASIS, HEALING |
+| `enums.py` | *(enums)* | `SpellType`, `EquipmentSlot`, `Rarity`, `CombatStatus`, `TickTrigger` |
 
 ---
 
@@ -266,22 +275,22 @@ La doc dans `/Echoes/` décrit une architecture cible bien plus complète. Voici
 | `users` + `players` séparés (UUID) | `players` seul (Integer PK, twitch_id direct) | **Pas de table users.** Le player contient directement le twitch_id. Le design prévoit une séparation User/Player avec UUIDs. |
 | `item_blueprints` + `weapon_blueprints` + `equipment_blueprints` + `consumable_blueprints` (héritage en DB) | `weapons` + `spells` en DB, items en JSON | **Système hybride.** Les items sont des JSON files, pas des blueprints en DB. Le design prévoit tout en DB avec héritage. |
 | `item_instances` (items possédés avec level/XP propre) | `inventories` (player_id + item_id + quantity) | **Pas d'instances levellable.** L'inventaire actuel est un simple compteur, pas d'item_level/item_xp. |
-| `player_equipment_loadout` (7 slots nommés) | Rien — equip/unequip sont des TODO | **Pas de loadout.** Aucun tracking d'équipement. |
-| `combat_sessions` (persisté en DB avec état complet) | `Battle` dataclass (runtime only, pas persisté) | **Combats pas persistés.** Le Battle est en mémoire uniquement. |
-| `combat_logs` (table avec turn, actor, damage, crit, echo) | `Battle.log: List[str]` | **Logs = strings.** Le design prévoit des logs structurés en DB. |
-| `combat_spell_cooldowns` (persisté en DB) | `Entity.cds: Dict` (runtime) | **Cooldowns en mémoire** uniquement. |
-| `monster_blueprints` + `monster_abilities` (stats, scaling, IA, loot) | `monsters` (stats basiques, pas d'abilities) | **Monstres simplistes.** Pas de scaling, pas d'IA, pas de loot tables. |
+| `player_equipment_loadout` (7 slots nommés) | `PlayerEquipmentLoadout` modèle créé (7 slots, ref item_id JSON) | **FAIT (modèle).** Le service equip/unequip reste à brancher dessus. |
+| `combat_sessions` (persisté en DB avec état complet) | `CombatSession` modèle créé | **FAIT (modèle).** Le modèle existe, pas encore branché au service. |
+| `combat_logs` (table avec turn, actor, damage, crit, echo) | `CombatLog` modèle créé | **FAIT (modèle).** Le modèle existe, les logs runtime restent des strings. Il faudra brancher la persistance. |
+| `combat_spell_cooldowns` (persisté en DB) | `Entity.cds: Dict` (runtime) | **Cooldowns en mémoire** uniquement. Les CDs seront persistés via CombatSession si nécessaire. |
+| `monster_blueprints` + `monster_abilities` (stats, scaling, IA, loot) | `monsters` enrichi (AP, armor, MR, speed, scaling, abilities JSON, boss flag, gold min/max) | **FAIT.** Monster a maintenant toutes les stats, le scaling, et les abilities en JSON. |
 | `status_definitions` (en DB, avec icon, max_stacks, stackable flag) | `statuses.json` (fichier JSON) | **Statuts en JSON.** Le design les veut en DB. |
 | `dungeons` + `dungeon_monster_sequence` + `player_dungeon_progress` | Rien | **Pas de donjons.** |
 | `achievements` + `player_achievements` | Rien | **Pas d'achievements.** |
 | `quests` + `player_quests` | Modèle Quest existe mais aucune route/service | **Quêtes orphelines.** |
 | `leaderboard_entries` | Rien | **Pas de leaderboard.** |
 | `loot_tables` + `loot_table_entries` | Rien | **Pas de loot.** |
-| `StatsBlock` (MAX_HP, HP, AD, AP, ARMOR, MR, SPEED, CRIT_CHANCE, CRIT_DAMAGE) | `Stats(MAX_HP, HP, AD, DEF)` | **Stats trop simples.** Il manque AP, MR, SPEED, CRIT_CHANCE, CRIT_DAMAGE dans le domain. Le Player SQLAlchemy les a, mais pas l'Entity de combat. |
-| `DamageType`: PHYSICAL, MAGIC, TRUE, MIXED, STASIS | `DamageType`: PHYSICAL, MAGICAL, TRUE, HEALING | **Enums désalignés.** MIXED et STASIS manquent, HEALING n'est pas dans le design. |
-| `SpellType`: BASIC, SKILL, ULTIMATE | Pas implémenté | **Pas de type de sort.** |
-| `EquipmentSlot`: 7 slots | Pas implémenté | **Pas de slots.** |
-| `Rarity`: COMMON → LEGENDARY | Pas implémenté | **Pas de raretés.** |
+| `StatsBlock` (MAX_HP, HP, AD, AP, ARMOR, MR, SPEED, CRIT_CHANCE, CRIT_DAMAGE) | `Stats(MAX_HP, HP, AD, AP, ARMOR, MR, SPEED, CRIT_CHANCE, CRIT_DAMAGE)` | **FAIT.** Stats complètes, DEF = alias de ARMOR. |
+| `DamageType`: PHYSICAL, MAGIC, TRUE, MIXED, STASIS | `DamageType`: PHYSICAL, MAGICAL, TRUE, MIXED, STASIS, HEALING | **FAIT.** MIXED et STASIS ajoutés, HEALING gardé. |
+| `SpellType`: BASIC, SKILL, ULTIMATE | `SpellType` dans `enums.py`, utilisé par `Spell` model | **FAIT.** |
+| `EquipmentSlot`: 7 slots | `EquipmentSlot` dans `enums.py`, utilisé par `PlayerEquipmentLoadout` | **FAIT.** |
+| `Rarity`: COMMON → LEGENDARY | `Rarity` dans `enums.py` | **FAIT.** Enum défini, pas encore utilisé dans les modèles. |
 | Echo system (gain par attaque/sort, coût pour ultimate) | `echo_current/echo_max` sur Player, `build_gauge` opcode existe | **Partiellement là.** Le gauge "echo" existe dans le moteur mais pas la logique de coût/ultimate. |
 
 ### Effets : existants vs prévus (UML note)
@@ -292,11 +301,11 @@ La doc dans `/Echoes/` décrit une architecture cible bien plus complète. Voici
 | `apply_status` | Oui | Oui |
 | `build_gauge` | Oui | Oui |
 | `bonus_damage_if_target_has_status` | Oui | Oui |
-| `heal` | Non | Oui |
-| `modify_stat` | Non | Oui |
-| `remove_status` | Non | Oui |
-| `echo_gain` | Non (via build_gauge) | Oui (dédié) |
-| `shield` | Non | Oui |
+| `heal` | **Oui** | Oui |
+| `modify_stat` | **Oui** | Oui |
+| `remove_status` | **Oui** | Oui |
+| `echo_gain` | Via `build_gauge` (gauge="echo") | Oui (via build_gauge) |
+| `shield` | **Oui** (+ absorption dans apply_damage) | Oui |
 
 ### Phases du planning backend vs avancement
 
@@ -327,36 +336,41 @@ Le design dans `/Echoes/Architecture/` prévoit **tout en DB** (item_blueprints,
 
 **Tu dois décider :** rester en hybride JSON+DB (plus simple, plus rapide à itérer sur les items) ou migrer vers le schéma SQL complet du design ? Les deux sont viables pour le MVP.
 
-### Priorité 1 — Aligner le domain engine avec le design
-- [ ] **Enrichir `Stats`** : ajouter AP, MR, SPEED, CRIT_CHANCE, CRIT_DAMAGE au dataclass Stats dans `domain.py`
-- [ ] **Enrichir `player_to_entity()`** : mapper toutes les stats du Player SQLAlchemy vers le Stats complet
-- [ ] **Aligner `DamageType`** : ajouter MIXED, STASIS. Décider du sort de HEALING.
-- [ ] **Ajouter SpellType** (BASIC, SKILL, ULTIMATE) si les sorts doivent avoir un type
+### ~~Priorité 1 — Aligner le domain engine avec le design~~ FAIT
+- [x] Stats enrichi (AP, MR, SPEED, CRIT_CHANCE, CRIT_DAMAGE)
+- [x] player_to_entity() mappe toutes les stats + monster_to_entity() ajouté
+- [x] DamageType aligné (MIXED, STASIS ajoutés)
+- [x] SpellType, EquipmentSlot, Rarity, CombatStatus, TickTrigger ajoutés
+- [x] Modèles PlayerEquipmentLoadout, CombatSession, CombatLog créés
+- [x] Monster enrichi (stats complètes, scaling, abilities, boss, gold min/max)
+- [x] 4 nouveaux effets (heal, modify_stat, remove_status, shield)
+- [x] Shield absorbé par apply_damage
+- [x] Crit utilise CRIT_CHANCE/CRIT_DAMAGE de l'Entity (plus hardcodé)
 
-### Priorité 2 — Boucle de combat complète
+### Priorité 1 — Boucle de combat complète
 - [ ] **Battle loop** : implémenter la boucle tour par tour dans `battle_service.start_battle()` — alternance joueur/monstre, sélection de sort, cooldowns, initiative (speed)
 - [ ] **Charger `statuses.json`** dans `Battle.status_defs` au lancement du combat
 - [ ] **Passives on_hit** : exécuter les passifs de l'arme à chaque attaque
 - [ ] **Echo system** : gain par attaque basique (10) et par sort (5), coût pour ultimates
 - [ ] **Cooldowns** : vérifier `Entity.cds` avant de lancer un sort, set CD après usage
 
-### Priorité 3 — Système d'équipement
-- [ ] **Table `player_equipment_loadout`** : ajouter le modèle SQLAlchemy avec les 7 slots (weapon_primary, weapon_secondary, head, armor, artifact, blessing, consumable)
+### Priorité 2 — Système d'équipement
+- [x] ~~Table `player_equipment_loadout`~~ FAIT (modèle créé)
 - [ ] **Compléter `equip_item()` / `unequip_item()`** : valider le slot, mettre à jour le loadout, recalculer les stats
 - [ ] **`get_total_stats()`** : agréger stats de base du player + bonus des items équipés
 
-### Priorité 4 — PvE et monstres
-- [ ] **Enrichir le modèle Monster** : scaling par niveau, abilities (JSON), loot_table reference
+### Priorité 3 — PvE et monstres
+- [x] ~~Enrichir le modèle Monster~~ FAIT
 - [ ] **Routes `/monsters`** : CRUD + endpoint pour instancier un MonsterEntity
 - [ ] **Adapter `battle_service`** : accepter un Monster comme adversaire (pas seulement un Player)
 - [ ] **Loot** : après victoire, roller la loot table et distribuer les items
 
-### Priorité 5 — Persistance du combat
-- [ ] **Table `combat_sessions`** : persister l'état du combat en DB (pour reprendre après déconnexion, pour l'historique)
-- [ ] **Table `combat_logs`** : logs structurés (turn, actor, spell_id, damage, crit, echo)
+### Priorité 4 — Persistance du combat
+- [x] ~~Tables `combat_sessions` et `combat_logs`~~ FAIT (modèles créés)
+- [ ] **Brancher la persistance** : sauvegarder/charger CombatSession depuis battle_service
 - [ ] **Endpoint `GET /combat/{id}/state`** : récupérer l'état d'un combat en cours
 
-### Priorité 6 — Fonctionnalités secondaires
+### Priorité 5 — Fonctionnalités secondaires
 - [ ] **Quests** : routes + service pour le système de quêtes (modèle déjà là)
 - [ ] **Achievements** : nouveau modèle + service
 - [ ] **Leaderboards** : nouveau modèle + endpoint
@@ -364,12 +378,9 @@ Le design dans `/Echoes/Architecture/` prévoit **tout en DB** (item_blueprints,
 - [ ] **Auth Twitch OAuth2** : JWT tokens, middleware d'authentification
 - [ ] **WebSocket** : combat en temps réel via socket.io
 
-### Nouveaux effets à implémenter (dans `engine/effects/`)
-- [ ] `heal` — soins (formule)
-- [ ] `modify_stat` — buff/debuff temporaire de stats
-- [ ] `remove_status` — retirer un statut spécifique
-- [ ] `echo_gain` — gain d'Echo dédié (ou garder build_gauge)
-- [ ] `shield` — bouclier absorbant les dégâts
+### ~~Nouveaux effets~~ FAIT
+- [x] `heal`, `modify_stat`, `remove_status`, `shield` — tous implémentés
+- `echo_gain` couvert par `build_gauge` avec `gauge: "echo"`
 
 ### Fichiers clés à modifier en premier
 1. `app/engine/domain.py` — Enrichir Stats (AP, MR, SPEED, CRIT)
