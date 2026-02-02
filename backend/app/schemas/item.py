@@ -1,16 +1,19 @@
 from pydantic import BaseModel, HttpUrl, Field
 from typing import Any, Literal
 
+
 class Effect(BaseModel):
     opcode: str
     params: dict[str, Any] = Field(default_factory=dict)
     trigger: Literal["on_use", "on_hit", "on_turn_start", "on_turn_end"] | None = None
     order: int | None = None
 
+
 class Passive(BaseModel):
     name: str
     trigger: Literal["on_hit", "on_use", "on_turn_start", "on_turn_end"]
     effects: list[Effect]
+
 
 class Spell(BaseModel):
     code: str
@@ -20,11 +23,30 @@ class Spell(BaseModel):
     flags: list[str] = []
     effects: list[Effect]
 
+
+class StatsBlock(BaseModel):
+    """Bloc de stats pour les items (base + scaling)."""
+    AD: int = 0
+    AP: int = 0
+    MAX_HP: int = 0
+    ARMOR: int = 0
+    MR: int = 0
+    SPEED: int = 0
+    CRIT_CHANCE: float = 0.0
+
+
 class Item(BaseModel):
     id: str
     name: str
     category: str | None = None
+    slot: str | None = None  # weapon_primary, head, armor, artifact, blessing, consumable
+    rarity: int = 1  # 1 (common) à 5 (legendary)
     tags: list[str] = []
     sprite_url: HttpUrl | str | None = None
+
+    # Stats de l'item avec scaling par niveau
+    base_stats: StatsBlock = Field(default_factory=StatsBlock)
+    scaling_per_level: StatsBlock = Field(default_factory=StatsBlock)
+
     passives: list[Passive] = []
     spells: list[Spell] = []

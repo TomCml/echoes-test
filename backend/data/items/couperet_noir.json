@@ -2,8 +2,13 @@
   "id": "couperet_noir",
   "name": "Couperet noir",
   "category": "Offensif",
+  "slot": "weapon_primary",
+  "rarity": 3,
   "tags": ["armor_pen"],
   "sprite_url": "/sprites/couperet_noir.webp",
+
+  "base_stats": { "AD": 18, "SPEED": 5 },
+  "scaling_per_level": { "AD": 3, "SPEED": 1 },
 
   "passives": [
     {
@@ -38,6 +43,7 @@
           "opcode": "damage",
           "params": {
             "formula": "140 + S_AD * 0.90",
+            "damage_type": "physical",
             "label": "coup-peret",
             "variance": 0.05,
             "can_crit": true
@@ -72,6 +78,7 @@
           "opcode": "damage",
           "params": {
             "formula": "200 + S_AD * 1.60",
+            "damage_type": "physical",
             "label": "exécution",
             "variance": 0.05,
             "can_crit": false
