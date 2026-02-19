@@ -1,0 +1,153 @@
+SHEETS: ['Theorycrafting', 'Feuille 63', 'Item AD', 'Item AP', 'Item tank ', 'Item Supp', 'wip ', 'Items Infos', 'item Particuliers', 'Bestiaire', 'Liste', 'Items in-game', 'Invocations & Taux', '% Stat', 'Buffs Debuffs', 'Vitesse test', 'Formule de Calcul']
+
+================================================================================
+SHEET: Theorycrafting (994 rows x 34 cols)
+================================================================================
+A1: Coiffe : | C1: Spell / Arme : | Y1: Buff
+A2: Affliction de Liandry | C2: Égide solaire | Y2: Consommable
+A3: #REF! | C3: #REF!
+A6: Armure : | C6: Spell / Arme :
+A7: Ange gardien | C7: Lame enragée de Guinsoo
+A8: #REF! | C8: #REF! | P8: 800.0
+A10: Bottes :
+A11: Coques en acier | C11: Spell / Arme : | P11: 2391.0 | Q11: 93.0
+A12: #REF! | C12: Epée du divin 
+C13: #REF!
+A14: Artefact : | P14: 450.0 | Q14: 60.0 | R14: 2841 | S14: 5483.13
+A15: Pourfendeur divin | C15: Spell / Arme : | S15: 5810.13
+A16: #REF! | C16: Bâton de l'archange
+C17: #REF!
+A18: Buff : | C18: Consommable :
+A19: Âme Hextech | C19: Barriere
+A20: #REF! | C20: #REF!
+A22: Lv : | B22: 90.0
+A23: Coef | B23: #REF!
+A24: Stats totales :
+A25: Points de vie : | B25: #REF! | C25: Dégats d'Attaque : | D25: #REF!
+A26: Armure : | B26: #REF! | C26: Puissance : | D26: #REF!
+A27: Resistance magique : | B27: #REF! | C27: Critique :  | D27: #REF!
+A28: Esquive : | B28: #REF! | C28: Vitesse : | D28: #REF!
+A29: Hâte :  | B29: #REF! | C29: Vol de vie :  | D29: #REF!
+A30: Vitesse d'attaque :  | B30: #REF! | C30: Sort vampirique : | D30: #REF!
+G31: #REF! | O31: #REF!
+G33: #REF! | O33: #REF!
+G35: #REF! | O35: #REF!
+O37: #REF!
+I40: #REF! | K40: #REF! | M40: #REF!
+
+================================================================================
+SHEET: Feuille 63 (1028 rows x 37 cols)
+================================================================================
+B1: - | E1: botte | T1: 155
+B2: coiffe | C2: armor | D2: 2 armes | E2: 2 echos | F2: benediction | G2: artefact | H2: BASE | T2: 583.125 | AD2: ilvl 50
+A4: ItemId | B4: Nom | C4: Image | D4: Categorie | E4: Rareté | F4: Rang | G4: Effet | H4: Puissance d'effet | I4: HP | J4: Force Adaptative | K4: AD | L4: AP | M4: Armure | N4: RM | O4: Critique | P4: Vitesse | Q4: Vol de vie  | R4: Sort vamp | S4: Puissance d'effet | T4: HP | U4: Force Adapt° | V4: AD | W4: AP | X4: Armure | Y4: RM | Z4: Critique | AA4: Vitesse | AB4: Vol de vie  | AC4: Sort vamp | AD4: Total | AE4: ilvl
+A5: 1.0 | B5: Fruit revigorant | D5: Consommable | E5: x | G5: 3 stacks : Soigne 20% des PV max. | AD5: 0
+A6: 2.0 | B6: Oeil du Hérault | D6: Consommable | E6: x | G6: Sort : Détruit les boucliers et Inflige 10% des PV max de la cible en dégats bruts, dégats directs, ne peut pas infliger de coup critique.  (une fois par combat). | AD6: 0
+A7: 3.0 | B7: Élixir de fer | D7: Consommable | E7: x | G7: Applique Mur au lanceur (4 tours). | AD7: 0
+A8: 4.0 | B8: Élixir de sorcellerie | D8: Consommable | E8: x | G8: Applique Puissance au lanceur (4 tours). | AD8: 0
+A9: 5.0 | B9: Élixir de rage | D9: Consommable | E9: x | G9: Applique Focus, Concentration, Impact  au lanceur(4 tours).  | AD9: 0
+A10: 6.0 | B10: Potion de soin | D10: Consommable | E10: x | G10: Restaure  60-300 PV  (en fonction du niveau du personnage) par tour (5 tours). | AD10: 0
+A11: 7.0 | B11: Potion de mana  | D11: Consommable | E11: x | G11:  Réduit le tour de relance des sorts communs de 3. | AD11: 0
+A12: 8.0 | B12: Soin  | D12: Consommable | E12: x | G12: Soigne le lanceur de 200 à 800 PV (en fonction du niveau du personnage) et lui applique Hate (3 tours) au lanceur. (15 tours de relance fixes) | AD12: 0
+A13: 9.0 | B13: Barriere | D13: Consommable | E13: x | G13: Applique un bouclier de 300 à 1500 PV (3 tours) en fonction du niveau du personnage ainsi que Méditation au lanceur (3 tours)  | AD13: 0
+A14: 10.0 | B14: Fatigue | D14: Consommable | E14: x | G14: Applique Fatigue et Lacération à la cible (3 tours). (20 tours de relance) | AD14: 0
+A15: 11.0 | B15: Clarté | D15: Consommable | E15: x | G15: Reduit le tour de relance de tous les sorts de 1. Applique Rythme au lanceur (1 tour). (20 tours de relance fixe) | AD15: 0
+A16: 12.0 | B16: Purge | D16: Consommable | E16: x | G16: Applique Voile et Volonté au lanceur (3 tours) (20 tours de relance fixe) | AD16: 0
+A17: 13.0 | B17: Embrasement | D17: Consommable | E17: x | G17: Applique 8 marques de Brulure. Applique 50% d'antiheal pendant la durée de cet effet. (20 tours de relance fixe) | AD17: 0
+A18: 14.0 | B18: Manoeuvres defensives | D18: Consommable | E18: x | G18: Soigne de 150 à 600 PV et applique une Bouclier de 200 à 1200 (3 tours) en fonction du niveau du personnage. (30 tours de relance ou 1 fois par cbt) | AD18: 0
+A19: 15.0 | B19: Chaud Bouillant | D19: Consommable | E19: x | G19: Applique Fatigue ainsi que 3 Marques de Brulures pendant 3 tours. Applique 25 % d'antiheal pendant la durée de cet effet . (30 tours de relance ou 1 fois par cbt) | AD19: 0
+A20: 16.0 | B20: Clarté purgative | D20: Consommable | E20: x | G20: Reduit le tour de relance de tous les sorts de 1. Applique Voile au lanceur pendant 2 tours.
+(30 tours de relance ou 1 fois par cbt) | AD20: 0
+A21: 17.0 | B21: Étreinte démoniaque | D21: Coiffe | E21: ★★★★ | F21: 18.0 | G21: Passif :Les sorts infligent 5 % des PV max de la cible en dégats magiques supplémentaires.
+Passif (Pré-combat) : 2 % des PV max du lanceur sont ajouté a l'AP du lanceur. | H21: 4.0 | I21: 375.0 | L21: 35.0 | S21: 4 | T21: 1166.25 | W21: 108.85 | AD21: 100.8333333 | AE21: 261
+A22: 18.0 | B22: Coiffe de Rabadon | D22: Coiffe | E22: ★ | F22: 10.0 | G22: Passif : Buff [+35 % de votre AP] (infini/indébuffable) | H22: 4.0 | L22: 90.0 | S22: 4 | W22: 90 | AD22: 100 | AE22: 50
+A23: 19.0 | B23: Affliction de Liandry | D23: Coiffe | E23: ★ | F23: 10.0 | G23: Passif : Les Sorts et Frappes appliquent une marque de Brulure (2 tours) à la cible.
+Passif : Les dégâts indirects peuvent infliger un coup critique.
+ | H23: 4.0 | I23: 150.0 | J23: 60.0 | O23: 10.0 | S23: 4 | T23: 150 | U23: 60 | Z23: 10 | AD23: 115 | AE23: 50
+A24: 20.0 | B24: Tempête de Luden | D24: wip | E24: x | G24: Inflige [270+70 % de votre AP] à la cible / peut infliger un coup critique / 8 tours de relance.
+Passif : Buff [+200% de votre Hate en AP]. Désactive la hâte, vos "Magies" réduisent de 1 le tour de relance des autres "Sorts" dans le deck. | H24: 5.0 | L24: 105.0 | P24: 3.0 | AD24: 123
+A25: 21.0 | B25: Chimico-scaphandre turbo | D25: Coiffe | E25: ★ | F25: 10.0 | G25: Passif : Le Héro perd 5 % de ses PV actuels en dégats bruts par tour, Le héro gagne 0,15 % de son AD / AP / RM / Armor par % de PV manquant. Le bonus est doublé lorsque le Héro a moins de 25 % de ses PV Max.  | H25: 5.0 | I25: 250.0 | M25: 10.0 | N25: 20.0 | O25: 10.0 | S25: 5 | T25: 250 | X25: 10 | Y25: 20 | Z25: 10 | AD25: 115 | AE25: 50
+A26: 22.0 | B26: Chant de guerre de Shurelya | D26: Coiffe | E26: ★ | F26: 10.0 | G26: Passif : Recevoir un soin génère une jauge d'Echo,(deux fois par tour) tant que le joueur a un Bouclier, il obtient Hâte. | H26: 3.0 | I26: 200.0 | L26: 60.0 | P26: 10.0 | S26: 3 | T26: 200 | W26: 60 | AA26: 10 | AD26: 102.5 | AE26: 50
+A27: 23.0 | B27: Arc-bouclier immortel | D27: wip | E27: x | G27: Inflige [200+50 % de votre AD] à la cible. Peut infliger un coup critique / 3 tours de relance.
+Passif : Si vous recevez une attaque léthale ou atteignez 20% de PV, Buff [+400+60% de votre AD] en bouclier (3 tours). | H27: 5.0 | K27: 40.0 | O27: 15.0 | Q27: 10.0 | AD27: 130
+A28: 24.0 | B28: Médaillon de l'Iron Solari | D28: Coiffe | E28: ★★★★ | F28: 10.0 | G28: (Adaptatif) Passif : Lorsque vous possèdez un bouclier, obtient Medititation.
+ | H28: 3.0 | I28: 300.0 | M28: 30.0 | N28: 30.0 | S28: 3 | T28: 645 | X28: 64.5 | Y28: 64.5 | AD28: 100 | AE28: 165
+A29: 25.0 | B29: Vœu du chevalier | D29: Coiffe | E29: ★ | F29: 10.0 | G29: Lucky 7 : Tous les 7 coups critiques. La prochaine frappe ou Attaque de base inflige 30 % des dégats supplémentaires et applique Glancing Glow (1 tour) à la cible. | H29: 3.0 | I29: 150.0 | K29: 40.0 | M29: 10.0 | O29: 10.0 | S29: 3 | T29: 150 | V29: 40 | X29: 10 | Z29: 10 | AD29: 111.6666667 | AE29: 50
+A30: 26.0 | B30: Couronne de la Reine brisée | D30: Coiffe | E30: ★ | F30: 10.0 | G30: Passif : Applique Mur et Puissance au lancement du combat (5 tour). | H30: 2.0 | I30: 250.0 | J30: 80.0 | S30: 2 | T30: 250 | U30: 80 | AD30: 98.33333333 | AE30: 50
+A31: 27.0 | B31: Salutations de Dominik | D31: wip | E31: x | G31: Inflige [15% des PV actuels] de la cible (ne peut pas infliger de coup critique) / 8 tours de relance (dégâts physiques).
+Passif : Armure de la cible x80%. | H31: 5.0 | K31: 65.0 | O31: 15.0 | AD31: 145
+A32: 28.0 | B32: Manteau de l'heure ultime  | D32: Coiffe | E32: ★ | F32: 10.0 | G32: Passif : Applique Voile au lanceur (infini)  / 15 tour de recharge. | H32: 2.0 | I32: 400.0 | M32: 30.0 | N32: 30.0 | S32: 2 | T32: 400 | X32: 30 | Y32: 30 | AD32: 100 | AE32: 50
+A33: 29.0 | B33: Voile de la banshee | D33: Coiffe | E33: ★ | F33: 10.0 | G33: Passif : Applique Voile au lanceur (infini)  / 15 tour de recharge. | H33: 2.0 | L33: 70.0 | N33: 50.0 | S33: 2 | W33: 70 | Y33: 50 | AD33: 100 | AE33: 50
+A34: 30.0 | B34: Manteau de la nuit | D34: Coiffe | E34: ★ | F34: 10.0 | G34: Passif : Applique Voile au lanceur (infini)  / 15 tour de recharge. | H34: 2.0 | I34: 300.0 | K34: 50.0 | S34: 2 | T34: 300 | V34: 50 | AD34: 100 | AE34: 50
+A35: 31.0 | B35: Jak'Sho, le Protéiforme | D35: Coiffe | E35: ★ | F35: 10.0 | G35: Passif : Dégats finaux x110% lorsque la derniere action etait offensive, dégats subis  
+x90% si la derniere action etait utilitaire / défensive. (Les deux effets ne peuvent co-exister et durent jusqu'a la prochaine action) | H35: 4.0 | I35: 275.0 | L35: 25.0 | M35: 25.0 | S35: 4 | T35: 275 | W35: 25 | X35: 25 | AD35: 100.8333333 | AE35: 50
+A36: 32.0 | B36: Masque abyssal | D36: Coiffe | E36: ★ | F36: 10.0 | G36: Passif : Infliger des dégats direct a une cible ayant des stacks de Brulures confère Concentration (2 tours) | H36: 3.0 | I36: 250.0 | J36: 40.0 | N36: 30.0 | S36: 3 | T36: 250 | U36: 40 | Y36: 30 | AD36: 101.6666667 | AE36: 50
+A37: 33.0 | B37: Gel éternel | D37: wip | E37: x | G37: Inflige [130+60% de ton AP] à la cible et lanceur Buff Dégats subis x50% (1 tour)
+(peut infliger un coup critique) / 12 tours de relance. Passif : Toutes les 10 attaques reçues, gèle l'adversaire pendant 1 tour. | H37: 5.0 | I37: 300.0 | L37: 75.0 | AD37: 120
+A38: 34.0 | B38: Volonté cosmique | D38: Coiffe | E38: ★ | F38: 10.0 | G38: Silencieux magique : Ajoute [6% de votre AP] à votre Vitesse. | H38: 3.0 | I38: 200.0 | L38: 50.0 | P38: 15.0 | S38: 3 | T38: 200 | W38: 50 | AA38: 15 | AD38: 102.0833333 | AE38: 50
+A39: 35.0 | B39: Masque du Kaiser | D39: wip | E39: ★ | F39: 10.0 | G39: (adaptatif) Multiplie le droprate par 1,25/1,5/1,75/2 à la fin des cbt des items au détriment des items Rares/Communs. | AD39: 0 | AE39: 50
+A40: 36.0 | B40: Buff Rouge | D40: benediction | E40: ★ | F40: 10.0 | G40: (Adaptatif) Vos attaques de base infligent à la cible 1/1,25/1,5/1,5 % PV max en dégâts bruts. | K40: 30.0 | V40: 30 | AD40: 30 | AE40: 50
+A41: 37.0 | B41: Buff bleu | D41: benediction | E41: ★ | F41: 10.0 | G41: - | L41: 60.0 | W41: 60 | AD41: 40 | AE41: 50
+A42: 38.0 | B42: Âme des océans | D42: benediction | E42: ★ | F42: 10.0 | G42: Passif : Ajoute 3% des PV par tour. | I42: 450.0 | T42: 450 | AD42: 45 | AE42: 50
+A43: 39.0 | B43: Âme de feu | D43: benediction | E43: ★ | F43: 10.0 | G43: (Adaptatif) Passif : Ajoute 6/8/10/10% des dégâts finaux. | K43: 30.0 | L43: 45.0 | V43: 30 | W43: 45 | AD43: 60 | AE43: 50
+A44: 40.0 | B44: Âme des nuages | D44: benediction | E44: ★ | F44: 10.0 | G44: Passif - Pré-combat : +60 de vitesse de deplacement | P44: 20.0 | AA44: 20 | AD44: 25 | AE44: 50
+A45: 41.0 | B45: Âme Hextech | D45: benediction | E45: ★ | F45: 10.0 | G45: - | K45: 60.0 | L45: 90.0 | V45: 60 | W45: 90 | AD45: 120 | AE45: 50
+A46: 42.0 | B46: Âme Chemtech | D46: benediction | E46: ★ | F46: 10.0 | G46: (Adaptatif) Passif : Inflige 5/7/10/10% de dégâts finaux et fais subir 5/7/10/10 % de dégâts de moins si vos PV sont en-dessous de 50%. | AD46: 0 | AE46: 50
+A47: 43.0 | B47: Âme des montages | D47: benediction | E47: ★ | F47: 10.0 | G47: (Adaptatif) À partir du tour 4, ajoute, tous les 3 tours, 8/9/10/10% des PV max en shield. | M47: 30.0 | N47: 30.0 | X47: 30 | Y47: 30 | AD47: 40 | AE47: 50
+A48: 44.0 | B48: Tueur de krakens | D48: wip | E48: ★ | F48: 10.0 | G48: Inflige [170 % de votre AD] à la cible en dégâts BRUTS / peut infliger un coup critique / 4 tours de relance. | H48: 5.0 | K48: 25.0 | O48: 15.0 | P48: 3.0 | AD48: 50
+A49: 45.0 | B49: Aspect du Dragon | D49: benediction | E49: ★ | F49: 10.0 | G49: Les attaques de base applique deux stacks de Brulure (2 tours). (une fois par tour) | K49: 60.0 | L49: 90.0 | O49: 10.0 | V49: 60 | W49: 90 | Z49: 10 | AD49: 140 | AE49: 50
+A50: 46.0 | B50: Cimier de courroux  | D50: benediction | E50: ★ | F50: 10.0 | G50: C'est joli. | I50: 333.0 | K50: 33.0 | L50: 33.0 | M50: 33.0 | N50: 33.0 | O50: 3.0 | P50: 3.0 | Q50: 3.0 | R50: 3.0 | T50: 333 | V50: 33 | W50: 33 | X50: 33 | Y50: 33 | Z50: 3 | AA50: 3 | AB50: 3 | AC50: 3 | AD50: 154.05 | AE50: 50
+A51: 47.0 | B51: Brèche cristalline | D51: benediction | E51: ★ | F51: 10.0 | K51: 45.0 | P51: 5.0 | V51: 45 | AA51: 5 | AD51: 51.25 | AE51: 50
+A52: 48.0 | B52: Chaussures de sorcier | D52: Boots | E52: ★ | F52: 10.0 | L52: 15.0 | P52: 6.0 | W52: 15 | AA52: 6 | AD52: 17.5 | AE52: 50
+A53: 49.0 | B53: Jambières du berzerker | D53: Boots | E53: ★ | F53: 10.0 | K53: 10.0 | P53: 6.0 | V53: 10 | AA53: 6 | AD53: 17.5 | AE53: 50
+A54: 50.0 | B54: Bottes de célérité | D54: Boots | E54: ★ | F54: 10.0 | O54: 5.0 | P54: 6.0 | Z54: 5 | AA54: 6 | AD54: 17.5 | AE54: 50
+A55: 51.0 | B55: Coques en acier | D55: Boots | E55: ★ | F55: 10.0 | M55: 20.0 | P55: 6.0 | X55: 20 | AA55: 6 | AD55: 20.83333333 | AE55: 50
+A56: 52.0 | B56: Éclipse | D56: wip | E56: ★ | F56: 10.0 | G56: Octroie un bouclier de [15 +150 % de l'AD] du Héros à la cible pendant 2 tours. Ne peut pas infliger de coup critique / 8 tours de relance. | H56: 1.0 | K56: 70.0 | AD56: 10
+A57: 53.0 | B57: Bottes de mobilité | D57: Boots | E57: ★ | F57: 10.0 | P57: 8.0 | AA57: 8 | AD57: 10 | AE57: 50
+A58: 54.0 | B58: Sandales de Mercure | D58: Boots | E58: ★ | F58: 10.0 | N58: 20.0 | P58: 6.0 | Y58: 20 | AA58: 6 | AD58: 20.83333333 | AE58: 50
+A59: 55.0 | B59: Force du vent | D59: wip | E59: ★ | F59: 10.0 | G59: Ceci est une attaque de base qui inflige 135 % de votre AD / 5 tours de relance. | K59: 50.0 | O59: 10.0 | P59: 5.0 | AD59: 0
+A60: 56.0 | B60: Onde Orageuse | D60: Weapon | E60: ★ | F60: 10.0 | G60: Item AP | L60: 100.0 | P60: 5.0 | W60: 100 | AA60: 5 | AD60: 72.91666667 | AE60: 50
+A61: 57.0 | B61: Bottes de lucidité | D61: Boots | E61: ★ | F61: 10.0 | P61: 6.0 | AA61: 6 | AD61: 7.5 | AE61: 50
+A62: 58.0 | B62: Jambières Gloutonnes  | D62: Boots | E62: ★ | F62: 10.0 | P62: 6.0 | Q62: 10.0 | R62: 10.0 | AA62: 6 | AB62: 10 | AC62: 10 | AD62: 47.5 | AE62: 50
+A63: 59.0 | B63: Pierre spirituelle | D63: Artéfact | E63: ★ | F63: 10.0 | G63: Passif : Les dégats des Brûlures sont augmentés de 20 % et applique Antiheal 25 % pendant la durée de l'effet | H63: 2.0 | I63: 200.0 | J63: 30.0 | M63: 30.0 | N63: 30.0 | S63: 2 | T63: 200 | U63: 30 | X63: 30 | Y63: 30 | AD63: 100 | AE63: 50
+A64: 60.0 | B64: Rasoir sanglant de madred | D64: Artéfact | E64: ★ | F64: 10.0 | G64: Passif : A chaque attaque de base, inflige 3 % des PV actuels de la cible en dégats magiques.
+Si le cible a un debuff, passe le montant a 6 % | H64: 3.0 | I64: 50.0 | K64: 40.0 | P64: 20.0 | S64: 3 | T64: 50 | V64: 40 | AA64: 20 | AD64: 100 | AE64: 50
+A65: 61.0 | B65: Faux spectrale 
+ | D65: Artefact | E65: ★ | F65: 10.0 | G65: Proc la Lame enchanté sur une cible génére une jauge d'Echo.
+Passif "Lame enchantée" (vous ne pouvez pas avoir plusieurs items lame enchantée) : La prochaine AA gagnée est un coup critique. Cette AA inflige [0,25% de dégâts finaux supplémentaires/chance de coup critique] supplementaire. | H65: 5.0 | K65: 40.0 | O65: 10.0 | S65: 5 | V65: 40 | Z65: 10 | AD65: 110 | AE65: 50
+A66: 62.0 | B66: Fléau de liche | D66: Artefact | E66: ★ | F66: 13.0 | G66: Proc la Lame enchanté sur une cible génére une jauge d'Echo.
+
+Passif "Lame enchanté" (vous ne pouvez pas avoir plusieurs items lame enchantée) : Votre attaque de base après un sort ou frappe inflige [60% de votre AP] supplémentaire (non cumulable). | H66: 5.0 | L66: 60.0 | P66: 10.0 | S66: 5 | W66: 69 | AA66: 11.5 | AD66: 102.5 | AE66: 65
+A67: 63.0 | B67: Gantelet givrant | D67: Artefact | E67: ★ | F67: 10.0 | G67: Passif : [Armure x110%] (infini/indébuffable)
+Passif "Lame enchantée" (vous ne pouvez pas avoir plusieurs items lame enchantée) : Lorsque vous attaquez après un sort, votre attaque de base inflige [150% de votre armure en dégâts physiques supplémentaires] et Applique Meditation au lanceur. (1 tour) | H67: 5.0 | I67: 250.0 | M67: 40.0 | S67: 5 | T67: 250 | X67: 40 | AD67: 101.6666667 | AE67: 50
+A68: 64.0 | B68: Force de la trinité | D68: Artefact | E68: ★ | F68: 10.0 | G68: Passif "Lame enchantée" (vous ne pouvez pas avoir plusieurs items lame enchantée) : Après avoir utilisé une compétence, votre prochaine attaque inflige [160% de votre AD en dégâts physiques] à la cible (peut infliger un coup critique). | H68: 5.0 | I68: 44.0 | J68: 44.0 | M68: 4.0 | N68: 4.0 | O68: 4.0 | P68: 4.0 | Q68: 4.0 | R68: 4.0 | S68: 5 | T68: 44 | U68: 44 | X68: 4 | Y68: 4 | Z68: 4 | AA68: 4 | AB68: 4 | AC68: 4 | AD68: 118.0666667 | AE68: 50
+A69: 65.0 | B69: Chaînes de l'anathème | D69: Artefact | E69: ★ | F69: 10.0 | G69: Passif : Buff Dégats subis x0,80% sur le lanceur | H69: 4.0 | I69: 600.0 | S69: 4 | T69: 600 | AD69: 100 | AE69: 50
+A70: 66.0 | B70: Mercure | D70: Artefact | E70: ★ | F70: 10.0 | G70: Passif : Applique Volonté (4 tours) au debut du combat.
+Silencieux Psychique : Buff la vitesse de [+7 % de votre RM] . | H70: 4.0 | I70: 150.0 | N70: 40.0 | P70: 15.0 | S70: 4 | T70: 150 | Y70: 40 | AA70: 15 | AD70: 100.4166667 | AE70: 50
+A71: 67.0 | B71: Régénérateur de pierre de lune | D71: Artefact | E71: ★ | F71: 10.0 | G71: Passif : Inflige [100% des boucliers] et [50% des soins] que vous recevez en dégâts magiques à la cible. | H71: 2.0 | I71: 300.0 | L71: 45.0 | M71: 15.0 | N71: 15.0 | S71: 2 | T71: 300 | W71: 45 | X71: 15 | Y71: 15 | AD71: 100 | AE71: 50
+A72: 68.0 | B72: Pourfendeur divin | D72: Artefact | E72: ★ | F72: 10.0 | G72: Passif  "Lame enchanté" (vous ne pouvez pas avoir plusieurs items lame enchantée) :
+Après l'utilisation d'une compétence, votre prochaine attaque de base inflige [7% des PV max de la cible] en dégâts physiques; soigne le lanceur de [2,5% PV max de la cible].  | H72: 5.0 | I72: 200.0 | K72: 30.0 | S72: 5 | T72: 200 | V72: 30 | AD72: 100 | AE72: 50
+A73: 69.0 | B73: Concentration lointaine | D73: Artefact | E73: ★ | F73: 10.0 | G73: Passif : Augmente de 20 % les dégats infligés par les sorts ayant plus de 12 tours de relance ou plus. | H73: 3.0 | I73: 300.0 | L73: 60.0 | S73: 3 | T73: 300 | W73: 60 | AD73: 100 | AE73: 50
+A74: 70.0 | B74: Linceul d'apaisement | D74: Artefact | E74: ★ | F74: 10.0 | G74: Passif : Lorsque vous allez recevoir une attaque léthale, vous recevez un bouclier équivalent à [10% de vos PV max +100 % RM + 100% armor] (3 tours)
+Silencieux Robuste : Buff la vitesse de [+7% de votre armure]  | H74: 3.0 | J74: 10.0 | M74: 45.0 | O74: 15.0 | P74: 15.0 | S74: 3 | U74: 10 | X74: 45 | Z74: 15 | AA74: 15 | AD74: 115.4166667 | AE74: 50
+A75: 71.0 | B75: Morellonomicon | D75: Artefact | E75: ★ | F75: 10.0 | G75: Passif : Obtient 40 de Force adaptative par buff présent sur le lanceur. Applique l'antiheal a 25 % (1 tour) sur les frappes et sorts si il bénéficie du premier buff | H75: 2.0 | I75: 200.0 | J75: 60.0 | O75: 10.0 | S75: 2 | T75: 200 | U75: 60 | Z75: 10 | AD75: 100 | AE75: 50
+A76: 72.0 | B76: Bénédiction de Mikael | D76: Artefact | E76: ★ | F76: 10.0 | G76: Passif : Se déclenche lorsque que le Héros subit un debuff. Dissipe tous les états négatifs et soigne le Héros de [5% de ses PV max] (10 tours de cooldown).  | H76: 2.0 | I76: 150.0 | J76: 30.0 | M76: 30.0 | N76: 30.0 | S76: 2 | T76: 150 | U76: 30 | X76: 30 | Y76: 30 | AD76: 95 | AE76: 50
+A77: 73.0 | B77: Flamme-ombre | D77: Artefact | E77: ★ | F77: 10.0 | G77: Passif : Annule tout les points de bouclier avant d'infliger les dégâts. | H77: 2.0 | I77: 250.0 | L77: 80.0 | S77: 2 | T77: 250 | W77: 80 | AD77: 98.33333333 | AE77: 50
+A78: 74.0 | B78: Volonté des anciens | D78: Artefact | E78: ★ | F78: 10.0 | H78: 0.0 | L78: 90.0 | R78: 20.0 | S78: 0 | W78: 90 | AC78: 20 | AD78: 100 | AE78: 50
+A79: 75.0 | B79: Gage de Sterak | D79: Artefact | E79: ★ | F79: 10.0 | G79: Passif : Octroie un Bouclier de [20% des PV max] quand vous passez en dessous de 30% PV (1 fois par combat). | H79: 3.0 | I79: 300.0 | K79: 40.0 | S79: 3 | T79: 300 | V79: 40 | AD79: 100 | AE79: 50
+A80: 76.0 | B80: Rituel des ruines | D80: Artefact | E80: ★ | F80: 10.0 | G80: Passif : Ajoute 0,10+ 20 % (Ratio Chance de coup critique) au multiplicateur critique lorsque le héro inflige des dégats magiques critiques. | H80: 3.0 | I80: 200.0 | L80: 55.0 | O80: 15.0 | S80: 3 | T80: 200 | W80: 55 | Z80: 15 | AD80: 116.6666667 | AE80: 50
+A81: 77.0 | B81: Dent de Nashor | D81: Artefact | E81: ★ | F81: 10.0 | G81: (Adaptatif) Passif : Vos attaques de base infligent 10/15/20/25+10 % de votre AP supplémentaire en dégâts magiques. | I81: 150.0 | L81: 80.0 | O81: 10.0 | P81: 20.0 | T81: 150 | W81: 80 | Z81: 10 | AA81: 20 | AD81: 113.3333333 | AE81: 50
+A82: 78.0 | B82: Convergence de Zeke | D82: Armure | E82: ★ | F82: 10.0 | G82: Passif : Applique Puissance (2 tour) lorsque le lanceur applique un debuff. | H82: 2.0 | I82: 200.0 | J82: 30.0 | M82: 40.0 | N82: 20.0 | S82: 2 | T82: 200 | U82: 30 | X82: 40 | Y82: 20 | AD82: 100 | AE82: 50
+A83: 79.0 | B83: Approche de l'hiver | D83: Arme | E83: ★ | F83: 10.0 | G83: Item tank  | H83: 2.0 | I83: 400.0 | M83: 15.0 | N83: 15.0 | S83: 2 | T83: 400 | X83: 15 | Y83: 15 | AD83: 80 | AE83: 50
+A84: 80.0 | B84: Fimbulvetr | D84: Arme | E84: ★ | F84: 10.0 | G84: Item tank  | H84: 2.0 | I84: 400.0 | M84: 15.0 | N84: 15.0 | S84: 2 | T84: 400 | X84: 15 | Y84: 15 | AD84: 80 | AE84: 50
+A85: 81.0 | B85: Ange gardien | D85: Armure | E85: ★ | F85: 10.0 | G85: Passif : Lorsque le lanceur recoit une attaque lethale, lui Applique Refus de la mort (1 tour). Vous gagnez 100% d'omnivamp (1 tour) le tour suivant (une fois par combat). | H85: 3.0 | J85: 60.0 | M85: 30.0 | N85: 15.0 | S85: 3 | U85: 60 | X85: 30 | Y85: 15 | AD85: 100 | AE85: 50
+A86: 82.0 | B86: Cotte épineuse | D86: Armure | E86: ★ | F86: 10.0 | G86: Passif : Renvoie 100 % de l'armure du lanceur + 10 % des dégats directs que vous recevez en dégats magiques. Applique Antiheal 25 % a la cible si elle inflige une attaque de base.
+ | H86: 2.0 | I86: 300.0 | M86: 50.0 | N86: 25.0 | S86: 2 | T86: 300 | X86: 50 | Y86: 25 | AD86: 100 | AE86: 50
+A87: 83.0 | B87: Force de la nature | D87: Armure | E87: ★ | F87: 10.0 | G87: (Adaptatif) Passif : Reduits les dégats magiques subis de 10-20 %, obtient hâte (3 tours) après avoir subies 10 actions enemies.
+ | H87: 3.0 | I87: 200.0 | M87: 15.0 | N87: 40.0 | P87: 10.0 | S87: 3 | T87: 200 | X87: 15 | Y87: 40 | AA87: 10 | AD87: 99.16666667 | AE87: 50
+A88: 84.0 | B88: Visage spirituel | D88: Armure | E88: ★ | F88: 10.0 | G88: Passif : Soin/Bouclier reçu x110%. Soigne [1,81818181818% PV max] par soin/bouclier reçu. | H88: 3.0 | I88: 270.0 | M88: 20.0 | N88: 45.0 | S88: 3 | T88: 270 | X88: 20 | Y88: 45 | AD88: 100.3333333 | AE88: 50
+A89: 85.0 | B89: Armure de Warmog | D89: Armure | E89: ★ | F89: 10.0 | G89: Passif : Soigne le lanceur de 5 % de ses PV max si il n'a pas subit de dégats au tour précedent | H89: 3.0 | I89: 700.0 | S89: 3 | T89: 700 | AD89: 100 | AE89: 50
+A90: 86.0 | B90: Cœur gelé | D90: Armure | E90: ★ | F90: 10.0 | G90: Echologie : Appliquer un debuff Génère une jauge d'Echo
+Passif : Lors de l'utilisation d'une compétence ultime, Applique Glancing Glow, Ralentissement à la cible. | H90: 4.0 | I90: 150.0 | M90: 60.0 | N90: 10.0 | S90: 4 | T90: 150 | X90: 60 | Y90: 10 | AD90: 101.6666667 | AE90: 50
+A91: 87.0 | B91: Détermination du Titan  | D91: Armure | E91: ★ | F91: 10.0 | G91: (Adaptatif) Passif : Gagne un stack pour chaque attaque subie ou infligée. Octroie +1,5 AP et +1 AD par stack (cumulable 14 fois). Full stack, donne 30/45/60/60 AD, 45/60/90/90 AP, 15/20/30/30 armure et 15/20/30/30 résistance magique. | H91: 5.0 | M91: 50.0 | N91: 30.0 | S91: 5 | X91: 50 | Y91: 30 | AD91: 103.3333333 | AE91: 50
+A92: 88.0 | B92: Linceul de la congruence | D92: Armure | E92: ★★★ | F92: 1.0 | G92: Passif : Lorsque le lanceur reçoit un debuff, Applique Puissance au lanceur. (1 tour) | H92: 1.0 | I92: 300.0 | J92: 30.0 | M92: 30.0 | N92: 30.0 | S92: 1 | T92: 252 | U92: 25.2 | X92: 25.2 | Y92: 25.2 | AD92: 10

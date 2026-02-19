@@ -1,0 +1,207 @@
+Applique des effets différents si la cible a un bouclier ou pas. (12 tours de relance) - 3 Echo
+Bouclier : Inflige 300% du montant de bouclier que detient le lanceur en dégats magiques à la cible. Le lanceur perd tout son bouclier ensuite. Dégats directs. Peut crit - 1 coup.
+Pas de bouclier : Applique 1 point de Bouclier au lanceur ainsi que Puissance (3 tours) et Rythme (1 tour). Peut crit.(12 tours de relance)
+A29: Griffe du Dragon | C29: On-Hit | D29: MR | E29: Etincelle Ionique | G29: AP | H29: MR | I29: Bouclier de Doran  | M29: Corne du Gardien
+B30: : Ajoute 40 % de la resistance magique du lanceur au degats magiques on-hit.
+
+Applique Impact au lanceur lorsqu'une invocation est en vie. | F30: Histoire d'atomes : Lorsque le lanceur recoit un sort , il génére un Ion (max 3), augmente les dégats magiques de 10 % par ion.
+Si le lanceur utilise un sort en possédant 3 ions, le sort donne un effet supplémentaire et  les ions sont consommés. | N30: Second Souffle : Soigne de 40 PV à chaque fois que vous recevez des dommages
+A31: Spells :  | E31: Spells :  | I31: Spells :  | M31: Spells : 
+B32: Fendaison : Inflige 80 + 55 % (Ratio MR)   à la cible en dégats physiques. Dégats directs, peut infliger un coup critique. (4 tours de relance) - 1 coup - 1 Echo | F32: Explosion : Inflige 80 + 30 % (Ratio MR) + 20 % (Ratio AP) à la cible en dégats magiques. Dégats directs, peut infliger un coup critique. (6 tours de relance) - 1 coup - 1 Echo
+Explosion Ionique : Les degats de base passent de 80 a 220. | J32: Huck : Inflige 70 + 6 % (Ratio HP) à la cible en dégats physiques. Dégats directs, peut infliger un coup critique. (4 tours de relance) - 1 coup - 1 Echo | N32: Silence du Gardien: Inflige 90 + 7 % (Ratio HP) à la cible en dégats magiques. Dégats directs, peut infliger un coup critique. (4 tours de relance) - 1 coup - 1 Echo
+B34: Griffe du Dragon : Inflige 3 attaques de base. (10 tours de relance) - 3 coups - 2 Echos | F34: Surtension : Inflige 80 + 30 % (Ratio MR) + 20 % (Ratio AP) à la cible en dégats magiques. Génère un Ion au lanceur. Dégats directs, peut infliger un coup critique.  (6 tours de relance) - 1 coup - 1 Echo
+Surtension ionique : Applique Méditation au lanceur (3 tours) | J34: Layout : Applique Regeneration au lanceur pendant 3 tours. (8 tours de relance) - 2 Echos | N34: Mutilation : S'inflige 4 fois 1 point de dégats physique. Dégats directs , peut pas infliger un coup critique. (9 tours de relance) - 2 Echos
+B36: Invocation du Dragon des montagnes : Invoque un dragon des montagne, peut infliger un coup critique. (15 tours de relance).
+Coup critique : Invoque un dragon des montagne, Applique Méditation au lanceur (3 tour) - 4 Echos | F36: Surcharge :Inflige 180 + 60 % (Ratio MR) + 45 % (Ratio AP) à la cible en dégats magiques. Dégats directs, peut infliger un coup critique. (13 tours de relance) - 1 coup - 3 Echos
+
+Surcharge Ionique : Etourdi la cible pendant 1 tour , génére une Jauge d'Echo supplementaire (13 tours de relance) | J36: L'ultimate : Inflige 270 à la cible en dégats physiques. Dégats directs, peut pas infliger un coup critique. (10 tours de relance) - 1 coup - 2 Echos | N36: Ouragan Delta du Gardien !! : Inflige 360 à la cible en dégats physiques. Dégats directs, peut pas infliger un coup critique. (10 tours de relance) - 1 coup - 2 Echos
+A41: Fimbulvetr | E41: Approche de l'hiver | I41: Force de l'entropie | K41: Crit
+B42: Passif : Le lanceur perd une jauge d'Echo toutes ses fin de tours et lorsqu'il utilise une autre arme ou AA. La Fimblewinter devient Approche de l'hiver lorsque le lanceur a 0 d'Echo
+Les sorts de Fimblewinter consomme 1 jauge d'Echo de moins si le lanceur à un Bouclier
+Applique un Bouclier de 6 % (Ratio HP) au lanceur lorsque le lanceur utilise un sort de la Fimblewinter de tant qu'elle est active. | F42: Echo-système : Passif : Ajoute au lanceur "Echo de l'hiver" a sa barre d'Echo, le lanceur ne peut avoir qu'un seul Echo
+
+Passif : Génère une jauge d'Echo par tour.
+ | J42: -inserer un nom- : WIP NE RIEN FAIRE                       
+A43: Spells :  | E43: Spells :  | I43: Spells : 
+B44: -Inserer un nom- : Inflige 80 + 8 % (Ratio HP) à la cible en dégats physiques. Dégats directs, peut infliger un coup critique. Consomme 2 jauges d'Echo. (3 tours de relance) - 1 coup. | F44: -Inserer un nom- : Inflige 50 + 5 % (Ratio HP) à la cible en dégats physiques. Dégats directs, peut infliger un coup critique. (3 tours de relance) | J44: -inserer un nom- : WIP NE RIEN FAIRE                
+                
+B46: -inserer un nom- : Inflige le % de Bouclier en PV max qu'a le lanceur en dégats bruts sur la cible. Consomme 4 jauges d'Echo. (1 tour de relance) - 1 coup. | F46: Echologie : Octroie 3 jauges d'Echo au lanceur et applique Echo-Responsable pendant 3 tours. Ne peut pas crit. 9 tours de relance - 0 Echo | J46: -inserer un nom- : WIP NE RIEN FAIRE		
+		
+B48: -inserer un nom- : Applique un Bouclier de 150 + 15 % (Ratio HP) au lanceur et lui Applique Rythme (1 tour), peut infliger un coup critique.Consomme 6 jauges d'Echo. (10 tours de relance) 
+Si le lanceur a deja un bouclier, consomme 3 Jauges. | F48: -inserer un nom- : Applique un Bouclier de 150 + 15 % (Ratio HP) au lanceur et lui Applique Rythme (1 tour), peut infliger un coup critique. (10 tours de relance) 
+ | J48: -inserer un nom- : WIP NE RIEN FAIRE		
+		
+C55: Fimbulvetr
+
+================================================================================
+SHEET: Item Supp (58 rows x 24 cols)
+================================================================================
+Q4: 40
+A5: Ombres Jumelles | C5: Vitesse | D5: Slow | E5: Bâton des Flots | I5: Mandat Impérial | K5: Brulure | M5: Graal impie d'Athène | O5: Heal | P5: Burst | T5: Dmg dealt
+B6: Passif - EXCLUSIF : Les sorts d'Ombres Jumelles ont des bonus si le lanceur joue de manière consecutive. (Jouer de maniere consécutive = jouer plusieurs fois d'affilés sans que l'adversaire ait le temps de jouer) | F6: Repli stratégique : Le lanceur obtient Mur tant qu'une invocation alliée est en vie. | J6: Malediction : Le lanceur inflige 7 % de dégats supplémentaire pour chaque Etat négatif que la cible à sur lui
+Chaque sort du Mandat impérial marque la cible (infini/debuffable) . Infliger des dégats directs via une attaque de base ou une action d'une autre arme fait exploser la marque en infligeant 20 + 10 % (Ratio AD) + 7 % (Ratio AP) en dégats magiques; dégats indirects et applique deux brulure (3 tours). | N6: Synchro : Lorsque le joueur recoit un debuff , il l'applique également a tout ses enemies. Divise par deux les effets des debuffs. (etourdissement exclus)
+Tant que le joueur dispose d'un debuff, il gagne 10 % de dégats finaux par debuff.
+A7: Spells :  | I7: Spells :  | M7: Spells : 
+B8: -Inserer un nom- : Inflige 80 + 60 % (Ratio AP) à la cible en dégats magiques. Dégats directs, peut infliger un coup critique.  (4 tours de relance) - 1 coup - 1 Echo               
+                        
+Bonus : Les dégats infligés pré-mitigation deviennent bruts.  | F8: Coup de bâton : Inflige 105 + 60 % (Ratio AD) à la cible en dégats physiques. Dégats directs, peut infliger un coup critique. (4 tours de relance) - 1 coup - 1 Echo
+Invocation : Si une invocation alliée est sur le terrain, elle utilisera son attaque de base juste après le coup de bâton. | J8: -Inserer un nom- : Inflige 70 + 25 % (Ratio AP) + 30 % (Ratio AD)  à la cible en dégats magiques. Dégats directs. peut infliger un coup critique (4 tours de relance) - 1 coup - 1 Echo | N8: Cran (ref): Inflige 60 + 50 % (Ratio Adaptatif) à la cible en dégats adaptatif. Dégats directs. Peut infliger un coup critique. (5 tours de relance) - 1 coup.
+Si le sort est fait sur soi-même : Applique 3 effets de Brulure au lanceur (3 tours) - 1 Echo
+B10: -Inserer un nom- : 70 + 35 % (Ratio AP) à la cible en dégats magiques. Dégats directs, peut infliger un coup critique. Applique Ralentissement à la cible (3 tours). (10 tours de relance) - 1 coup - 2 Echos      
+Bonus : Applique Hâte (3 tours) au lanceur. | F10: -Inserer un nom- : Applique un Bouclier de 150 +  60 % (Ratio AP) au lanceur pendant 4 tours. Peut infliger un coup critique. (8 tours de relance)
+Invocation : Si une invocation alliée est sur le terrain, elle obtient deux fois le montant en bouclier appliqué, ainsi que Concentration (3 tours) et Puissance (3 tours) - 2 Echos | J10: Marque Brulante : Appliques 3 marques de Brulures à la cible pendant 3 tours. Ne Peut infliger un coup critique. (10 tours de relance) - 2 Echos | N10: Transfert Sanguin : Inflige 6 % des PV max de la cible en degats magiques. Soigne le lanceur de 7 % de ses PV max. Multiplie les effets du sort par X en fonction du nombre de debuff sur le lanceur. (9 tours de relance, ne peut pas crit) - 2 Echos
+B12: -Inserer un nom- : Inflige 75 + 50 % (Ratio AP)  à la cible en dégats magiques. Dégats directs, peut infliger un coup critique. (12 tours de relance) - 1 coup - 3 Echos
+Bonus : Multiplie les dégats infligés par x en fonction du nombre d'Etat positif sur le lanceur et dégats négatif sur la cible. | F12: Invocation : Invoque une entitée en fonction de la derniere action effectuée : 
+_Frappe : Invoque un mini-Krug 
+_Attaque de base : Invoque un petit Lycan
+_Sort : Invoque un bébé Gromp
+(8 tours de relance / peut infliger un coup critique, 2 Echos | J12: Jugement Impérial  : Applique Lacération , Fatigue, Ralentissement à la cible pendant 3 tours. Ne peut pas crit. (14 tours de relance) - 3 Echos | N12: Résonance Sanguine : Génère un debuff aléatoire (2 tours - Etourdissement exclu) aléatoire et applique rythme au lanceur. (17 tours de relance) - 3 Echos
+
+Réduit le tour de relance de Résonance Sanguine si le lanceur commence son tour en ayant un debuff
+A17: Vertue Radieuse | E17: Redemption | I17: Danseur Fantome | K17: Puissance | L17: Buff | M17: Sword of Blossoming Dawn | O17: On-hit | P17: Heal
+B18: Passif : Les buffs durent 2 tours de plus sur le lanceur. (Rythme,Stase exclu) | F18: Passif : Applique Méditation lorsque le lanceur subit un état négatif
+Inflige 20+50 % (Ratio Adaptatif) en dégats adaptatif a toutes les cibles enemies lorsqu'un debuff disparait du lanceur, Applique Puissance jusqu'a la prochaine frappe, attaque de base ou sort, dégats indirects, ne peut pas crit. | J18: Valse de Dagues : La lanceur gagne 1 point d'Echo à chaque changement d'arme. Génère 1 point d'Echo a chaque action repetée. Perd un point d'Echo par tour.
+Octroie : 
+_Focus lorsque le lanceur a 5 point d'Echo
+_Hâte lorsque le lanceur a 10 points d'Echo
+_Puissance lorsque le lanceur a 15 points d'Echo | N18: Passif - EXCLUSIF : 
+Gagne une Petale a chaque attaque de base.
+A19: Spells :  | E19: Spells :  | I19: Spells :  | M19: Spells : 
+B20: -Inserer un nom- : Inflige 70 + 60 % (Ratio AP) à la cible en dégats magiques. Dégats directs. peut infliger un coup critique (4 tours de relance) - 1 coup - 1 Echo | F20: -Inserer un nom- : Applique Criticable au lanceur (2 tours), Inflige 60 + 50 (Ratio Adaptatif) à la cible en dégats adaptatifs. Dégats directs. Peut crit. (4 tours de relance) - 1 coup - 1 Echo | J20: -Inserer un nom- : Inflige 80 + 50 (Ratio AD) + 40 % (Ratio AP) à la cible en dégats physiques. Dégats directs, peut infliger un coup critique.  (4 tours de relance) - 1 coup - 0 Echo | N20: -Inserer un nom- : Inflige 2 attaques de base. Dégats directs.peut infliger un coup critique. (4 tours de relance) - 2 coups.
+B22: -Inserer un nom- : Applique Regeneration au lanceur pendant 3 tours. Ne peut pas crit. (10 tours de relance) - 2 Echos | F22: -Inserer un nom- : Dissipe tous les debuffs du lanceur, inflige a toutes les cibles 20+50 % (Ratio Adaptatif) en dégats adaptatif par debuff dissipé, dégats directs (9 tours de relance) - 2 Echos | J22: Echologie : Octroie 3 jauges d'Echo au lanceur et applique Echo-Responsable pendant 3 tours. Ne peut pas crit. 9 tours de relance - 0 Echo | N22: -Inserer un nom- : Invoque un Carapateur 10 tours de relance. Peut crit.
+B24: -Inserer un nom- : Sacrifie 20 % des PV actuels du lanceur. Inflige 100 + 110 % (Ratio AP) dégats magiques à la cible, dégats directs. La lanceur obtient le même montant en Bouclier (3 tours). Peut crit (12 tours de relance) - 1 coup - 3 Echos | F24: Voeu : Le lanceur prepare une attaque apres deux tours, Inflige 18 % des PV max de la cible en dégats bruts, soigne de 20 % des PV max du lanceur. Ne peut pas infliger de coup critique. Degats indirect. 13 tours de relance - 3 Echos | J24: Mimique (ref) : Répète le dernier sort utilisé par le lanceur.(16 tours de relance)  - 0 Echo | N24: -Inserer un nom- : Inflige 15+10 % (Ratio Adaptatif) en dégats adaptatif, les dégats infligés sont multiplié par par le nombre de Pétales qu'a le lanceur, retire les Pétales sur le lanceur. Peut crit. (12 tours de relance)
+A29: Epee du Divin | C29: Crit | E29: Cryptobloom | G29: Heal | H29: Pen | I29: World Atlas | M29: Amulette du Guardien
+B30: Passif : Une fois par tour, si le lanceur réalise un coup critique, il inflige immédiatement une attaque de base a 50 % de Ratio AD. (peut crit) | F30: Les fleurs du mal : La lanceur se soigne de 5 % de ses PV max lorsqu'il applique un debuff
+Les debuffs appliqués durent 1 tours de plus qu'il ne devrait durer | J30: Maitre des Elements : L'attaque de base applique un élement au lanceur (Feu , Air, Eau, Terre). L'element possiblement applicable change tous les tours dans le même ordre. Chaque élement applique un effet au lanceur : 
+Feu : Chaque lignes de dégats infligent 15+15 % (Ratio Adaptatif) en dégats adaptatif supplémentaire (indirect)
+Eau : Génére une jauge d'Echo a chaque action effectuée
+Air : Applique Hâte au lanceur (infini)
+Terre : Reduits les dégats subis de 10 %
+
+Lorsque deux élements se superposent, ils explosent. Un élement qui explose inflige 30+30 % (Ratio Adaptatif) en dégats adaptatif a toutes les cibles enemies (dégats indirects) | N30: Cycle Élémentaire :
+A31: Spells :  | E31: Spells :  | I31: Spells :  | M31: Spells : 
+B32: -Inserer un nom- : Inflige 70 + 60 % (Ratio AD) à la cible en dégats physiques. Dégats directs. peut infliger un coup critique (4 tours de relance) - 1 coup - 1 Echo
+
+Coup critique : Inflige une attaque de base supplémentaire | F32: Floraison Mortelle : Inflige 80 + 60 % (Ratio AP) à la cible en dégats magiques. Dégats directs, peut infliger un coup critique.(5 tours de relance) - 1 coup.
+Si la cible a un debuff : Inflige 110 + 80 % (Ratio AP) à la cible en dégats magiques. Dégats directs, peut crit. | J32: Lame Elementaire : Inflige 2 attaques de base. Dégats directs.Ne peut pas infliger un coup critique. (4 tours de relance) - 2 coups - 1 Echo | N32: -inserer un nom- : WIP NE RIEN FAIRE                       
+B34: -Inserer un nom- : Applique Concentration au lanceur pendant 4 tours. (9 tours de relance) - 2 Echos
+
+Coup critique : Applique également Puissance (3 tours) | F34: -Inserer un nom- : Applique Lacération à la cible pendant 3 tours. (10 tours de relance)
+Si la cible a un debuff : Applique Lacération à la cible pendant 3 tours. Reduit de 2 le temps de relance de Floraison Mortelle et de Doux Parfum | J34: Cycle Elementaire : Transforme l'élement actuel du lanceur en élement némesis, si le lanceur n'a pas d'élement sur lui, génère le dernier élement utilisé. Ne peut pas infliger un coup critique. Applique Rythme au lanceur. (7 tour de relance) - 1 Echo | N34: -inserer un nom- : WIP NE RIEN FAIRE                       
+B36: Lame divine : Inflige 110 + 80 % (Ratio AD) à la cible en dégats physiques. Dégats directs. Peut infliger un coup critique. (11 tours de relance) - 1 coup - 3 Echos
+
+Coup critique : Inflige durant le tour de l'adversaire les mêmes dégats. Dégats indirects. Ca sera forcement un coup critique.  
+ | F36: Doux Parfum : Sort faisant un effet différent en fonction de sa cible. (11 tours de relance) , ne peut pas crit.
+Sur un allié : Applique Volonté à la cible. (3 tours)
+Sur un enemi : Enlèves tout les buffs sur la cible et Applique Fatigue (2 tours) 
+                         | J36: Explosion Runique : Sort puissant appliquant des effets en fonction de l'element détenu par le lanceur. (Le sort ne peut pas etre lancé sans élement actif)
+Feu :  Fait exploser 4 élements et inflige les dégats a tous les adversaires (dégats indirects) - 4 coups.
+Eau : Réduit les CD de tous les actions des deux armes de 3.
+Air : Inflige 100+70 %(Ratio Adaptatif) en dégats adaptatif directs (1 coup), peut infliger un coup critique, applique Glancing glow a la cible (1 tour) et Ralentissement (3 tours)
+Terre : Applique un Bouclier au lanceur de 150 + 100 % (Ratio AD) + 80 % (Ratio AP), peut crit. Applique Regénération au lanceur. (3 tours)
+
+Fait exploser l'élement sur le lanceur. (12 tours de relance) - 3 Echos | N36: -inserer un nom- : WIP NE RIEN FAIRE                       
+G39: 120 % ratio ap | H39: 180 | J39: Spell qui buff les prochaines AA
+G40: 60 | J40: Spell qui buff les spells
+H41: Soigne le lanceur de 100 + 90 % (Ratio AD) + 70 % (Ratio AP), peut crit , Applique Regeneration au lanceur. (3 tours)
+H43: Aura d’ouverture : Si cette compétence est utilisée en tout premier dans le combat, elle a des effets bonus.
+H44: Déchaînement : Si tu as 3 buffs actifs, tu déclenches automatiquement une attaque bonus.
+H45: breakarmor (echo)
+H46: counter attack
+H47: dgt par slot vide
+H48: Follow up sous condition | I48: Buff apres X aa
+H50: Gagne de l'armure en fonction d'un % de stats apres une action
+H51: Gagne un % de stats si detient armure
+H52: Gagne X jauges d'echo si frappe une cible brulé (consomme l'etat)
+H53: Enleve des HP pour faire des actions (shields)
+H54: Vole de buff
+
+================================================================================
+SHEET: wip  (1005 rows x 28 cols)
+================================================================================
+A3: Attaque de base : Ne genere pas de Jauge d'Echo | F3: 5,10,15,20,25
+A4: Les sorts genère entre 0 et 4 d'echo.
+A6: Item (le nom est pas definitif) | B6: Filtre avancés | C6: FIltre | D6: Rareté | E6: Drop | F6: Echo / Core  | G6: Vrai effet | H6: Effet | I6: Durée
+A7: Bequée Vorace (inspiration Temtem) | B7: DPS  | C7: Frappe | E7: Corbins | F7: 10.0 | G7: Inflige 5 attaques de base à 30 % (Ratio AD) par attaque de base. 
+A8: Flarminette | C8: Sort | E8: Roncier Rouge | F8: 5.0 | G8: Applique 2 marques de Brulure à la cible (3 tours)
+A9: Rage inépuisable  | C9: Sort | E9: Tryndamere | F9: 10.0 | G9: Déclenchement (15) - Attaque Léthale : Applique Refus de la mort (2 tours)
+A10: Terreur Mortelle | C10: Sort | E10: Kindred | F10: 20.0 | G10: Applique Vulnérabilité (3 tours) et Lacération (3 tours) à la cible.
+A11: Morsure du Loup  | C11: Sort | E11: Lycan | F11: 10.0 | G11: La prochaine action sera un coup critique, si l'action le permet
+A12: Ecko | B12: buff | C12: Sort | E12: Ekko | F12: 25.0 | G12: Applique Stase (2 tours) au lanceur 
+A13: Envol du Dragon  | C13: Sort | E13: Dragons | F13: 15.0 | G13: Etourdi la cible (1 tour)
+A14: Echo du Dragon Ancestral | C14: Sort | E14: Dragon ancestral | F14: 5.0 | G14: Applique Puissance au lanceur (1 tour)
+A15: Echo d'Elise | C15: Sort | E15: Elise, Vilmaw | F15: 5.0 | G15: Invocation : x1 Araignée (max 2)
+A16: Echo de Skarner Primal | C16: Sort | E16: Skarner Primal | F16: 5.0 | G16: Déclenchement (10) - Etourdissement, Silence  : Applique Volonté au lanceur (1 tour)
+A17: Barrage de Plomb | C17: Frappe | E17: Miss fortune | F17: 25.0 | G17: Inflige au debut de tous les tours pendant 5 tours : 3 x 20+15 %(Ratio Adaptatif) en dégats adaptatifs - 3 coup, peut infliger un coup critique. L'echo s'interromp si le lanceur est cible d'un débuff. 
+A18: Coeur brisé | C18: Frappe | E18: Viego | F18: 15.0 | G18: Inflige 160+135 % (Ratio AD) en dégats physiques. Inflige 0,5 % de dégats supplémentaires par PDV manquants à la cible. Puet infliger un coup critique.
+A19: Orbe de sentinelle | C19: Sort | E19: Sentinelle bleu | F19: 5.0 | G19: Inflige 20+35 % (Ratio AP) en dégats magiques, Inflige forcement un coup critique | I19: 3.0
+A23: Echo du Herault
+A25: Echo du Nashor
+A26: Echo de Mordekaiser
+A28: Echo de Thresh
+A29: Echo de la recrue gazeifié
+A32: Echo d'aurelion Sol | F32: 12/11/10/9 | H32: Le joueur rejoue son tour. | I32: -
+A34: Echo de Ornn
+A35: Echo de Senna | F35: 20/19/18/17 | H35: Passif : Gagne une jauge d'echo a chaque Soin reçu  (une fois par tour) . Soigne la cible de 50 % de ses PV max. -100 % d'antiheal pendant 4 tours sur le héro. | I35: 1.0
+A36: Echo de Vilmaw
+A37: Echo de Skarner
+A38: Echo de Volibear | F38: 6.0 | H38: Applique un shield a hauteur de 7/8/9/10% des max du Héro et inflige les mêmes dégats a la cible. Applique l'Etat "Chargé" a la cible | I38: 2.0
+A40: Echo de Jinx | B40: buff | C40: Offensif | D40: Héritage | F40: 18.0 | H40: Gagne 25 % de Coup Critique. Le joueur rejoue dès qu'il réalise un coup critique. Si le joueur fait un coup critique. Hero -25 % de chance de CC pendant 3 tours. | I40: 3.0 | J40: -------
+A41: Echo de Silco | F41: 14/13/12/11 | H41: Devient invulnérable. | I41: 1.0
+A42: Echo de Bel veth | F42: 17.0 | H42: Invoque 1 néantin : 2 PV Les néantin passent leurs premier tours. Passif : L'attaque de base du néantin applique l'Etat "Harmonie" | I42: -
+A44: Echo d'Oeuf Chardent | F44: 15.0 | H44: Augmente l'AD du Héro de 15 % | I44: 4.0
+A45: Echo de bébé Chardent | F45: 15.0 | H45: Augmente l'AD du Héro de 20 % | I45: 4.0
+A46: Echo de Chardent Primal | F46: 15.0 | H46: Augmente l'AD du Héro de 25 % | I46: 4.0
+A47: Echo de d'Oeuf Saute Nuage | F47: 15.0 | H47: Augmente l'AP du Héro de 15 % | I47: 4.0
+A48: Echo de bébé Saute Nuage | F48: 15.0 | H48: Augmente l'Ap du Héro de 20 % | I48: 4.0
+A49: Echo de Saute Nuage Primal | F49: 15.0 | H49: Augmente l'Ap du Héro de 25 % | I49: 4.0
+A50: Echo d'Oeuf Ixamandre | F50: 15.0 | H50: Reduit les dégats subis de 15 % | I50: 4.0
+A51: Echo de bébé Ixamandre  | F51: 15.0 | H51: Reduit les dégats subis de 20 % | I51: 4.0
+A52: Echo d'Ixamandre Primal | F52: 15.0 | H52: Reduit les dégats subis de 25 % | I52: 4.0
+A53: Echo de Pix  | F53: 5.0 | H53: Ajoute 25/50/75/100 dégats on-hit magiques. | I53: 3.0
+A54: Echo de Daisy | F54: 12.0 | H54: Double les montants de soin et boucliers | I54: 2.0
+A55: Echo de TIbbers | H55: Les dégats indirects sont doublés et appliquent l'etat Ardent | I55: 2.0
+A56: Echo de Skaarl  | F56: 10.0 | H56: Reduit a 0 la prochaine attaque UNIQUEMENT infligeant + de 10 % des PV max. Augmente de 10/15/20/25 % les dégats contre les cible ayant un état primaire. | I56: 3.0
+A57: Echo de Valor | F57: 20.0 | H57: Durant les 6 tours suivants l'activation de cet Echo, Inflige 25 % de dégats supplementaires les tours pairs , inflige 15 % de dégats en moins les tours impairs. | I57: 6.0
+A58: Echo de Beatrice | F58: 11.0 | H58: Le Héro se soigne de 100 % des degats qu'il inflige pré-mitigation du sort qu'il va lancer  | I58: 1.0
+A59: Echo de Yuumi | F59: 15.0 | H59: Passif : Gagne une jauge D'Echo lorsque le Héro attaque une cible avec "Etat - Eau". Augmente les dégats sur une cible "Eau" de 35/40/45/50 %  | I59: 2.0
+A60: Echo d'Urf | F60: 15.0 | H60: Passif : Gagne une jauge D'Echo lorsque le Héro attaque une cible avec l'Etat  "Ardent".Augmente les dégats sur une cible avec l'Etat "Ardent" de 35/40/45/50 %. | I60: 2.0
+A61: Echo du Poro | F61: 15.0 | H61: Passif : Gagne une jauge D'Echo lorsque le Héro attaque une cible "Electrique". Augmente les dégats sur une cible "Electrique" de 35/40/45/50 %  | I61: 2.0
+A62: Echo du Scuttle | F62: 11.0 | H62: Passif : Gagne une Jauge d'Echo a chaque Esquive. Actif : Inflige 30% de degats supplémentaire sur vos actions.  | I62: 2.0
+A63: Echo du Krug
+
+================================================================================
+SHEET: Items Infos (1026 rows x 10 cols)
+================================================================================
+A1: -
+A4: Nom | B4: Image | C4: Categorie
+A5: Fruit revigorant | C5: Consommable
+A6: Oeil du Hérault | C6: Consommable
+A7: Élixir de fer | C7: Consommable
+A8: Élixir de sorcellerie | C8: Consommable
+A9: Élixir de rage | C9: Consommable
+A10: Potion de soin | C10: Consommable
+A11: Potion de mana  | C11: Consommable
+A12: Soin  | C12: Consommable
+A13: Barriere | C13: Consommable
+A14: Fatigue | C14: Consommable
+A15: Clarté | C15: Consommable
+A16: Purge | C16: Consommable
+A17: Embrasement | C17: Consommable
+A18: Manoeuvres defensives | C18: Consommable
+A19: Chaud Bouillant | C19: Consommable
+A20: Clarté purgative | C20: Consommable
+A21: Étreinte démoniaque | C21: Coiffe
+A22: Coiffe de Rabadon | C22: Coiffe
+A23: Affliction de Liandry | C23: Coiffe
+A24: Tempête de Luden | C24: ?
+A25: Chimico-scaphandre turbo | C25: Coiffe
+A26: Chant de guerre de Shurelya | C26: Coiffe
+A27: Arc-bouclier immortel | C27: ?
+A28: Médaillon de l'Iron Solari | C28: Coiffe
+A29: Vœu du chevalier | C29: Coiffe
+A30: Couronne de la Reine brisée | C30: Coiffe
+A31: Salutations de Dominik | C31: ?
+A32: Manteau de l'heure ultime  | C32: Coiffe
+A33: Voile de la banshee | C33: Coiffe
+A34: 

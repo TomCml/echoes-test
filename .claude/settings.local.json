@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git ls-tree:*)",
+      "Bash(findstr:*)",
+      "Bash(git checkout:*)",
+      "Bash(git branch:*)",
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$\\(cat <<''EOF''\nfeat: align models and engine with design docs\n\nDomain engine:\n- Stats: added AP, ARMOR, MR, SPEED, CRIT_CHANCE, CRIT_DAMAGE \\(DEF = alias\\)\n- player_to_entity\\(\\) maps all stats, monster_to_entity\\(\\) with scaling\n- damage effect uses entity CRIT_CHANCE/CRIT_DAMAGE instead of hardcoded 0.2/1.5\n- apply_damage\\(\\) now absorbs shield gauge before HP\n- 4 new effects: heal, modify_stat, remove_status, shield\n\nEnums:\n- DamageType: added MIXED, STASIS \\(kept HEALING\\)\n- New enums: SpellType, EquipmentSlot, Rarity, CombatStatus, TickTrigger\n\nModels:\n- Monster enriched: AP, armor, MR, speed, scaling, abilities JSON, boss, gold min/max\n- Spell: added spell_type \\(BASIC/SKILL/ULTIMATE\\)\n- New: PlayerEquipmentLoadout \\(7 slots\\)\n- New: CombatSession \\(persistent combat state\\)\n- New: CombatLog \\(structured combat logs\\)\n\nBattle service:\n- Loads statuses.json into Battle.status_defs\n\nCo-Authored-By: Claude Opus 4.5 <noreply@anthropic.com>\nEOF\n\\)\")",
+      "Bash(python -c \"\nimport subprocess\nsubprocess.run\\([''pip'', ''install'', ''openpyxl''], capture_output=True\\)\n\nfrom openpyxl import load_workbook\nwb = load_workbook\\(r''C:\\\\Users\\\\Thoma\\\\.claude-worktrees\\\\Echoes-rework test\\\\zen-banach\\\\Echoes\\\\Items post C_O.xlsx'', data_only=True\\)\nprint\\(''SHEETS:'', wb.sheetnames\\)\nfor name in wb.sheetnames:\n    ws = wb[name]\n    print\\(f''\\\\n{\"\"=\"\"*80}''\\)\n    print\\(f''SHEET: {name} \\({ws.max_row} rows x {ws.max_column} cols\\)''\\)\n    print\\(f''{\"\"=\"\"*80}''\\)\n    for row in ws.iter_rows\\(min_row=1, max_row=ws.max_row, values_only=False\\):\n        vals = []\n        for cell in row:\n            v = cell.value\n            if v is not None:\n                vals.append\\(f''{cell.coordinate}: {v}''\\)\n        if vals:\n            print\\('' | ''.join\\(vals\\)\\)\n\")",
+      "Bash(pip install:*)",
+      "Bash(python -m pip install:*)",
+      "Bash(python:*)",
+      "Bash(PYTHONUTF8=1 python:*)"
+    ]
+  }
+}

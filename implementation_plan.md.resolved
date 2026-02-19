@@ -1,0 +1,134 @@
+# Étape 1 — Boucle de combat complète
+
+## Contexte
+
+Actuellement, [start_battle()](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/services/battle_service.py#61-122) dans [battle_service.py](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/services/battle_service.py) exécute **un seul sort** et retourne. Il n'y a ni boucle de tours, ni initiative, ni cooldowns, ni echo, ni passifs on_hit.
+
+Tous les **building blocks** existent déjà dans l'engine :
+- `status_engine.end_turn()` — tick statuts + décrémente CDs
+- [build_echo](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/engine/effects/gauge/echo_gauge.py#17-31) / [consume_echo](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/engine/effects/gauge/echo_gauge.py#33-48) — opcodes de jauge Echo
+- [set_cooldown](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/engine/effects/cooldown/cooldown_management.py#17-28) / [check_cooldown](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/engine/effects/cooldown/cooldown_management.py#66-78) — opcodes de cooldown
+- `on_hit_triggers` — déclencheurs d'effets on-hit
+- [run_effects()](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/engine/combat.py#15-22) — exécution d'effets par opcode
+
+## User Review Required
+
+> [!IMPORTANT]
+> **Choix d'architecture :** Le combat va fonctionner en **un seul appel HTTP** ([start_battle](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/services/battle_service.py#61-122) ou `start_pve_battle`), pas encore tour par tour via API (ça c'est l'Étape 4). Ici on construit la boucle qui joue le combat complet côté serveur, le joueur passant la liste de sorts qu'il veut utiliser en priorité.
+
+> [!WARNING]
+> **[damage_service.py](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/services/damage_service.py)** utilise un système de calcul (ratios AD/AP) **différent** du moteur d'effets (formules [eval](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/engine/combat.py#24-31)). Il reste intact mais ne sera pas utilisé par la boucle de combat. Il pourra être supprimé ou adapté plus tard.
+
+## Proposed Changes
+
+### Combat Engine Core
+
+#### [NEW] [combat_loop.py](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/engine/combat_loop.py)
+
+Nouveau module contenant la logique de la boucle de combat. Séparé de [combat.py](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/engine/combat.py) (qui gère les opcodes) pour garder les responsabilités claires.
+
+**Fonctions principales :**
+
+- `run_combat(battle, src, tgt, src_spells, tgt_spells, item_passives) → CombatResult`
+  - Boucle `while` tour par tour
+  - Gère initiative, tours alternés, conditions de victoire/défaite/draw
+  - Retourne un `CombatResult` dataclass avec le résultat complet
+
+- `execute_turn(battle, actor, target, spells, item_passives) → None`
+  - Choisit le sort disponible (CD == 0, echo suffisant si ultimate)
+  - Exécute [run_effects()](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/engine/combat.py#15-22) avec les effets du sort
+  - Met le cooldown : `actor.cds[spell_code] = spell.cooldown_turns`
+  - Exécute les passifs on_hit si c'est une attaque basique
+  - Gère le gain d'Echo (+10 basic, +5 skill, -cost ultimate)
+  - Appelle `status_engine.end_turn(battle, actor)`
+
+- `choose_spell(actor, spells, spell_type_priority) → spell | None`
+  - Pour le joueur : suit l'ordre de priorité fourni
+  - Pour le monstre : itère sur `monster.abilities` par priorité, prend la première dispo
+
+- `determine_initiative(src, tgt) → (first, second)`
+  - Compare `SPEED`. Égalité → le joueur (src) joue en premier
+
+#### [NEW] [combat_result.py](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/engine/combat_result.py)
+
+Dataclass `CombatResult` pour structurer le résultat :
+
+```python
+@dataclass
+class CombatResult:
+    outcome: str          # "victory" | "defeat" | "draw"
+    turns_played: int
+    winner_name: str | None
+    final_src_hp: int
+    final_tgt_hp: int
+    src_max_hp: int
+    tgt_max_hp: int
+    log: list[str]
+```
+
+---
+
+### Battle Service
+
+#### [MODIFY] [battle_service.py](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/services/battle_service.py)
+
+- **Refactorer [start_battle()](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/services/battle_service.py#61-122)** pour utiliser `run_combat()` au lieu d'un seul [run_effects()](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/engine/combat.py#15-22)
+- Le joueur passe une **liste de spell_codes par priorité** (au lieu d'un seul `spell_code`)
+- Charger les passifs de l'item pour les passer à `run_combat()`
+- Signature mise à jour :
+  ```python
+  def start_battle(db, player_id, target_id, item_id, spell_priority: list[str]) -> dict
+  ```
+
+---
+
+### API Routes
+
+#### [MODIFY] [battle.py](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/api/routes/battle.py)
+
+- Modifier [start_battle_endpoint](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/api/routes/battle.py#77-92) pour accepter une liste de `spell_codes` (body JSON) au lieu d'un seul `spell_code` en query param
+- Le résultat inclut maintenant le log complet tour par tour
+
+---
+
+### Configuration
+
+- `MAX_TURNS = 50` — constante pour éviter les boucles infinies
+- `ECHO_MAX = 100` — jauge echo max
+- `ECHO_GAIN_BASIC = 10` — echo gagné par attaque basique
+- `ECHO_GAIN_SKILL = 5` — echo gagné par sort skill
+
+---
+
+## Verification Plan
+
+### Test automatisé (script Python)
+
+Créer un fichier [test_combat_loop.py](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/test_combat_loop.py) exécutable directement (pas pytest vu qu'il n'y a pas de framework de test en place) :
+
+```bash
+cd backend
+python test_combat_loop.py
+```
+
+Ce script va :
+1. Créer deux [Entity](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/engine/domain.py#24-33) manuellement (pas de DB)
+2. Définir des spells avec cooldowns variés
+3. Exécuter `run_combat()` et vérifier :
+   - Le combat se termine (pas de boucle infinie)
+   - Les HP final d'un des combattants == 0 (ou draw si max turns atteint)
+   - Les cooldowns sont bien décrémentés
+   - L'echo est bien accumulé
+   - Les passifs on_hit sont exécutés
+   - L'initiative est respectée (le plus rapide joue en premier)
+
+### Test manuel via API
+
+> [!TIP]
+> Après implémentation, tester via Swagger UI :
+> 1. Lancer le serveur (`uvicorn main:app --reload`)
+> 2. Aller sur `/docs`
+> 3. Appeler `POST /battle/start` avec deux player_ids existants, un item_id (`couperet_noir`), et une liste de spells (`["coup_peret", "entaille_profonde", "execution"]`)
+> 4. Vérifier que le résultat contient un log multi-tours, un outcome, et des HP finaux cohérents
+
+ **Est-ce que tu as un moyen de tester l'API facilement (Swagger/Postman) ? Est-ce que le flow proposé te convient ?**

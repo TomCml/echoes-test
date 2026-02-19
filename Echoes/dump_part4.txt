@@ -1,0 +1,377 @@
+Manteau de la nuit | C34: Coiffe
+A35: Jak'Sho, le Protéiforme | C35: Coiffe
+A36: Masque abyssal | C36: Coiffe
+A37: Gel éternel | C37: ?
+A38: Volonté cosmique | C38: Coiffe
+A39: Masque du Kaiser | C39: wip
+A40: Buff Rouge | C40: buff
+A41: Buff bleu | C41: buff
+A42: Âme des océans | C42: buff
+A43: Âme de feu | C43: buff
+A44: Âme des nuages | C44: buff
+A45: Âme Hextech | C45: buff
+A46: Âme Chemtech | C46: buff
+A47: Âme des montages | C47: buff
+A48: Tueur de krakens | C48: ?
+A49: Aspect du Dragon | C49: buff
+A50: Cimier de courroux  | C50: buff
+A51: Brèche cristalline | C51: buff
+A52: Chaussures de sorcier | C52: Boots
+A53: Jambières du berzerker | C53: Boots
+A54: Bottes de célérité | C54: Boots
+A55: Coques en acier | C55: Boots
+A56: Éclipse | C56: ?
+A57: Bottes de mobilité | C57: Boots
+A58: Sandales de Mercure | C58: Boots
+A59: Force du vent | C59: ?
+A60: Onde Orageuse | C60: ?
+A61: Bottes de lucidité | C61: Boots
+A62: Jambières Gloutonnes  | C62: Boots
+A63: Pierre spirituelle | C63: Artéfact
+A64: Rasoir sanglant de madred | C64: Artéfact
+A65: Faux spectrale 
+ | C65: Artefact
+A66: Fléau de liche | C66: Artefact
+A67: Gantelet givrant | C67: Artefact
+A68: Force de la trinité | C68: Artefact
+A69: Chaînes de l'anathème | C69: Artefact
+A70: Mercure | C70: Artefact
+A71: Régénérateur de pierre de lune | C71: Artefact
+A72: Pourfendeur divin | C72: Artefact
+A73: Concentration lointaine | C73: Artefact
+A74: Linceul d'apaisement | C74: Artefact
+A75: Morellonomicon | C75: Artefact
+A76: Bénédiction de Mikael | C76: Artefact
+A77: Flamme-ombre | C77: Artefact
+A78: Volonté des anciens | C78: Artefact
+A79: Gage de Sterak | C79: Artefact
+A80: Rituel des ruines | C80: Artefact
+A81: Dent de Nashor | C81: Artefact
+A82: Convergence de Zeke | C82: Armure
+A83: Approche de l'hiver | C83: Arme
+A84: Fimbulvetr | C84: Arme
+A85: Ange gardien | C85: Armure
+A86: Cotte épineuse | C86: Armure
+A87: Force de la nature | C87: Armure
+A88: Visage spirituel | C88: Armure
+A89: Armure de Warmog | C89: Armure
+A90: Cœur gelé | C90: Armure
+A91: Détermination du Titan  | C91: Armure
+A92: Linceul de la congruence | C92: Armure
+A93: Cœuracier | C93: Armure
+A94: Plaque du mort | C94: Armure
+A95: Ceinture-roquette Hextech  | C95: Armure
+A96: Lithoplastron de gargouille | C96: Armure
+A97: World Atlas | C97: Arme
+A98: Cryptobloom | C98: Arme
+A99: Sword of blossoming Dawn | C99: Arme
+A100: Etincelle Ionique | C100: Arme
+A101: Opposition Celeste | C101: Arme
+A102: Paratonerre | C102: Arme
+A103: Gantelet du Trou Noir | C103: Arme
+A104: Serre d'acier sombre | C104: Arme
+A105: Desespoir infini | C105: Arme
+A106: Runecarver | C106: Arme
+A107: Orbe detonnante | C107: Arme
+A108: Moonflair spellblade | C108: Arme
+A109: Danse de la mort | C109: Arme
+A110: Lame du parieur
+A111: Couperet noir | C111: Arme
+A112: Epée du divin  | C112: Arme
+A113: Manamune | C113: Arme
+A114: Muramana | C114: Arme
+A115: Bâton de l'archange | C115: Arme
+A116: Etreinte du Seraphin | C116: Arme
+A117: Hydre titanesque | C117: Arme
+A118: Lame enragée de Guinsoo | C118: Arme
+A119: Cimeterre mercuriel | C119: Arme
+A120: Présage de Randuin | C120: Arme
+A121: Au bout du rouleau | C121: Arme
+A122: Ombre jumelles | C122: Arme
+A123: Lame d'infini | C123: Arme
+A124: Soif-de-sang | C124: Arme
+A125: Sablier de Zhonya | C125: Arme
+A126: Créateur de failles | C126: Arme
+A127: Éviscérateur | C127: Arme
+A128: Deathfire grasp | C128: Arme
+A129: Lance de Shojin | C129: Arme
+A130: Attrape-sorts | C130: Arme
+A131: Jeweled Gauntelet | C131: Arme
+A132: Danseur fantôme | C132: Arme
+A133: Égide solaire | C133: Arme
+A134: Rédemption | C134: Arme
+A135: Moissonneur nocturne | C135: Arme
+A136: Vertu radieuse | C136: Arme
+A137: Crochet de serpent | C137: Arme
+A138: Mandat impérial | C138: Arme
+A139: Pistolame Hextech | C139: Arme
+A140: Maillet gelé | C140: Arme
+A141: Sceptre de Rylai | C141: Arme
+A142: Force de l'entropie | C142: Arme
+A143: Twilight's edge | C143: Arme
+A144: Jugement d'Atma | C144: Arme
+A145: Bâton des flots | C145: Arme
+A146: Graal impie d'Athène | C146: Arme
+A147: Lame du Roi déchu | C147: wip
+A148: Bouclier de Doran | C148: Arme
+A149: Corne du Gardien (Devient rare) | C149: Arme
+A150: Anneau de Doran | C150: Arme
+A151: Orbe du Gardien  (Devient rare) | C151: Arme
+A152: Lame de Doran | C152: Arme
+A153: Marteau du Gardien  (Devient rare) | C153: Arme
+A154: Griffe du Dragon  | C154: Arme
+A155: Viego | C155: Hero
+A156: Miss fortune | C156: Hero
+A157: Elise | C157: Hero
+A158: Kindred | C158: Hero
+A159: Silco | C159: Hero
+A160: Senna | C160: Hero
+A161: Ekko | C161: Hero
+A162: Jinx | C162: Hero
+A163: Powder | C163: Hero
+A164: Tryndamere | C164: Hero
+A165: Hero normal | C165: Hero
+
+================================================================================
+SHEET: item Particuliers (29 rows x 12 cols)
+================================================================================
+A1: S = Sort (dégats magiques) | C1: F = Frappe (Dégats physiques)  | E1: A = AA
+A2: S → F → A | B2: S → A → F | C2: F → S → A
+A3: Volonté | B3: Regénération | C3: Mur | H3: 50 % | I3: 33 % | K3: 40
+A4: F → A → S | B4: A → S → F | C4: A → F → S
+A5: Hâte | B5: Puissance | C5: Concentration
+A7: Pistolame Hextech | C7: Combo | D7: Utilitaire | E7: Lame du Parieur | G7: Gambling | H7: $$$ | I7: Twilight's Edge
+B8: EXCLUSIF
+Combo Hextech : Utiliser les compétences non utilimes de la Pistolame ainsi que l'attaque de base peut provoquer un combo en fonction de l'ordre d'utilisation de ses actions, se sont des combos de 3 coups.
+Les combos confère des buffs pendant 2 tours
+ | F8: Gambling Addict  : 
+_Les dégats infligés ont un % aleatoire d'infliger des degats entre 50 % et 200 % des degats initiaux (100%)
+_Tous les deux tours, Applique un état aleatoire (positif ou negatif) sur le lanceur pendant 2 tours.
+ | J8: L'attaque du base inflige 50 % de l'AD ainsi que 33 % de l'AP du lanceur au lieu de 100 % de l'ad du lanceur. Peut crit (2 coup)
+Lorsque le lanceur inflige un coup critique, lui applique Lame enchantée. L'attaque de base inflige 40 % de dégats supplémentaires à la cible et tape en stasis (flemme d'expliquer atm)
+A9: Sort :  | E9: Sort :  | I9: Sort : (incompatible avec une autre arme enchantée)
+B10: -Inserer un nom- : Inflige 80 + 80 % (Ratio AD) à la cible en dégats physiques. Dégats directs, peut infliger un coup critique. (4 tours de relance) | F10: -Inserer un nom- : Inflige 90 + 90 + 30 % (Ratio AD) + 20 % (Ratio AP) à la cible, 4 coups. Dégats directs, peut infliger un coup critique. (3 tours de relance) | J10: -inserer un nom- : Inflige 55 + 60 % (Ratio AD) + 40 % (Ratio AP) à la cible en dégats adaptatif. Dégats directs, peut infliger un coup critique. (5 tours de relance)
+B12: -Inserer un nom- : Inflige 80 + 60 %  (Ratio AP) à la cible en dégats magique. Dégats directs. peut infliger un coup critique. (4 tours de relance) | F12: -Inserer un nom- : Inflige 135 + 135 + 50 % (Ratio AD) + 35 % (Ratio AP) à la cible, 4 coups. Dégats directs, peut infliger un coup critique. (8 tours de relance) | J12: -inserer un nom- : Applique Focus au lanceur (3 tours) peut infliger un coup critique. (8 tours de relance)
+Coup critique : Applique également Concentration (3 tours)
+B14: -Inserer un nom- : Inflige Attaque de base + 40 % (Ratio AP) + 40 % (Ratio AD) à la cible en dégats magique à la cible. Les dégats de ce sort est augmenté de 30 % pour chaque combo différents réalisés dans le combat (3 coups). Dégats directs. Peut infliger un coup critique. (14 tours de relance) | F14: -Inserer un nom- : Applique Volonté et Rythme pendant 1 tour au lanceur. (17 tours de relance) | J14: -inserer un nom- : Inflige 100 + 90 % (Ratio AD) + 60 (Ratio AP) à la cible en dégats stasis. Dégats directs. Coup critique only (11 tours de relance)
+A19: Bébé roncier rouge (invocation) | E19: Roncier rouge (invocation) | I19: Dragon des montagnes (invocation)
+B20: Passif : 
+Les attaques de base appliquent un stack de Brulure à la cible.
+ | F20: Passif : 
+Les attaques de base appliquent un stack de Brulure à la cible. 
+Les brulures appliqués lorsque le roncier est en vie durent un tour de plus. | J20: Passif : 
+
+Gagne 10 % de ses PV max en bouclier a chaque actions
+A21: Note : les stats en % seront les stats lors de l'invocation même modifiées | E21: Note : les stats en % seront les stats lors de l'invocation même modifiées | I21: Note : les stats en % seront les stats lors de l'invocation même modifiées
+A22: Stats : | C22: Armor : | D22: 20 % | E22: Stats : | G22: Armor : | H22: 40 % | I22: Stats : | K22: Armor : | L22: 50 %
+A23: PV : | B23: 20 % | C23: Magic Resist : | D23: 20 % | E23: PV : | F23: 35 % | G23: Magic Resist : | H23: 40 % | I23: PV : | J23: 40 % | K23: Magic Resist : | L23: 50 %
+A24: AD : | C24: CritChance : | D24: 10.0 | E24: AD : | F24: 0.0 | G24: CritChance : | H24: 20.0 | I24: AD : | J24: 0.0 | K24: CritChance : | L24: 20.0
+A25: AP : | B25: 15 % | C25: Vitesse : | D25: 50 % | E25: AP : | F25: 25 % | G25: Vitesse : | H25: 70 % | I25: AP : | J25: 40 % (MR du lanceur) | K25: Vitesse : | L25: 50 %
+A26: Attaque de base : L'attaque de base inflige 100 % de l'AP de l'invocation en dégats physiques. | E26: Attaque de base : L'attaque de base inflige 100 % de l'AP de l'invocation en dégats physiques. | I26: Attaque de base : L'attaque de base inflige 100 % de l'AP de l'invocation en dégats physiques.
+A28: Sort 1 : - | E28: Sort 2 : Applique Lacération a la cible pendant 3 tours. (11 tours de relance)
+
+================================================================================
+SHEET: Bestiaire (67 rows x 16 cols)
+================================================================================
+K2: 16.66666667
+A5: Carapateur | C5: Cat 1 | E5: Krug | G5: Cat 1 | I5: Lycans | K5: Cat 1 | O5: Cat 1
+B6: Glissade : A chaque dégats reçu , le carapateur a 75 % de chance de ne subir aucun dégat | F6: Passif : - | J6: Maitrise Critique accrue : Les dégats critiques infligent 300% au lieu de 150% de dégâts. | N6: Picots multiples : Les Corbins infligent X fois leur attaque de base pour chaque 100/6 % de PV Max qu'il a.
+A17: Roncier Rouge | C17: Cat 2 | E17: Sentinelle bleu  | G17: Cat 2 | I17: Dragon Infernal
+F18: Passif : Les sorts de Sentinelle bleu applique Fatigue (2 tours) | J18: Passif : Applique Brûlure (2 tours) lorsque le dragon inflige des dégats via un sort ou une attaque de base.
+Contre-attaque : Une fois par combat, le Dragon applique Etourdi à la cible le tour lorsqu'il prend des dégâts.
+F20: Explosion runique :  Inflige 200+100% de l'AP du Monstre, en dégats magiques / peut crit / 5 tours de relance
+
+================================================================================
+SHEET: Liste (27 rows x 26 cols)
+================================================================================
+A5: Liste : 
+A7: Degats | B7: Catégorie | C7: Puissance | D7: Catégorie | E7: Tank | F7: Catégorie | G7: Support | H7: Catégorie
+A8: Lame de Doran | C8: Anneau de Doran | E8: Bouclier de Doran
+A9: Lame d'infini | B9: Crit  | C9: DeathFire Grasp | D9: AP / Supp Offensif | E9: Egide Solaire | F9: Armure / Burn | G9: Ombre Jumelles | H9: Slow 
+A10: Couperet noir | B10: Supp Offensif | C10: Attrape Sorts | D10: Burst | E10: Presage de Randuin | F10: Armure | G10: Bâton des Flots | H10: AP / Shield
+A11: Lance de Shojin | C11: Sablier de Zhonya | D11: Utilitaire | E11: Desespoir infini | F11: Omnivamp | G11: Mandat impérial | H11: Burn / 
+A12: Death Dance | B12: Burn / Armor | C12: Wits end | D12: On-hit AP | E12: DarkSteel Talon (Arena) | F12: Armure / On-Hit | G12: Graal impie d'Athéne | H12: Echo 
+A13: Lame enragée de Guinsoo | B13: On-hit | C13: Moissonneur Nocturne | E13: Black Hole Gantelet (arena) | F13: Hp  | G13: Vertue Radieuse | H13: Regeneration
+A14: Hydre Titanesque | B14: AD / HP  | C14: Gantelet Precieux | D14: Crit  | E14: Atma Reckoning (Arena) | F14: Crit Tank | G14: Redemption | H14: Heal / Degats
+A15: Eviscérateur | B15: Life Steal / Berserk | C15: Créateur de Faille | D15: Spell Vamp / Brut Damage | E15: Lightning Rod (Arena) | F15: Slow / DPS MR | G15: Danseur Fantome | H15: AD / Vitesse
+A16: Crochet de Serpent | B16: Anti Shield | C16: Moonflair Spellblade (Arena) | D16: Auto Attack | E16: Opposition Celeste  | F16: Invul | G16: Sword of Blossoming Dawn (Arena) | H16: AA / Heal / Speed
+A17: Soif de Sang | B17: Life Steal / Shield | C17: Detonation Orb (Arena) | D17: Degats indirects / Burn | E17: Hollow Radiance | F17: MR / Burn | G17: Epee du Divin | H17: Crit
+A18: Cimetiere mercuriel  | B18: Cleanse / MR | C18: Runecarver (Arena) | E18: Dent de Dragon  | F18: MR / On-hit | G18: Cryptobloom | H18: Pen / Heal 
+A22: Maillet gelée | B22:   | C22: Sceptre de Rylai | E22: Force de l'entropie (arena)
+A23: Muramana | C23: Archange | E23: Fimblewinter
+C25: Pistolame Hextech
+C26: Lame du Parieur
+C27: Twilight Edge
+
+================================================================================
+SHEET: Items in-game (9 rows x 5 cols)
+================================================================================
+A3: Visuel  | B3: Nom | C3: Effet | D3: Obtention  | E3: Commentaire
+
+================================================================================
+SHEET: Invocations & Taux (39 rows x 13 cols)
+================================================================================
+A1: Taux des items dans les coffres
+A3: Invocation commune
+A5: Objet | B5: Cases | C5: Pourcentage | D5: Items concernés
+A6: Item 1 ★ | B6: 500.0 | C6: 0.5 | D6: Items
+A7: Item 2 ★★ | B7: 280.0 | C7: 0.28 | D7: Items
+A8: Item 3 ★★★ | B8: 154.0 | C8: 0.154 | D8: Items, Items de monstre, Echos classique
+A9: Item 4 ★★★★ | B9: 60.0 | C9: 0.06 | D9: Items classique, Echos de monstre , Echos de semi boss, items de semi boss et boss, Items de monstres, Summoners spells et consommables
+A10: Item 5 ★★★★★ | B10: 6.0 | C10: 0.006 | D10: Items classique, Echos de monstre , Echos de boss, Items de boss et semi boss, items de monstres, Héros, Summoners spells et consommables
+A11: Total | B11: 1000.0 | C11: 1
+A13: Garanted 4 Start at 17 openings
+A14: Garanted 5 start at 167 openings
+A16: Puissance des items (on parle uniquements des stats des items)
+F17: Nb max d'upgrade : | G17: 20.0
+B18: Ilv de base (a) | C18: Gain de % de stats par Upgrade  | D18: Puissance Max en Ilvl (Upgrade Rang 20) | E18: (la mecanique d'ilvl n'existera pas, juste j'ai fait mes calculs comme ça donc j'appelle ça ilvl)
+A19: Item 1 ★ | B19: 0.0 | C19: 5.0 | D19: 100 | H19: 0.0 | I19: vous etes ici
+A20: Item 2 ★★ | B20: 10.0 | C20: 7.0 | D20: 150 | H20: 5.0 | I20: 1.0
+A21: Item 3 ★★★ | B21: 25.0 | C21: 9.0 | D21: 205 | H21: 10.0 | I21: 2.0
+A22: Item 4 ★★★★ | B22: 45.0 | C22: 12.0 | D22: 285 | H22: 15.0 | I22: 3.0
+A23: Item 5 ★★★★★ | B23: 70.0 | C23: 15.0 | D23: 370 | H23: 20.0 | I23: 4.0
+H24: 25.0 | I24: 5.0
+B25: Rareté | C25: Rang | H25: 30.0 | I25: 6.0
+A26: Cosmic Drive | B26: ★★★★ | C26: 7.0 | D26: 145 | E26: 129 | H26: 35.0 | I26: 7.0
+H27: 40.0 | I27: 8.0
+B28: ilv 50 | C28: ilvl 0 | H28: 45.0 | I28: 9.0
+A29: PV | B29: 200.0 | H29: 50.0 | I29: 10.0
+A30: AP | B30: 50.0 | H30: 55.0 | I30: 11.0
+A31: Vitesse | B31: 15.0 | H31: 60.0 | I31: 12.0
+H32: 65.0 | I32: 13.0
+H33: 70.0 | I33: 14.0
+H34: 75.0 | I34: 15.0
+H35: 80.0 | I35: 16.0
+H36: 85.0 | I36: 17.0
+H37: 90.0 | I37: 18.0
+H38: 95.0 | I38: 19.0
+H39: 100.0 | I39: 20.0
+
+================================================================================
+SHEET: % Stat (27 rows x 22 cols)
+================================================================================
+A2: ★
+A3: ★★
+A4: ★★★
+A5: ★★★★
+A6: ★★★★★
+B8: 0.5 | C8: 0.55 | D8: 0.6 | E8: 0.65 | F8: 0.7 | G8: 0.75 | H8: 0.8 | I8: 0.85 | J8: 0.9 | K8: 0.95 | L8: 1 | M8: 1.05 | N8: 1.1 | O8: 1.15 | P8: 1.2 | Q8: 1.25 | R8: 1.3 | S8: 1.35 | T8: 1.4
+A9: Rareté/Niveau | B9: 0.0 | C9: 1.0 | D9: 2.0 | E9: 3.0 | F9: 4.0 | G9: 5.0 | H9: 6.0 | I9: 7.0 | J9: 8.0 | K9: 9.0 | L9: 10.0 | M9: 11.0 | N9: 12.0 | O9: 13.0 | P9: 14.0 | Q9: 15.0 | R9: 16.0 | S9: 17.0 | T9: 18.0 | U9: 19.0 | V9: 20.0
+A10: Item 1 ★ | B10: 0 | C10: 5 | D10: 10 | E10: 15 | F10: 20 | G10: 25 | H10: 30 | I10: 35 | J10: 40 | K10: 45 | L10: 50 | M10: 55 | N10: 60 | O10: 65 | P10: 70 | Q10: 75 | R10: 80 | S10: 85 | T10: 90 | U10: 95 | V10: 100
+A11: Item 2 ★★ | B11: 10 | C11: 17 | D11: 24 | E11: 31 | F11: 38 | G11: 45 | H11: 52 | I11: 59 | J11: 66 | K11: 73 | L11: 80 | M11: 87 | N11: 94 | O11: 101 | P11: 108 | Q11: 115 | R11: 122 | S11: 129 | T11: 136 | U11: 143 | V11: 150
+A12: Item 3 ★★★ | B12: 25 | C12: 34 | D12: 43 | E12: 52 | F12: 61 | G12: 70 | H12: 79 | I12: 88 | J12: 97 | K12: 106 | L12: 115 | M12: 124 | N12: 133 | O12: 142 | P12: 151 | Q12: 160 | R12: 169 | S12: 178 | T12: 187 | U12: 196 | V12: 205
+A13: Item 4 ★★★★ | B13: 45 | C13: 57 | D13: 69 | E13: 81 | F13: 93 | G13: 105 | H13: 117 | I13: 129 | J13: 141 | K13: 153 | L13: 165 | M13: 177 | N13: 189 | O13: 201 | P13: 213 | Q13: 225 | R13: 237 | S13: 249 | T13: 261 | U13: 273 | V13: 285
+A14: Item 5 ★★★★★ | B14: 70 | C14: 85 | D14: 100 | E14: 115 | F14: 130 | G14: 145 | H14: 160 | I14: 175 | J14: 190 | K14: 205 | L14: 220 | M14: 235 | N14: 250 | O14: 265 | P14: 280 | Q14: 295 | R14: 310 | S14: 325 | T14: 340 | U14: 355 | V14: 370
+G17: 5
+A19: Formule :
+A20: x * (0,5+(0,05*y))
+A21: x * (0,6+(0,07*y))
+A22: x * (0,75+(0,09*y))
+A23: x * (0,95+(0,12*y))
+A24: x * (1,2+(0,15*y))
+B27: 720
+
+================================================================================
+SHEET: Buffs Debuffs (32 rows x 8 cols)
+================================================================================
+A2: Buff & Debuffs
+A4: Etat - 1 | C4: Buff | D4: Regeneration | E4: Effet : Soigne un Ratio AD / HP / AP / Armor / MR a calculer au debut du tour pendant un nombre X de tour. | F4: Formule ici : Regen=(HPmax​×0.07)+(AD×0.15)+(AP×0.15)+(Armor×0.15)+(MR×0.15)
+A5: Etat - 2 | C5: Buff | D5: Meditation  | E5: Effet : Buff +25 % Armor / RM pendant un nombre X de tour.
+A6: Etat - 3 | C6: Buff | D6: Puissance | E6: Buff +25 % dégats finaux infligés pendant un nombre X de tour.
+A7: Etat - 4 | C7: Buff | D7: Hâte | E7: Buff + 25 % de vitesse pendant un nombre X de tour.
+A8: Etat - 5 | C8: Buff | D8: Rythme | E8: Rejoue son tour.
+A9: Etat - 6 | C9: Buff | D9: Mur | E9: Buff -20 % dégats finaux subis pendant un nombre X de tour.
+A10: Etat - 7 | C10: Buff | D10: Impact | E10: Buff +X dégats on-hit a magiques pendant un nombre X de tour. | F10: Formule ici : On-hit Magique = 45×(1+0.25*(AD+AP)/100​)
+A11: Etat - 8 | C11: Buff | D11: Focus | E11: Buff +20 % de chance de Coup critique pendant un nombre X de tour.
+A12: Etat - 9 | C12: Buff | D12: Concentration | E12: Buff X lethalité et Pénétration magique pendant un nombre X de tour. | F12: Formule ici : Létalité = 30×(1+0.2*(AD+AP)/100​)
+A13: Etat - 10 | C13: Buff | D13: Lame enchantée | E13: Applique un effet a l'attaque de base après un sort
+A14: Etat - 11 | C14: Buff | D14: Refus de la mort  | E14: Fixe les Points de vie de la cible à 1 pendant un nombre X de tour.
+A15: Etat - 12 | C15: Buff | D15: Voile | E15: Annule le prochain sort / Frappe
+A16: Etat - 13 | C16: Buff | D16: Volonté | E16: Rend Insensible aux alterations d'Etats négatives pendant un nombre X de tour.
+A17: Etat - 14 | C17: Buff | D17: Stase | E17: Invulnérable mais passe son tour pendant un nombre X de tour.
+A18: Etat - 15 | C18: Buff | D18: Bouclier | E18: Montant X de point de bouclier pendant un nombre X de tour.
+A19: Etat - 16 | C19: Buff | D19: Invulnérable | E19: Ne peut pas recevoir de dégats tant qu'il est dans cet état.
+A20: Etat - 17 | C20: Debuff | D20: Brulure | E20: Brule (j'ai pas encore calculé) pendant un nombre X de tour. | F20:  Formule : Brûlure= 0,3 % des max de la cible + ((AD×0.07)+(AP×0.05)+(HPmax​×0.02))
+A21: Etat - 18 | C21: Debuff | D21: Lacération | E21: Debuff -25 % Armor / RM pendant un nombre X de tour.
+A22: Etat - 19 | C22: Debuff | D22: Fatigue | E22: Debuff -25 % dégats finaux infligés pendant un nombre X de tour.
+A23: Etat - 20 | C23: Debuff | D23: Ralentissement | E23: Debuff 25 % de vitesse pendant un nombre X de tour.
+A24: Etat - 21 | C24: Debuff | D24: Etourdi | E24: Passe le tour de jeu pendant un nombre X de tour.
+A25: Etat - 22 | C25: Debuff | D25: Vulnérabilité | E25: Debuff +20 % dégats finaux subis pendant un nombre X de tour.
+A26: Etat - 23 | C26: Debuff | D26: Antiheal  | E26: Soins reduits de 25%-50%-75% pendant un nombre X de tour.
+A27: Etat - 24 | C27: Debuff | D27: Critiquable | E27: -100 % de chance de crit  pendant un nombre X de tour.
+A28: Etat - 25 | C28: Debuff | D28: Seul | E28: La cible ne peut recevoir aucun buff pendant un nombre X de tour. (boss only)
+A29: Etat - 26 | C29: Debuff | D29: Glancing Glow | E29: Le prochain sort infligera 50 % de dégats (a voir si c'est un % et cb de %)
+A30: Etat - 27 | C30: Debuff | D30: Silence | E30: La Cible ne peut pas faire de sorts pendant un nombre X de tour.
+A31: Etat - 28 | C31: Buff | D31: Echo-Responsable | E31: Chaque action génère une Jauge d'Echo supplémentaire
+A32: Etat - 29 | C32: Debuff | D32: Echonome  | E32: Ne peut pas generer de Jauge d'Echo pendant un nombre X de tour. (boss only)
+
+================================================================================
+SHEET: Vitesse test (54 rows x 15 cols)
+================================================================================
+E7: 83.33333333
+I8: 83.33333333 | J8: m
+G9: 250 | I9: 75
+I10: 62.5
+I11: 50
+I12: 37.5
+C15: Regle du monde | D15: 25000.0
+C16: Speed Tie
+B17: Vitesse | C17: 150.0 | D17: 250.0 | E17: 350.0 | F17: 450.0 | G17: 550.0 | H17: 650.0 | I17: 750.0 | J17: 850.0 | K17: 950.0
+B18: 300.0 | C18: 1 | D18: 2 | E18: 1 | F18: 1 | G18: 1 | H18: 1 | I18: 2 | J18: 1 | K18: 1
+B19: 333.3333333 | C19: 2 | D19: 1 | E19: 1 | F19: 2 | G19: 1 | H19: 1 | I19: 2 | J19: 1 | K19: 1
+B20: 400.0 | C20: 2 | D20: 2 | E20: 1 | F20: 2 | G20: 1 | H20: 2 | I20: 2 | J20: 1 | K20: 2
+B21: 500.0 | C21: 3 | D21: 2 | E21: 2 | F21: 2 | G21: 2 | H21: 2 | I21: 2 | J21: 2 | K21: 2
+B22: 666.6666667 | C22: 4 | D22: 2 | E22: 3 | F22: 3 | G22: 2 | H22: 3 | I22: 3 | J22: 2 | K22: 3
+G25: 62.5 | H25: 1.0 | J25: 5.882352941
+G26: 125 | H26: 2.0
+G27: 187.5 | H27: 3.0
+G28: 250 | H28: 4.0
+G29: 312.5 | H29: 5.0
+G30: 375 | H30: 6.0
+G31: 437.5 | H31: 7.0
+G32: 500 | H32: 8.0
+G33: 562.5 | H33: 9.0
+C38: 25000
+C40: Speed Tie
+B41: Vitesse
+A42: Joueur 1 | B42: 300 | C42: 83.33333333 | D42: 166.6666667 | E42: 250 | F42: 333.3333333 | G42: 416.6666667 | H42: 500 | I42: 583.3333333 | J42: 666.6666667 | K42: 750
+A43: Joueur 2 | B43: 333.3333333 | C43: 75 | D43: 150 | E43: 225 | F43: 300 | G43: 375 | H43: 450 | I43: 525 | J43: 600 | K43: 675
+A44: Joueur 3 | B44: 400 | C44: 62.5 | D44: 125 | E44: 187.5 | F44: 250 | G44: 312.5 | H44: 375 | I44: 437.5 | J44: 500 | K44: 562.5
+A45: Joueur 4 | B45: 500 | C45: 50 | D45: 100 | E45: 150 | F45: 200 | G45: 250 | H45: 300 | I45: 350 | J45: 400 | K45: 450
+A46: Joueur 5 | B46: 666.6666667 | C46: 37.5 | D46: 75 | E46: 112.5 | F46: 150 | G46: 187.5 | H46: 225 | I46: 262.5 | J46: 300 | K46: 337.5
+B47: 478.0
+C50: Speed Tie
+A51: Distance | B51: 37.5 | C51: 50.0 | D51: 62.5 | E51: 75.0 | F51: 83.33333333 | G51: 100.0 | H51: 112.5 | I51: 125 | J51: 150 | K51: 166.6666667 | L51: 187.5 | M51: 200 | N51: 225 | O51: 250
+B52: Joueur 5 | C52: Joueur 4 | D52: Joueur 3 | E52: Joueur 5 | F52: Joueur 1 | G52: Joueur 4 | H52: Joueur 5 | I52: Joueur 3 | J52: Joueur 5 | K52: Joueur 1 | L52: Joueur 5 | M52: Joueur 4 | N52: Joueur 5 | O52: Joueur 4
+E53: Joueur 2 | J53: Joueur 4 | L53: Joueur 3 | N53: Joueur 2 | O53: Joueur 3
+J54: Joueur 2 | O54: Joueur 1
+
+================================================================================
+SHEET: Formule de Calcul (1004 rows x 20 cols)
+================================================================================
+B2: Etape 1 : | F2: Armor :  | G2: 140.0
+G3: 0.2680785159
+B4: Calcul des dégats qui doivent être infligés 
+B6: Dégats de l'action + Ratio (si il y en a)
+A7: + | B7: Dégats supplémentaire lié aux items ou arme
+A8: + | B8: Coup critique ou pas (Dégats indirects exclus)
+B11: Etape 2 : 
+B12: Calcul des resistances 
+B13: Armure / RM de base
+A14: + | B14: Buff/Debuff lié aux items
+A15: + | B15: Buff/debuff en combat (meditation/lacération) | E15: Lancération = -25 % resistances , méditation = +25 %
+B18: Etape 3 :
+B19: Resistance 
+A20: - | B20: Armor Pen / Magic Pen (%)
+A21: - | B21: Lethalité / Magic pen (flat)
+B22: CF tableau pour le resultat
+B24: Etape 4 :
+B25: Buff Dégats finaux %
+A26: + | B26: Debuff Dégats finaux reduit %
+A27: + | B27: deBuff dégats subis %
+A28: + | B28: Buff dégats réduits %
+A29: + | B29: buff de reduction flat
+D30: x | F30: tape  | G30: y
+D32: degats finaux (puissance - buff ) | G32: dégats finaux subis (vulnérabilité - debuff)
+D33: dégats finaux reduits (fatigue - debuff) | G33: dégats finaux subis reduits (mur - buff)
+G34: dégats finaux  subis reduit flat (buff)

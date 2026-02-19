@@ -57,6 +57,14 @@ def monster_to_entity(monster) -> Entity:
         tags={"boss"} if monster.is_boss else set(),
     )
 
+entities = [monster, player]
+
+turn_list = []
+for entity in entities:
+    interval = 1 / entity.SPEED
+    turn_list.append((interval, entity))
+
+
 
 def start_battle(
     db: Session,
@@ -119,11 +127,3 @@ def start_battle(
         "target_hp_max": tgt.stats.MAX_HP,
         "log": battle.log
     }
-
-
-def simulate_item_effect(item_id: str) -> Optional[Dict[str, Any]]:
-    """Simule les effets d'un item (WIP)."""
-    item = item_repo.load_item(item_id)
-    if not item:
-        return None
-    return {"item": item}

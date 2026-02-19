@@ -18,6 +18,9 @@ from models.title import Title
 from models.monster import Monster
 from models.equipement import Weapon, Spell
 from models.player_shop import PlayerShop
+from models.loadout import PlayerEquipmentLoadout
+from models.combat_session import CombatSession
+from models.combat_log import CombatLog
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.

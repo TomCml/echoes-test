@@ -1,6 +1,5 @@
 """
 Damage Service - Fonctions de calcul des dégâts.
-Migré depuis services/damage_service.py (classe -> fonctions)
 """
 import math
 import logging
@@ -40,7 +39,6 @@ def calculate_damage(
     mr_stat = val(player.magic_resistance)
     speed_stat = val(player.speed)
 
-    # Extraire les ratios depuis les effects du spell
     # Structure attendue: spell["effects"] = [{"opcode": "damage", "params": {...}}]
     effects = spell.get("effects", [])
     damage_effect = next((e for e in effects if e.get("opcode") == "damage"), {})

@@ -1,0 +1,136 @@
+# Echoes Backend — Point de reprise
+
+## Résumé
+
+J'ai inspecté l'intégralité du projet `zen-banach/backend/` et comparé avec le ROADMAP.md. Voici l'**état d'avancement réel** de chaque étape, et les **prochaines actions** pour reprendre.
+
+---
+
+## État d'avancement par étape
+
+### Étape 0 — Migration Alembic ⚠️ **Partiellement fait**
+
+| Élément | Statut |
+|---|---|
+| Modèle [PlayerEquipmentLoadout](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/models/loadout.py#5-19) | ✅ Créé dans [loadout.py](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/models/loadout.py) |
+| Modèle [CombatSession](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/models/combat_session.py#6-31) | ✅ Créé dans [combat_session.py](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/models/combat_session.py) |
+| Modèle [CombatLog](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/models/combat_log.py#6-23) | ✅ Créé dans [combat_log.py](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/models/combat_log.py) |
+| Modèle [Monster](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/models/monster.py#5-39) enrichi | ✅ Complet (description, is_boss, ai_behavior, scaling, abilities JSON, reward_gold_min/max, sprite_key) |
+| Enums ([CombatStatus](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/models/enums.py#28-36), [SpellType](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/models/enums.py#4-8), [EquipmentSlot](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/models/enums.py#10-18), etc.) | ✅ Créés dans [enums.py](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/models/enums.py) |
+| [env.py](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/alembic/env.py) — imports des nouveaux modèles | ❌ **Manquant** : `loadout`, `combat_session`, `combat_log`, `enums` non importés |
+| Migration Alembic générée et appliquée | ❌ **Non fait** — seulement 2 versions existantes (initial + snake_case) |
+
+> [!IMPORTANT]
+> **C'est ici qu'il faut reprendre.** Tant que la migration n'est pas faite, les tables `player_equipment_loadout`, `combat_sessions`, `combat_logs` et les nouvelles colonnes de `monsters`/`spells` n'existent pas en DB.
+
+---
+
+### Étape 1 — Boucle de combat ❌ **Non commencé**
+
+| Élément | Statut |
+|---|---|
+| [start_battle()](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/services/battle_service.py#61-122) — boucle tour par tour | ❌ Exécute **un seul sort** puis retourne (pas de boucle `while`) |
+| Initiative (SPEED) | ❌ Non implémenté |
+| Cooldowns (vérification avant sort + set après) | ❌ Non utilisé (`Entity.cds` existe mais jamais vérifié/mis) |
+| Echo system (gain/dépense) | ❌ Non implémenté (`Entity.gauges["echo"]` jamais touché) |
+| Passifs on_hit | ❌ Non implémenté (les passifs dans [couperet_noir.json](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/data/items/couperet_noir.json) sont définis mais jamais itérés) |
+| `status_engine.end_turn()` | ✅ Code prêt mais ❌ jamais appelé |
+| IA monstre (choix de sort) | ❌ Non implémenté |
+| Choix du sort par le joueur via API | ❌ L'API actuelle passe le `spell_code` en paramètre, mais pas de flow tour par tour |
+
+**Ce qui est prêt pour l'étape 1 :**
+- Le système d'opcodes est très riche (10+ catégories : damage, healing, shields, status_effects, stat_modifiers, gauge, triggers, cooldown, summons, misc)
+- `Entity.cds`, `Entity.gauges`, `Entity.statuses` sont déjà des dicts prêts à l'emploi
+- `status_engine.end_turn()` tick les statuts et décrémente les CDs
+- `Battle.status_defs` est chargé depuis [statuses.json](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/data/statuses.json)
+- [monster_to_entity()](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/services/battle_service.py#38-59) est prêt (inclut scaling par level, tags boss)
+
+---
+
+### Étape 2 — Système d'équipement ❌ **Non commencé**
+
+| Élément | Statut |
+|---|---|
+| `repositories/loadout.py` | ❌ N'existe pas |
+| [equip_item()](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/services/inventory_service.py#107-128) | ❌ TODO dans [inventory_service.py:107](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/services/inventory_service.py#L107) — fait les vérifications mais ne touche pas au loadout |
+| [unequip_item()](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/services/inventory_service.py#130-141) | ❌ TODO dans [inventory_service.py:130](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/services/inventory_service.py#L130) — stub vide |
+| `get_total_stats()` | ❌ N'existe pas |
+| Champ `slot` dans les JSON d'items | ✅ Déjà fait dans [couperet_noir.json](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/data/items/couperet_noir.json) (`"slot": "weapon_primary"`) |
+
+---
+
+### Étape 3 — PvE monstres ❌ **Non commencé**
+
+| Élément | Statut |
+|---|---|
+| Routes `/monsters` | ❌ N'existe pas |
+| `repositories/monster.py` | ❌ N'existe pas |
+| `schemas/monster.py` | ❌ N'existe pas |
+| `start_pve_battle()` | ❌ N'existe pas |
+| Seed data (Gobelin, Dragon) | ❌ Non fait |
+
+> [!NOTE]
+> Le modèle [Monster](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/models/monster.py#5-39) est complet et [monster_to_entity()](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/services/battle_service.py#38-59) est déjà prêt dans [battle_service.py](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/services/battle_service.py).
+
+---
+
+### Étape 4 — Persistance combat ❌ **Non commencé**
+
+| Élément | Statut |
+|---|---|
+| Modèles [CombatSession](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/models/combat_session.py#6-31) / [CombatLog](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/models/combat_log.py#6-23) | ✅ Créés (mais pas en DB) |
+| `repositories/combat.py` | ❌ N'existe pas |
+| Endpoints `/combat/start`, `/combat/{id}/action`, `/combat/{id}/state` | ❌ N'existent pas |
+| Sérialisation Battle ↔ CombatSession | ❌ Non implémenté |
+
+---
+
+### Étape 5 — Fonctionnalités secondaires ❌ **Non commencé**
+
+Aucune des features secondaires n'est entamée (Auth, Quests, Leaderboards, Achievements, WebSocket, Donjons, Shop).
+
+---
+
+## 🎯 Point de reprise recommandé
+
+```
+On est ici ──────────────────────────────────────────────────────────►
+
+Étape 0: Migration Alembic        ████████░░ 80% (modèles OK, migration manquante)
+Étape 1: Boucle de combat          ██░░░░░░░░ 20% (engine prêt, boucle manquante)
+Étape 2: Équipement                █░░░░░░░░░ 10% (modèle+slot OK, logique manquante)
+Étape 3: PvE monstres              █░░░░░░░░░ 10% (modèle Monster OK, reste à faire)
+Étape 4: Persistance combat        █░░░░░░░░░ 10% (modèles OK, reste à faire)
+Étape 5: Features secondaires      ░░░░░░░░░░  0%
+```
+
+### Actions immédiates (dans l'ordre)
+
+1. **Finir Étape 0** — Ajouter les imports manquants dans [env.py](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/alembic/env.py), générer et appliquer la migration Alembic
+2. **Attaquer Étape 1** — Refactorer [start_battle()](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/services/battle_service.py#61-122) avec la boucle tour par tour (c'est le gros morceau)
+3. Puis Étape 2 → 3 → 4 → 5 séquentiellement
+
+---
+
+## Observations supplémentaires
+
+### [damage_service.py](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/services/damage_service.py) doublon potentiel
+
+Le [damage_service.py](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/services/damage_service.py) utilise un système de calcul de dégâts basé sur des ratios (`ad_ratio`, `ap_ratio`, etc.) qui est **différent** du système de formules du moteur (`"formula": "140 + S_AD * 0.90"` via [eval_formula](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/app/engine/combat.py#24-31)). Ces deux systèmes coexistent et pourraient créer de la confusion.
+
+> [!WARNING]
+> Il faudra décider si on garde `damage_service.calculate_damage()` (endpoint `/battle/damages-calculation`) comme un outil de simulation séparé, ou si on le remplace par le moteur d'effets pour tout unifier. Le moteur d'effets (avec les opcodes et formules) est plus flexible et devrait être la source de vérité pour les combats réels.
+
+### Données manquantes
+
+- Un seul item existe : [couperet_noir.json](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/data/items/couperet_noir.json). Il y a un fichier Excel `Items post C_O.xlsx` (119 Mo) dans le dossier `Echoes/` qui contient probablement les données de tous les items à convertir en JSON.
+- Un seul statut existe dans [statuses.json](file:///c:/Users/Thoma/.claude-worktrees/Echoes-rework%20test/zen-banach/backend/data/statuses.json) (lacération). Il faudra en créer d'autres.
+- Aucun monstre en DB — il faudra créer un script de seed.
+
+### Architecture solide
+
+L'architecture existante est propre et bien pensée :
+- Layered architecture (routes → services → repositories)
+- Engine de combat orienté objet avec registre d'opcodes
+- Modèles SQLAlchemy complets
+- Enums bien définis

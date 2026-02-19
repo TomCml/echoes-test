@@ -30,7 +30,7 @@ def eval_formula(expr: str, src: Entity, tgt: Entity) -> float:
     return float(eval(expr, {"__builtins__": {}}, scope))
 
 
-def apply_damage(b: Battle, target: Entity, amount: float, label: str = "damage"):
+def apply_damage(b: Battle, target: Entity, amount: float, label: str):
     val = max(1, int(round(amount)))
 
     # Absorber par le shield si présent
