@@ -1,14 +1,294 @@
 {
-  "laceration": {
-    "code": "laceration",
-    "name": "Lacération",
-    "tags": ["debuff", "bleed"],
+  "regeneration": {
+    "code": "regeneration",
+    "name": "Régénération",
+    "type": "buff",
+    "description": "Soigne au début du tour",
+    "tick": {
+      "trigger": "on_turn_start",
+      "effect": {
+        "opcode": "damage",
+        "params": {
+          "formula": "-(S_MAX_HP * 0.07 + S_AD * 0.15 + S_AP * 0.15 + S_ARMOR * 0.15 + S_MR * 0.15)",
+          "damage_type": "true",
+          "label": "régénération"
+        }
+      }
+    }
+  },
+  "meditation": {
+    "code": "meditation",
+    "name": "Méditation",
+    "type": "buff",
+    "description": "+25% Armor et MR",
+    "stat_modifiers": {
+      "ARMOR": {
+        "type": "percent",
+        "value": 0.25
+      },
+      "MR": {
+        "type": "percent",
+        "value": 0.25
+      }
+    }
+  },
+  "puissance": {
+    "code": "puissance",
+    "name": "Puissance",
+    "type": "buff",
+    "description": "+25% dégâts finaux infligés",
+    "damage_modifier": {
+      "type": "percent",
+      "value": 0.25
+    }
+  },
+  "hate": {
+    "code": "hate",
+    "name": "Hâte",
+    "type": "buff",
+    "description": "+25% vitesse",
+    "stat_modifiers": {
+      "SPEED": {
+        "type": "percent",
+        "value": 0.25
+      }
+    }
+  },
+  "rythme": {
+    "code": "rythme",
+    "name": "Rythme",
+    "type": "buff",
+    "description": "Rejoue son tour",
+    "special": "replay_turn"
+  },
+  "mur": {
+    "code": "mur",
+    "name": "Mur",
+    "type": "buff",
+    "description": "-20% dégâts finaux subis",
+    "damage_reduction": {
+      "type": "percent",
+      "value": 0.20
+    }
+  },
+  "impact": {
+    "code": "impact",
+    "name": "Impact",
+    "type": "buff",
+    "description": "Dégâts on-hit magiques supplémentaires",
+    "on_hit": {
+      "formula": "45 * (1 + 0.25 * (S_AD + S_AP) / 100)",
+      "damage_type": "magic"
+    }
+  },
+  "focus": {
+    "code": "focus",
+    "name": "Focus",
+    "type": "buff",
+    "description": "+20% de chance de coup critique",
+    "stat_modifiers": {
+      "CRIT_CHANCE": {
+        "type": "flat",
+        "value": 0.20
+      }
+    }
+  },
+  "concentration": {
+    "code": "concentration",
+    "name": "Concentration",
+    "type": "buff",
+    "description": "Bonus létalité et pénétration magique",
+    "penetration": {
+      "formula": "30 * (1 + 0.2 * (S_AD + S_AP) / 100)"
+    }
+  },
+  "lame_enchantee": {
+    "code": "lame_enchantee",
+    "name": "Lame Enchantée",
+    "type": "buff",
+    "description": "Applique un effet à l'attaque de base après un sort",
+    "special": "enchant_next_basic"
+  },
+  "refus_de_la_mort": {
+    "code": "refus_de_la_mort",
+    "name": "Refus de la Mort",
+    "type": "buff",
+    "description": "Les PV ne peuvent pas descendre en dessous de 1",
+    "special": "undying"
+  },
+  "voile": {
+    "code": "voile",
+    "name": "Voile",
+    "type": "buff",
+    "description": "Annule le prochain sort / frappe subie",
+    "special": "spellshield"
+  },
+  "volonte": {
+    "code": "volonte",
+    "name": "Volonté",
+    "type": "buff",
+    "description": "Insensible aux altérations d'états négatives",
+    "special": "debuff_immunity"
+  },
+  "stase": {
+    "code": "stase",
+    "name": "Stase",
+    "type": "buff",
+    "description": "Invulnérable mais passe son tour",
+    "special": "stasis"
+  },
+  "bouclier": {
+    "code": "bouclier",
+    "name": "Bouclier",
+    "type": "buff",
+    "description": "Points de bouclier absorbant les dégâts",
+    "special": "shield"
+  },
+  "invulnerable": {
+    "code": "invulnerable",
+    "name": "Invulnérable",
+    "type": "buff",
+    "description": "Ne peut pas recevoir de dégâts",
+    "special": "invulnerable"
+  },
+  "brulure": {
+    "code": "brulure",
+    "name": "Brûlure",
+    "type": "debuff",
+    "description": "Inflige des dégâts par tick",
+    "is_stackable": true,
     "tick": {
       "trigger": "on_turn_end",
       "effect": {
         "opcode": "damage",
-        "params": { "formula": "T_MAX_HP * 0.03", "label": "saignement" }
+        "params": {
+          "formula": "T_MAX_HP * 0.003 + S_AD * 0.07 + S_AP * 0.05 + S_MAX_HP * 0.02",
+          "damage_type": "magic",
+          "label": "brûlure"
+        }
       }
     }
+  },
+  "laceration": {
+    "code": "laceration",
+    "name": "Lacération",
+    "type": "debuff",
+    "description": "-25% Armor et MR",
+    "stat_modifiers": {
+      "ARMOR": {
+        "type": "percent",
+        "value": -0.25
+      },
+      "MR": {
+        "type": "percent",
+        "value": -0.25
+      }
+    },
+    "tick": {
+      "trigger": "on_turn_end",
+      "effect": {
+        "opcode": "damage",
+        "params": {
+          "formula": "T_MAX_HP * 0.03",
+          "damage_type": "true",
+          "label": "saignement"
+        }
+      }
+    }
+  },
+  "fatigue": {
+    "code": "fatigue",
+    "name": "Fatigue",
+    "type": "debuff",
+    "description": "-25% dégâts finaux infligés",
+    "damage_modifier": {
+      "type": "percent",
+      "value": -0.25
+    }
+  },
+  "ralentissement": {
+    "code": "ralentissement",
+    "name": "Ralentissement",
+    "type": "debuff",
+    "description": "-25% vitesse",
+    "stat_modifiers": {
+      "SPEED": {
+        "type": "percent",
+        "value": -0.25
+      }
+    }
+  },
+  "etourdi": {
+    "code": "etourdi",
+    "name": "Étourdi",
+    "type": "debuff",
+    "description": "Passe son tour",
+    "special": "stun"
+  },
+  "vulnerabilite": {
+    "code": "vulnerabilite",
+    "name": "Vulnérabilité",
+    "type": "debuff",
+    "description": "+20% dégâts finaux subis",
+    "damage_amplifier": {
+      "type": "percent",
+      "value": 0.20
+    }
+  },
+  "antiheal": {
+    "code": "antiheal",
+    "name": "Antiheal",
+    "type": "debuff",
+    "description": "Soins réduits",
+    "is_stackable": true,
+    "max_stacks": 3,
+    "heal_reduction_per_stack": 0.25
+  },
+  "critiquable": {
+    "code": "critiquable",
+    "name": "Critiquable",
+    "type": "debuff",
+    "description": "-100% de chance de crit",
+    "stat_modifiers": {
+      "CRIT_CHANCE": {
+        "type": "flat",
+        "value": -1.0
+      }
+    }
+  },
+  "seul": {
+    "code": "seul",
+    "name": "Seul",
+    "type": "debuff",
+    "description": "Ne peut recevoir aucun buff (boss only)",
+    "special": "buff_immunity"
+  },
+  "glancing_blow": {
+    "code": "glancing_blow",
+    "name": "Glancing Blow",
+    "type": "debuff",
+    "description": "Le prochain sort infligera 50% de dégâts",
+    "special": "glancing"
+  },
+  "silence": {
+    "code": "silence",
+    "name": "Silence",
+    "type": "debuff",
+    "description": "Ne peut pas lancer de sorts",
+    "special": "silence"
+  },
+  "echo_responsable": {
+    "code": "echo_responsable",
+    "name": "Écho-Responsable",
+    "type": "buff",
+    "description": "Chaque action génère une jauge d'Echo supplémentaire",
+    "special": "bonus_echo"
+  },
+  "echonome": {
+    "code": "echonome",
+    "name": "Échonome",
+    "type": "debuff",
+    "description": "Ne peut pas générer de jauge d'Echo (boss only)",
+    "special": "echo_lock"
   }
 }

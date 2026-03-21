@@ -1,0 +1,289 @@
+@startuml Echoes_Complete_Compact
+!pragma layout smetana
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam ranksep 30
+skinparam nodesep 20
+skinparam classFontSize 11
+skinparam packageFontSize 12
+skinparam noteFontSize 9
+skinparam wrapWidth 150
+skinparam defaultTextAlignment center
+
+title Echoes - Architecture Complète v4
+
+' ============================================
+' ROW 1: ENUMS (Top)
+' ============================================
+together {
+    enum DamageType {
+        PHYSICAL
+        MAGIC
+        TRUE
+        MIXED
+        STASIS
+    }
+    
+    enum SpellType {
+        BASIC
+        SKILL
+        ULTIMATE
+    }
+    
+    enum CombatStatus {
+        PENDING
+        IN_PROGRESS
+        VICTORY
+        DEFEAT
+    }
+    
+    enum EquipmentSlot {
+        WEAPON_PRIMARY
+        WEAPON_SECONDARY
+        HEAD
+        ARMOR
+        ARTIFACT
+        BLESSING
+        CONSUMABLE
+    }
+    
+    enum TickTrigger {
+        ON_TURN_START
+        ON_TURN_END
+        ON_HIT
+    }
+}
+
+' ============================================
+' ROW 2: VALUE OBJECTS
+' ============================================
+package "Value Objects" #EEEEEE {
+    class StatsBlock <<VO>> {
+        MAX_HP, HP, AD, AP
+        ARMOR, MR, SPEED
+        CRIT_CHANCE
+        --
+        add(other): StatsBlock
+    }
+    
+    class EffectPayload <<VO>> {
+        opcode: String
+        order: Integer
+        params: Dict
+    }
+    
+    class StatusInstance <<VO>> {
+        remaining: Integer
+        stacks: Integer
+    }
+}
+
+' ============================================
+' ROW 3: CORE DOMAIN
+' ============================================
+package "Core Domain" #D4EDDA {
+    class User {
+        id: UUID
+        twitch_id: String
+        username: String
+    }
+    
+    class Player {
+        id: UUID
+        user_id: UUID
+        level: Integer
+        current_xp: BigInt
+        gold: Integer
+    }
+    
+    class ItemInstance {
+        id: UUID
+        blueprint_id: UUID
+        owner_id: UUID
+        item_level: Integer
+        is_equipped: Boolean
+    }
+}
+
+' ============================================
+' ROW 4: BLUEPRINTS
+' ============================================
+package "Blueprints" #FFF3CD {
+    abstract class ItemBlueprint {
+        id: UUID
+        name: String
+        item_type: ItemType
+        rarity: Rarity
+        base_stats: StatsBlock
+    }
+    
+    class WeaponBlueprint {
+        damage_type: DamageType
+    }
+    
+    class Spell {
+        id: UUID
+        weapon_id: UUID
+        name: String
+        spell_type: SpellType
+        cooldown: Integer
+        echo_cost: Integer
+        effects: List[EffectPayload]
+    }
+    
+    class MonsterBlueprint {
+        id: UUID
+        name: String
+        base_stats: StatsBlock
+        ai_behavior: String
+        xp_reward: Integer
+        is_boss: Boolean
+    }
+    
+    class MonsterAbility {
+        name: String
+        cooldown: Integer
+        effects: List[EffectPayload]
+    }
+}
+
+' ============================================
+' ROW 5: COMBAT SYSTEM
+' ============================================
+package "Combat System" #D1ECF1 {
+    class Entity {
+        id: UUID
+        name: String
+        stats: StatsBlock
+        statuses: Dict[str, StatusInstance]
+        gauges: Dict[str, int]
+        cds: Dict[str, int]
+    }
+    
+    class PlayerEntity {
+        player_id: UUID
+    }
+    
+    class MonsterEntity {
+        blueprint_id: UUID
+    }
+    
+    class Battle {
+        id: UUID
+        status: CombatStatus
+        turn: Integer
+        log: List[String]
+        status_defs: Dict
+        rng: Random
+        --
+        start()
+        execute_spell()
+        next_turn()
+    }
+}
+
+' ============================================
+' ROW 6: EFFECT ENGINE
+' ============================================
+package "Effect Engine" #E2D5F1 {
+    class EffectRegistry <<Singleton>> {
+        registry: Dict[str, Fn]
+        --
+        @register(opcode)
+        run_effects(b, src, tgt, effects)
+    }
+    
+    class StatusDefinition {
+        code: String
+        display_name: String
+        is_debuff: Boolean
+        tick: TickDefinition
+    }
+    
+    class StatusEngine <<Service>> {
+        end_turn(battle, who)
+        apply_status()
+        remove_status()
+    }
+}
+
+' ============================================
+' ROW 7: PROGRESSION
+' ============================================
+package "Progression" #F8D7DA {
+    class Achievement {
+        id: UUID
+        name: String
+        condition_type: String
+        reward_xp: Integer
+    }
+    
+    class Quest {
+        id: UUID
+        name: String
+        objective_type: String
+        is_daily: Boolean
+    }
+    
+    class LeaderboardEntry {
+        player_id: UUID
+        type: LeaderboardType
+        score: BigInt
+    }
+}
+
+' ============================================
+' ROW 8: WORLD
+' ============================================
+package "World" #FCE4D6 {
+    class LootTable {
+        id: UUID
+        --
+        roll(): List[LootDrop]
+    }
+    
+    class Dungeon {
+        id: UUID
+        name: String
+        level_req: Integer
+        boss_id: UUID
+    }
+}
+
+' ============================================
+' RELATIONS
+' ============================================
+
+' Core
+User "1" -- "1" Player
+Player "1" -- "*" ItemInstance
+ItemInstance "*" -- "1" ItemBlueprint
+
+' Blueprints
+WeaponBlueprint --|> ItemBlueprint
+WeaponBlueprint "1" -- "3" Spell
+MonsterBlueprint "1" -- "*" MonsterAbility
+MonsterBlueprint "*" -- "1" LootTable
+
+' Combat
+PlayerEntity --|> Entity
+MonsterEntity --|> Entity
+Battle "1" *-- "1" PlayerEntity
+Battle "1" *-- "1" MonsterEntity
+MonsterEntity "*" -- "1" MonsterBlueprint
+
+' Effects
+Spell "1" -- "*" EffectPayload
+MonsterAbility "1" -- "*" EffectPayload
+StatusEngine ..> Battle
+EffectRegistry ..> EffectPayload
+
+' Progression
+Player "1" -- "*" Achievement : tracks
+Player "1" -- "*" Quest : has
+Player "1" -- "*" LeaderboardEntry
+
+' World
+Dungeon "*" -- "*" MonsterBlueprint
+
+@enduml

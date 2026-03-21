@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mcd>
+  <info>
+    <name>Echoes_MLD</name>
+    <author>Claude</author>
+    <date>2026-01-15</date>
+    <description>Modèle Logique de Données - Echoes RPG</description>
+  </info>
+  
+  <tables>
+    
+    <!-- ==================== CORE DOMAIN ==================== -->
+    
+    <table name="users" x="50" y="50">
+      <column name="id" type="UUID" pk="true"/>
+      <column name="twitch_id" type="VARCHAR(50)" unique="true" notnull="true"/>
+      <column name="username" type="VARCHAR(100)" notnull="true"/>
+      <column name="is_profile_public" type="BOOLEAN" default="false"/>
+      <column name="created_at" type="TIMESTAMP" default="CURRENT_TIMESTAMP"/>
+      <column name="updated_at" type="TIMESTAMP"/>
+    </table>
+    
+    <table name="players" x="50" y="200">
+      <column name="id" type="UUID" pk="true"/>
+      <column name="user_id" type="UUID" fk="users.id" unique="true" notnull="true"/>
+      <column name="level" type="INTEGER" default="1" notnull="true"/>
+      <column name="current_xp" type="BIGINT" default="0" notnull="true"/>
+      <column name="xp_to_next_level" type="BIGINT" notnull="true"/>
+      <column name="gold" type="INTEGER" default="0" notnull="true"/>
+      <column name="stat_points_available" type="INTEGER" default="0"/>
+      <column name="created_at" type="TIMESTAMP" default="CURRENT_TIMESTAMP"/>
+    </table>
+    
+    <table name="player_equipment_loadout" x="50" y="400">
+      <column name="id" type="UUID" pk="true"/>
+      <column name="player_id" type="UUID" fk="players.id" unique="true" notnull="true"/>
+      <column name="weapon_primary_id" type="UUID" fk="item_instances.id"/>
+      <column name="weapon_secondary_id" type="UUID" fk="item_instances.id"/>
+      <column name="head_id" type="UUID" fk="item_instances.id"/>
+      <column name="armor_id" type="UUID" fk="item_instances.id"/>
+      <column name="artifact_id" type="UUID" fk="item_instances.id"/>
+      <column name="blessing_id" type="UUID" fk="item_instances.id"/>
+      <column name="consumable_id" type="UUID" fk="item_instances.id"/>
+    </table>
+    
+    <!-- ==================== ITEMS ==================== -->
+    
+    <table name="item_blueprints" x="300" y="50">
+      <column name="id" type="UUID" pk="true"/>
+      <column name="name" type="VARCHAR(100)" notnull="true"/>
+      <column name="description" type="TEXT"/>
+      <column name="item_type" type="VARCHAR(20)" notnull="true" comment="WEAPON|HEAD|ARMOR|ARTIFACT|BLESSING|CONSUMABLE"/>
+      <column name="rarity" type="VARCHAR(20)" notnull="true" comment="COMMON|UNCOMMON|RARE|EPIC|LEGENDARY"/>
+      <column name="level_requirement" type="INTEGER" default="1"/>
+      <column name="max_level" type="INTEGER" default="100"/>
+      <column name="is_tradeable" type="BOOLEAN" default="true"/>
+      <!-- Stats de base (JSON ou colonnes séparées) -->
+      <column name="base_max_hp" type="INTEGER" default="0"/>
+      <column name="base_ad" type="INTEGER" default="0"/>
+      <column name="base_ap" type="INTEGER" default="0"/>
+      <column name="base_armor" type="INTEGER" default="0"/>
+      <column name="base_mr" type="INTEGER" default="0"/>
+      <column name="base_speed" type="INTEGER" default="0"/>
+      <column name="base_crit_chance" type="DECIMAL(5,2)" default="0"/>
+      <!-- Scaling par niveau -->
+      <column name="scaling_hp_per_level" type="DECIMAL(5,2)" default="0"/>
+      <column name="scaling_ad_per_level" type="DECIMAL(5,2)" default="0"/>
+      <column name="scaling_ap_per_level" type="DECIMAL(5,2)" default="0"/>
+      <column name="scaling_armor_per_level" type="DECIMAL(5,2)" default="0"/>
+      <column name="scaling_mr_per_level" type="DECIMAL(5,2)" default="0"/>
+    </table>
+    
+    <table name="weapon_blueprints" x="300" y="300">
+      <column name="id" type="UUID" pk="true" fk="item_blueprints.id"/>
+      <column name="damage_type" type="VARCHAR(20)" notnull="true" comment="PHYSICAL|MAGIC|TRUE|MIXED|STASIS"/>
+    </table>
+    
+    <table name="equipment_blueprints" x="300" y="420">
+      <column name="id" type="UUID" pk="true" fk="item_blueprints.id"/>
+      <column name="slot" type="VARCHAR(20)" notnull="true" comment="HEAD|ARMOR|ARTIFACT|BLESSING"/>
+      <column name="passive_effects" type="JSONB" comment="List[EffectPayload]"/>
+    </table>
+    
+    <table name="consumable_blueprints" x="300" y="540">
+      <column name="id" type="UUID" pk="true" fk="item_blueprints.id"/>
+      <column name="effects" type="JSONB" notnull="true" comment="List[EffectPayload]"/>
+      <column name="uses_per_combat" type="INTEGER" default="1"/>
+    </table>
+    
+    <table name="item_instances" x="550" y="200">
+      <column name="id" type="UUID" pk="true"/>
+      <column name="blueprint_id" type="UUID" fk="item_blueprints.id" notnull="true"/>
+      <column name="owner_id" type="UUID" fk="players.id" notnull="true"/>
+      <column name="item_level" type="INTEGER" default="1" notnull="true"/>
+      <column name="item_xp" type="INTEGER" default="0"/>
+      <column name="item_xp_to_next_level" type="INTEGER"/>
+      <column name="is_equipped" type="BOOLEAN" default="false"/>
+      <column name="equipped_slot" type="VARCHAR(20)" comment="EquipmentSlot si équipé"/>
+      <column name="acquired_at" type="TIMESTAMP" default="CURRENT_TIMESTAMP"/>
+    </table>
+    
+    <!-- ==================== SPELLS ==================== -->
+    
+    <table name="spells" x="550" y="50">
+      <column name="id" type="UUID" pk="true"/>
+      <column name="weapon_blueprint_id" type="UUID" fk="weapon_blueprints.id" notnull="true"/>
+      <column name="name" type="VARCHAR(100)" notnull="true"/>
+      <column name="description" type="TEXT"/>
+      <column name="spell_type" type="VARCHAR(20)" notnull="true" comment="BASIC|SKILL|ULTIMATE"/>
+      <column name="spell_order" type="INTEGER" default="1" comment="1, 2 ou 3 pour ordre dans arme"/>
+      <column name="cooldown_turns" type="INTEGER" default="0"/>
+      <column name="echo_cost" type="INTEGER" default="0"/>
+      <column name="effects" type="JSONB" notnull="true" comment="List[EffectPayload]"/>
+    </table>
+    
+    <!-- ==================== MONSTERS ==================== -->
+    
+    <table name="monster_blueprints" x="800" y="50">
+      <column name="id" type="UUID" pk="true"/>
+      <column name="name" type="VARCHAR(100)" notnull="true"/>
+      <column name="description" type="TEXT"/>
+      <column name="base_level" type="INTEGER" default="1" notnull="true"/>
+      <column name="ai_behavior" type="VARCHAR(50)" default="basic"/>
+      <column name="loot_table_id" type="UUID" fk="loot_tables.id"/>
+      <column name="xp_reward" type="INTEGER" notnull="true"/>
+      <column name="gold_reward_min" type="INTEGER" notnull="true"/>
+      <column name="gold_reward_max" type="INTEGER" notnull="true"/>
+      <column name="is_boss" type="BOOLEAN" default="false"/>
+      <column name="sprite_key" type="VARCHAR(100)"/>
+      <!-- Stats de base -->
+      <column name="base_max_hp" type="INTEGER" notnull="true"/>
+      <column name="base_ad" type="INTEGER" default="0"/>
+      <column name="base_ap" type="INTEGER" default="0"/>
+      <column name="base_armor" type="INTEGER" default="0"/>
+      <column name="base_mr" type="INTEGER" default="0"/>
+      <column name="base_speed" type="INTEGER" default="10"/>
+      <!-- Scaling -->
+      <column name="scaling_hp_per_level" type="DECIMAL(5,2)" default="0"/>
+      <column name="scaling_ad_per_level" type="DECIMAL(5,2)" default="0"/>
+      <column name="scaling_armor_per_level" type="DECIMAL(5,2)" default="0"/>
+    </table>
+    
+    <table name="monster_abilities" x="800" y="300">
+      <column name="id" type="UUID" pk="true"/>
+      <column name="monster_blueprint_id" type="UUID" fk="monster_blueprints.id" notnull="true"/>
+      <column name="name" type="VARCHAR(100)" notnull="true"/>
+      <column name="cooldown" type="INTEGER" default="0"/>
+      <column name="priority" type="INTEGER" default="1" comment="Pour IA: ordre de préférence"/>
+      <column name="condition_expr" type="VARCHAR(200)" comment="Expression condition: target_hp < 50"/>
+      <column name="effects" type="JSONB" notnull="true" comment="List[EffectPayload]"/>
+    </table>
+    
+    <!-- ==================== COMBAT ==================== -->
+    
+    <table name="combat_sessions" x="1050" y="50">
+      <column name="id" type="UUID" pk="true"/>
+      <column name="player_id" type="UUID" fk="players.id" notnull="true"/>
+      <column name="monster_blueprint_id" type="UUID" fk="monster_blueprints.id" notnull="true"/>
+      <column name="monster_level" type="INTEGER" notnull="true" comment="Niveau du monstre instancié"/>
+      <column name="status" type="VARCHAR(20)" default="PENDING" comment="PENDING|IN_PROGRESS|PLAYER_TURN|MONSTER_TURN|VICTORY|DEFEAT|ABANDONED"/>
+      <column name="turn_count" type="INTEGER" default="0"/>
+      <column name="current_turn_entity" type="VARCHAR(20)" comment="PLAYER|MONSTER"/>
+      <!-- État du joueur en combat -->
+      <column name="player_current_hp" type="INTEGER" notnull="true"/>
+      <column name="player_max_hp" type="INTEGER" notnull="true"/>
+      <column name="player_echo_current" type="INTEGER" default="0"/>
+      <column name="player_echo_max" type="INTEGER" default="100"/>
+      <column name="player_statuses" type="JSONB" default="'{}'" comment="Dict[status_code, StatusInstance]"/>
+      <column name="player_gauges" type="JSONB" default="'{}'" comment="Dict[gauge_name, value]"/>
+      <!-- État du monstre en combat -->
+      <column name="monster_current_hp" type="INTEGER" notnull="true"/>
+      <column name="monster_max_hp" type="INTEGER" notnull="true"/>
+      <column name="monster_statuses" type="JSONB" default="'{}'" comment="Dict[status_code, StatusInstance]"/>
+      <!-- Timestamps -->
+      <column name="started_at" type="TIMESTAMP" default="CURRENT_TIMESTAMP"/>
+      <column name="ended_at" type="TIMESTAMP"/>
+    </table>
+    
+    <table name="combat_spell_cooldowns" x="1050" y="300">
+      <column name="id" type="UUID" pk="true"/>
+      <column name="combat_session_id" type="UUID" fk="combat_sessions.id" notnull="true"/>
+      <column name="spell_id" type="UUID" fk="spells.id" notnull="true"/>
+      <column name="remaining_turns" type="INTEGER" notnull="true"/>
+    </table>
+    
+    <table name="combat_logs" x="1050" y="420">
+      <column name="id" type="UUID" pk="true"/>
+      <column name="combat_session_id" type="UUID" fk="combat_sessions.id" notnull="true"/>
+      <column name="turn" type="INTEGER" notnull="true"/>
+      <column name="actor" type="VARCHAR(20)" notnull="true" comment="PLAYER|MONSTER"/>
+      <column name="action_type" type="VARCHAR(50)" comment="SPELL|BASIC_ATTACK|CONSUMABLE|STATUS_TICK"/>
+      <column name="spell_id" type="UUID"/>
+      <column name="damage_dealt" type="INTEGER"/>
+      <column name="damage_type" type="VARCHAR(20)"/>
+      <column name="was_critical" type="BOOLEAN" default="false"/>
+      <column name="echo_gained" type="INTEGER" default="0"/>
+      <column name="message" type="TEXT"/>
+      <column name="created_at" type="TIMESTAMP" default="CURRENT_TIMESTAMP"/>
+    </table>
+    
+    <!-- ==================== EFFECT ENGINE ==================== -->
+    
+    <table name="status_definitions" x="1300" y="50">
+      <column name="code" type="VARCHAR(50)" pk="true"/>
+      <column name="display_name" type="VARCHAR(100)" notnull="true"/>
+      <column name="description" type="TEXT"/>
+      <column name="icon_key" type="VARCHAR(100)"/>
+      <column name="is_debuff" type="BOOLEAN" default="true"/>
+      <column name="is_stackable" type="BOOLEAN" default="false"/>
+      <column name="max_stacks" type="INTEGER" default="1"/>
+      <column name="tick_trigger" type="VARCHAR(30)" comment="ON_TURN_START|ON_TURN_END|ON_HIT|ON_DAMAGED"/>
+      <column name="tick_effect" type="JSONB" comment="EffectPayload exécuté à chaque tick"/>
+    </table>
+    
+    <!-- ==================== LOOT ==================== -->
+    
+    <table name="loot_tables" x="800" y="450">
+      <column name="id" type="UUID" pk="true"/>
+      <column name="name" type="VARCHAR(100)" notnull="true"/>
+    </table>
+    
+    <table name="loot_table_entries" x="800" y="550">
+      <column name="id" type="UUID" pk="true"/>
+      <column name="loot_table_id" type="UUID" fk="loot_tables.id" notnull="true"/>
+      <column name="item_blueprint_id" type="UUID" fk="item_blueprints.id" notnull="true"/>
+      <column name="weight" type="INTEGER" default="100" notnull="true"/>
+      <column name="min_quantity" type="INTEGER" default="1"/>
+      <column name="max_quantity" type="INTEGER" default="1"/>
+      <column name="min_player_level" type="INTEGER" default="1"/>
+    </table>
+    
+    <!-- ==================== DUNGEONS ==================== -->
+    
+    <table name="dungeons" x="1300" y="200">
+      <column name="id" type="UUID" pk="true"/>
+      <column name="name" type="VARCHAR(100)" notnull="true"/>
+      <column name="description" type="TEXT"/>
+      <column name="level_requirement" type="INTEGER" default="1"/>
+      <column name="recommended_level" type="INTEGER"/>
+      <column name="boss_blueprint_id" type="UUID" fk="monster_blueprints.id"/>
+      <column name="background_key" type="VARCHAR(100)"/>
+    </table>
+    
+    <table name="dungeon_monster_sequence" x="1300" y="350">
+      <column name="id" type="UUID" pk="true"/>
+      <column name="dungeon_id" type="UUID" fk="dungeons.id" notnull="true"/>
+      <column name="monster_blueprint_id" type="UUID" fk="monster_blueprints.id" notnull="true"/>
+      <column name="sequence_order" type="INTEGER" notnull="true"/>
+      <column name="monster_level_override" type="INTEGER" comment="Si null, utilise base_level"/>
+    </table>
+    
+    <table name="player_dungeon_progress" x="1300" y="480">
+      <column name="id" type="UUID" pk="true"/>
+      <column name="player_id" type="UUID" fk="players.id" notnull="true"/>
+      <column name="dungeon_id" type="UUID" fk="dungeons.id" notnull="true"/>
+      <column name="is_unlocked" type="BOOLEAN" default="false"/>
+      <column name="best_clear_time_ms" type="INTEGER"/>
+      <column name="clear_count" type="INTEGER" default="0"/>
+      <column name="last_cleared_at" type="TIMESTAMP"/>
+    </table>
+    
+    <!-- ==================== PROGRESSION ==================== -->
+    
+    <table name="achievements" x="50" y="600">
+      <column name="id" type="UUID" pk="true"/>
+      <column name="name" type="VARCHAR(100)" notnull="true"/>
+      <column name="description" type="TEXT"/>
+      <column name="category" type="VARCHAR(30)" comment="COMBAT|EXPLORATION|COLLECTION|SOCIAL|MASTERY"/>
+      <column name="condition_type" type="VARCHAR(50)" notnull="true" comment="kill_monster|reach_level|collect_item..."/>
+      <column name="condition_value" type="INTEGER" notnull="true"/>
+      <column name="condition_target_id" type="UUID" comment="ID spécifique si applicable (monster_id, item_id...)"/>
+      <column name="reward_xp" type="INTEGER" default="0"/>
+      <column name="reward_gold" type="INTEGER" default="0"/>
+      <column name="reward_item_blueprint_id" type="UUID" fk="item_blueprints.id"/>
+      <column name="icon_key" type="VARCHAR(100)"/>
+      <column name="is_hidden" type="BOOLEAN" default="false"/>
+    </table>
+    
+    <table name="player_achievements" x="50" y="800">
+      <column name="id" type="UUID" pk="true"/>
+      <column name="player_id" type="UUID" fk="players.id" notnull="true"/>
+      <column name="achievement_id" type="UUID" fk="achievements.id" notnull="true"/>
+      <column name="progress" type="INTEGER" default="0"/>
+      <column name="is_completed" type="BOOLEAN" default="false"/>
+      <column name="completed_at" type="TIMESTAMP"/>
+    </table>
+    
+    <table name="quests" x="300" y="700">
+      <column name="id" type="UUID" pk="true"/>
+      <column name="name" type="VARCHAR(100)" notnull="true"/>
+      <column name="description" type="TEXT"/>
+      <column name="quest_type" type="VARCHAR(20)" notnull="true" comment="DAILY|WEEKLY|STORY|EVENT"/>
+      <column name="objective_type" type="VARCHAR(50)" notnull="true" comment="kill_monsters|complete_dungeon|use_spell..."/>
+      <column name="objective_target" type="INTEGER" notnull="true"/>
+      <column name="objective_target_id" type="UUID" comment="ID spécifique si applicable"/>
+      <column name="reward_xp" type="INTEGER" default="0"/>
+      <column name="reward_gold" type="INTEGER" default="0"/>
+      <column name="reward_item_blueprint_id" type="UUID" fk="item_blueprints.id"/>
+      <column name="is_repeatable" type="BOOLEAN" default="false"/>
+      <column name="reset_period_hours" type="INTEGER" comment="24 pour daily, 168 pour weekly"/>
+    </table>
+    
+    <table name="player_quests" x="300" y="900">
+      <column name="id" type="UUID" pk="true"/>
+      <column name="player_id" type="UUID" fk="players.id" notnull="true"/>
+      <column name="quest_id" type="UUID" fk="quests.id" notnull="true"/>
+      <column name="progress" type="INTEGER" default="0"/>
+      <column name="is_completed" type="BOOLEAN" default="false"/>
+      <column name="assigned_at" type="TIMESTAMP" default="CURRENT_TIMESTAMP"/>
+      <column name="completed_at" type="TIMESTAMP"/>
+      <column name="expires_at" type="TIMESTAMP"/>
+    </table>
+    
+    <table name="leaderboard_entries" x="550" y="800">
+      <column name="id" type="UUID" pk="true"/>
+      <column name="player_id" type="UUID" fk="players.id" notnull="true"/>
+      <column name="leaderboard_type" type="VARCHAR(30)" notnull="true" comment="GLOBAL_LEVEL|ACHIEVEMENTS_COUNT|BOSS_SPEEDRUN|TOTAL_MONSTERS_KILLED"/>
+      <column name="score" type="BIGINT" notnull="true"/>
+      <column name="rank" type="INTEGER"/>
+      <column name="metadata" type="JSONB" comment="Données additionnelles: boss_id, time_ms..."/>
+      <column name="updated_at" type="TIMESTAMP" default="CURRENT_TIMESTAMP"/>
+    </table>
+    
+  </tables>
+  
+  <!-- ==================== CONSTRAINTS & INDEXES ==================== -->
+  
+  <constraints>
+    <!-- Unique constraints -->
+    <unique table="player_achievements" columns="player_id,achievement_id"/>
+    <unique table="player_quests" columns="player_id,quest_id" comment="Un joueur ne peut avoir la même quête qu'une fois active"/>
+    <unique table="leaderboard_entries" columns="player_id,leaderboard_type"/>
+    <unique table="player_dungeon_progress" columns="player_id,dungeon_id"/>
+    <unique table="combat_spell_cooldowns" columns="combat_session_id,spell_id"/>
+    
+    <!-- Check constraints -->
+    <check table="players" expression="level >= 1"/>
+    <check table="players" expression="current_xp >= 0"/>
+    <check table="players" expression="gold >= 0"/>
+    <check table="item_instances" expression="item_level >= 1"/>
+    <check table="item_instances" expression="item_xp >= 0"/>
+    <check table="combat_sessions" expression="turn_count >= 0"/>
+    <check table="combat_sessions" expression="player_current_hp >= 0"/>
+    <check table="combat_sessions" expression="monster_current_hp >= 0"/>
+    <check table="spells" expression="spell_order BETWEEN 1 AND 3"/>
+  </constraints>
+  
+  <indexes>
+    <index table="users" columns="twitch_id" unique="true"/>
+    <index table="players" columns="user_id"/>
+    <index table="players" columns="level"/>
+    <index table="item_instances" columns="owner_id"/>
+    <index table="item_instances" columns="blueprint_id"/>
+    <index table="spells" columns="weapon_blueprint_id"/>
+    <index table="monster_abilities" columns="monster_blueprint_id"/>
+    <index table="combat_sessions" columns="player_id"/>
+    <index table="combat_sessions" columns="status"/>
+    <index table="combat_logs" columns="combat_session_id"/>
+    <index table="loot_table_entries" columns="loot_table_id"/>
+    <index table="player_achievements" columns="player_id"/>
+    <index table="player_quests" columns="player_id"/>
+    <index table="leaderboard_entries" columns="leaderboard_type,score DESC"/>
+  </indexes>
+  
+</mcd>

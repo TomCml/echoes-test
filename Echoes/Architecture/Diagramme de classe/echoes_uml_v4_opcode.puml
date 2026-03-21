@@ -1,0 +1,558 @@
+@startuml Echoes_Domain_Model_V4_Opcode
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam linetype ortho
+
+title Echoes - Modèle de Domaine v4 (Compatible Opcode Engine)
+
+' ============================================
+' ENUMS
+' ============================================
+package "Enumerations" {
+    enum DamageType {
+        PHYSICAL
+        MAGIC
+        TRUE
+        MIXED
+        STASIS
+    }
+    
+    enum EquipmentSlot {
+        WEAPON_PRIMARY
+        WEAPON_SECONDARY
+        HEAD
+        ARMOR
+        ARTIFACT
+        BLESSING
+        CONSUMABLE
+    }
+    
+    enum ItemType {
+        WEAPON
+        HEAD
+        ARMOR
+        ARTIFACT
+        BLESSING
+        CONSUMABLE
+    }
+    
+    enum Rarity {
+        COMMON
+        UNCOMMON
+        RARE
+        EPIC
+        LEGENDARY
+    }
+    
+    enum CombatStatus {
+        PENDING
+        IN_PROGRESS
+        PLAYER_TURN
+        MONSTER_TURN
+        VICTORY
+        DEFEAT
+        ABANDONED
+    }
+    
+    enum SpellType {
+        BASIC
+        SKILL
+        ULTIMATE
+    }
+    
+    enum TickTrigger {
+        ON_TURN_START
+        ON_TURN_END
+        ON_HIT
+        ON_DAMAGED
+        IMMEDIATE
+    }
+    
+    enum LeaderboardType {
+        GLOBAL_LEVEL
+        ACHIEVEMENTS_COUNT
+        BOSS_SPEEDRUN
+        TOTAL_MONSTERS_KILLED
+    }
+}
+
+' ============================================
+' VALUE OBJECTS
+' ============================================
+package "Value Objects" <<Rectangle>> {
+    
+    class StatsBlock <<ValueObject>> {
+        + MAX_HP: Integer
+        + HP: Integer
+        + AD: Integer
+        + AP: Integer
+        + ARMOR: Integer
+        + MR: Integer
+        + SPEED: Integer
+        + CRIT_CHANCE: Float
+        + CRIT_DAMAGE: Float = 1.5
+        --
+        + add(other: StatsBlock): StatsBlock
+        + scale(level: int, scaling: StatsScaling): StatsBlock
+        + toDict(): Dict[str, Any]
+    }
+    
+    class StatsScaling <<ValueObject>> {
+        + hp_per_level: Float
+        + ad_per_level: Float
+        + ap_per_level: Float
+        + armor_per_level: Float
+        + mr_per_level: Float
+    }
+    
+    class EffectPayload <<ValueObject>> {
+        + opcode: String
+        + order: Integer = 0
+        + params: Dict[str, Any]
+        --
+        ' Représente UN effet dans une liste
+        ' Ex: {"opcode": "damage", "params": {"formula": "AD*1.5"}}
+    }
+    
+    class StatusInstance <<ValueObject>> {
+        + remaining: Integer
+        + stacks: Integer = 1
+        --
+        ' État runtime d'un status sur une entité
+        ' Stocké dans Entity.statuses[status_code]
+    }
+    
+    class CombatLogEntry <<ValueObject>> {
+        + turn: Integer
+        + message: String
+        + timestamp: DateTime
+    }
+    
+    class LootDrop <<ValueObject>> {
+        + item_blueprint_id: UUID
+        + quantity: Integer
+    }
+}
+
+' ============================================
+' EFFECT ENGINE (ton système actuel)
+' ============================================
+package "Effect Engine (core/)" <<Rectangle>> {
+    
+    note "Système Opcode Registry\n\nLes effets sont des fonctions\nenregistrées via @register(opcode)\net appelées dynamiquement." as N_Engine
+    
+    class EffectRegistry <<Singleton>> {
+        - registry: Dict[String, EffectFn]
+        --
+        + register(opcode: String): Decorator
+        + get(opcode: String): EffectFn
+        + run_effects(battle, src, tgt, effects: List[EffectPayload]): void
+    }
+    
+    class StatusDefinition {
+        + code: String <<PK>>
+        + display_name: String
+        + description: String
+        + icon_key: String
+        + is_debuff: Boolean
+        + max_stacks: Integer
+        + tick: TickDefinition
+        --
+        ' Définition statique d'un status (BURN, FREEZE...)
+        ' Stocké en JSON ou DB, chargé dans Battle.status_defs
+    }
+    
+    class TickDefinition <<ValueObject>> {
+        + trigger: TickTrigger
+        + effect: EffectPayload
+        --
+        ' Ce qui se passe à chaque tick du status
+    }
+    
+    class StatusEngine <<Service>> {
+        --
+        + end_turn(battle: Battle, who: Entity): void
+        + apply_status(battle, target, code, duration, stacks): void
+        + remove_status(battle, target, code): void
+        + has_status(entity, code): Boolean
+    }
+    
+    abstract class EffectFunction <<Interface>> {
+        --
+        + __call__(b: Battle, src: Entity, tgt: Entity, params: Dict): void
+    }
+    
+    note "Opcodes existants:\n- damage\n- apply_status\n- build_gauge\n- bonus_damage_if_target_has_status\n\nÀ ajouter:\n- heal\n- modify_stat\n- remove_status\n- echo_gain\n- shield" as N_Opcodes
+}
+
+' ============================================
+' CORE DOMAIN (Identity)
+' ============================================
+package "Core Domain" <<Rectangle>> {
+    
+    class User {
+        + id: UUID <<PK>>
+        + twitch_id: String <<unique>>
+        + username: String
+        + created_at: DateTime
+        + is_profile_public: Boolean = false
+    }
+    
+    class Player {
+        + id: UUID <<PK>>
+        + user_id: UUID <<FK>>
+        + level: Integer = 1
+        + current_xp: BigInteger = 0
+        + gold: Integer = 0
+        + stat_points: Integer = 0
+        --
+        + gainXp(amount: int): LevelUpResult
+        + addGold(amount: int): void
+        + getTotalStats(): StatsBlock
+        + getEquippedSpells(): List[Spell]
+    }
+    
+    class PlayerEquipmentLoadout <<ValueObject>> {
+        + weapon_primary_id: UUID
+        + weapon_secondary_id: UUID
+        + head_id: UUID
+        + armor_id: UUID
+        + artifact_id: UUID
+        + blessing_id: UUID
+        + consumable_id: UUID
+        --
+        + getTotalBonusStats(): StatsBlock
+        + getAllSpells(): List[Spell]
+    }
+}
+
+' ============================================
+' COMBAT SYSTEM (Runtime)
+' ============================================
+package "Combat System" <<Rectangle>> {
+    
+    note "Entity = État runtime pendant combat\nCompatible avec ton models/domain.py" as N_Combat
+    
+    class Entity {
+        + id: UUID
+        + name: String
+        + stats: StatsBlock
+        + statuses: Dict[String, StatusInstance]
+        + gauges: Dict[String, Integer]
+        + cds: Dict[String, Integer]
+        --
+        ' Classe de base pour combat
+        ' Correspond à ton Entity existant
+    }
+    
+    class PlayerEntity {
+        + player_id: UUID <<FK>>
+        + loadout: PlayerEquipmentLoadout
+        --
+        ' Entity spécialisée pour le joueur
+        ' gauges["echo"] = jauge Echo
+    }
+    
+    class MonsterEntity {
+        + blueprint_id: UUID <<FK>>
+        + ai_behavior: String
+        + loot_table_id: UUID
+        --
+        ' Entity instanciée depuis MonsterBlueprint
+    }
+    
+    class Battle {
+        + id: UUID <<PK>>
+        + player_id: UUID <<FK>>
+        + monster_blueprint_id: UUID <<FK>>
+        + status: CombatStatus
+        + turn: Integer = 0
+        + log: List[CombatLogEntry]
+        + status_defs: Dict[String, StatusDefinition]
+        + rng: Random
+        --
+        + start(): void
+        + execute_spell(caster: Entity, spell: Spell, target: Entity): void
+        + next_turn(): void
+        + end_turn(who: Entity): void
+        + is_finished(): Boolean
+        + get_winner(): Entity
+    }
+    
+    class SpellCooldownTracker {
+        + cds: Dict[UUID, Integer]
+        --
+        + set_cooldown(spell_id: UUID, turns: Integer): void
+        + tick_all(): void
+        + is_ready(spell_id: UUID): Boolean
+        + get_remaining(spell_id: UUID): Integer
+    }
+}
+
+' ============================================
+' BLUEPRINTS (Static Definitions)
+' ============================================
+package "Blueprints" <<Rectangle>> {
+    
+    abstract class ItemBlueprint {
+        + id: UUID <<PK>>
+        + name: String
+        + description: String
+        + item_type: ItemType
+        + rarity: Rarity
+        + base_stats: StatsBlock
+        + stats_scaling: StatsScaling
+        + level_requirement: Integer = 1
+        + max_level: Integer = 100
+        --
+        + getStatsAtLevel(level: int): StatsBlock
+    }
+    
+    class WeaponBlueprint {
+        + damage_type: DamageType
+    }
+    
+    class EquipmentBlueprint {
+        + slot: EquipmentSlot
+        + passive_effects: List[EffectPayload]
+    }
+    
+    class ConsumableBlueprint {
+        + effects: List[EffectPayload]
+        + uses_per_combat: Integer = 1
+    }
+    
+    class Spell {
+        + id: UUID <<PK>>
+        + weapon_blueprint_id: UUID <<FK>>
+        + name: String
+        + description: String
+        + spell_type: SpellType
+        + cooldown_turns: Integer = 0
+        + echo_cost: Integer = 0
+        + effects: List[EffectPayload]
+        --
+        ' Les effets sont une LISTE d'EffectPayload
+        ' Exécutés via run_effects()
+        + isUltimate(): Boolean
+    }
+    
+    class MonsterBlueprint {
+        + id: UUID <<PK>>
+        + name: String
+        + base_level: Integer
+        + base_stats: StatsBlock
+        + stats_scaling: StatsScaling
+        + ai_behavior: String
+        + abilities: List[MonsterAbility]
+        + loot_table_id: UUID <<FK>>
+        + xp_reward: Integer
+        + gold_reward_min: Integer
+        + gold_reward_max: Integer
+        + is_boss: Boolean = false
+        --
+        + createEntity(level: int): MonsterEntity
+    }
+    
+    class MonsterAbility {
+        + id: UUID <<PK>>
+        + monster_blueprint_id: UUID <<FK>>
+        + name: String
+        + cooldown: Integer
+        + priority: Integer
+        + condition: String
+        + effects: List[EffectPayload]
+        --
+        ' Capacités du monstre (IA)
+    }
+}
+
+' ============================================
+' ITEM INSTANCES
+' ============================================
+package "Item Instances" <<Rectangle>> {
+    
+    class ItemInstance {
+        + id: UUID <<PK>>
+        + blueprint_id: UUID <<FK>>
+        + owner_id: UUID <<FK>>
+        + item_level: Integer = 1
+        + item_xp: Integer = 0
+        + equipped_slot: EquipmentSlot
+        + is_equipped: Boolean = false
+        --
+        + getCurrentStats(): StatsBlock
+        + addXp(amount: int): LevelUpResult
+    }
+}
+
+' ============================================
+' WORLD & CONTENT
+' ============================================
+package "World & Content" <<Rectangle>> {
+    
+    class LootTable {
+        + id: UUID <<PK>>
+        + name: String
+        + entries: List[LootTableEntry]
+        --
+        + roll(rng: Random): List[LootDrop]
+    }
+    
+    class LootTableEntry {
+        + item_blueprint_id: UUID <<FK>>
+        + weight: Integer
+        + min_quantity: Integer = 1
+        + max_quantity: Integer = 1
+    }
+    
+    class Dungeon {
+        + id: UUID <<PK>>
+        + name: String
+        + level_requirement: Integer
+        + monster_sequence: List[UUID]
+        + boss_blueprint_id: UUID <<FK>>
+    }
+}
+
+' ============================================
+' PROGRESSION
+' ============================================
+package "Progression" <<Rectangle>> {
+    
+    class Achievement {
+        + id: UUID <<PK>>
+        + name: String
+        + condition_type: String
+        + condition_value: Integer
+        + reward_xp: Integer
+        + reward_gold: Integer
+    }
+    
+    class PlayerAchievement {
+        + player_id: UUID <<FK>>
+        + achievement_id: UUID <<FK>>
+        + progress: Integer = 0
+        + is_completed: Boolean = false
+    }
+    
+    class LeaderboardEntry {
+        + player_id: UUID <<FK>>
+        + leaderboard_type: LeaderboardType
+        + score: BigInteger
+    }
+}
+
+' ============================================
+' RELATIONS
+' ============================================
+
+' Core
+User "1" -- "1" Player : owns >
+Player "1" *-- "1" PlayerEquipmentLoadout : has >
+
+' Combat Entities
+PlayerEntity --|> Entity
+MonsterEntity --|> Entity
+
+' Battle
+Battle "1" *-- "1" PlayerEntity : player >
+Battle "1" *-- "1" MonsterEntity : monster >
+Battle "1" *-- "0..*" CombatLogEntry : log >
+Battle "1" -- "*" StatusDefinition : loads >
+
+' Engine
+EffectRegistry "1" -- "*" EffectFunction : registers >
+StatusEngine ..> Battle : operates on >
+StatusEngine ..> StatusDefinition : uses >
+
+' Blueprints
+WeaponBlueprint --|> ItemBlueprint
+EquipmentBlueprint --|> ItemBlueprint
+ConsumableBlueprint --|> ItemBlueprint
+
+WeaponBlueprint "1" *-- "3" Spell : has >
+Spell "1" *-- "1..*" EffectPayload : effects >
+MonsterBlueprint "1" *-- "0..*" MonsterAbility : abilities >
+MonsterAbility "1" *-- "1..*" EffectPayload : effects >
+EquipmentBlueprint "1" *-- "0..*" EffectPayload : passive >
+ConsumableBlueprint "1" *-- "1..*" EffectPayload : effects >
+
+' Instances
+ItemInstance "*" -- "1" ItemBlueprint : based on >
+Player "1" *-- "0..*" ItemInstance : owns >
+MonsterEntity "*" -- "1" MonsterBlueprint : from >
+
+' World
+MonsterBlueprint "*" -- "1" LootTable : drops >
+LootTable "1" *-- "*" LootTableEntry : contains >
+Dungeon "*" -- "*" MonsterBlueprint : contains >
+
+' Progression
+Player "1" *-- "*" PlayerAchievement : tracks >
+Player "1" -- "*" LeaderboardEntry : ranked >
+
+' Notes
+N_Engine .. EffectRegistry
+N_Opcodes .. EffectFunction
+N_Combat .. Entity
+
+' ============================================
+' FLUX D'EXÉCUTION D'UN SORT
+' ============================================
+note bottom of Battle
+  **Flux d'exécution d'un sort:**
+  
+  1. Player sélectionne Spell(id=X)
+  2. Battle vérifie cooldown dans Entity.cds[spell_id]
+  3. Battle vérifie echo_cost vs Entity.gauges["echo"]
+  4. Pour chaque EffectPayload dans Spell.effects:
+     a. EffectRegistry.get(effect.opcode)
+     b. fn(battle, caster, target, effect.params)
+  5. StatusEngine.end_turn(battle, caster)
+  6. Battle.next_turn()
+end note
+
+' ============================================
+' EXEMPLE JSON D'UN SORT
+' ============================================
+note right of Spell
+  **Exemple: Boule de Feu (JSON)**
+  
+  {
+    "name": "Boule de Feu",
+    "spell_type": "SKILL",
+    "cooldown_turns": 2,
+    "echo_cost": 0,
+    "effects": [
+      {
+        "opcode": "damage",
+        "order": 1,
+        "params": {
+          "formula": "AP * 1.2 + 50",
+          "can_crit": true,
+          "label": "fire"
+        }
+      },
+      {
+        "opcode": "apply_status",
+        "order": 2,
+        "params": {
+          "status_code": "BURN",
+          "duration_turns": 3,
+          "chance": "0.8"
+        }
+      },
+      {
+        "opcode": "build_gauge",
+        "order": 3,
+        "params": {
+          "gauge": "echo",
+          "amount": 5
+        }
+      }
+    ]
+  }
+end note
+
+@enduml

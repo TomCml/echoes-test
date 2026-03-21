@@ -1,0 +1,206 @@
+@startuml Echoes_04_Progression
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam ranksep 40
+skinparam nodesep 30
+
+title Echoes - 04. Progression (Achievements, Quests, Leaderboards)
+
+' ============================================
+' ENUMS
+' ============================================
+package "Enums" {
+    enum LeaderboardType {
+        GLOBAL_LEVEL
+        ACHIEVEMENTS_COUNT
+        BOSS_SPEEDRUN
+        TOTAL_MONSTERS_KILLED
+    }
+    
+    enum QuestType {
+        DAILY
+        WEEKLY
+        STORY
+        EVENT
+    }
+    
+    enum AchievementCategory {
+        COMBAT
+        EXPLORATION
+        COLLECTION
+        SOCIAL
+        MASTERY
+    }
+}
+
+' ============================================
+' CORE REFERENCE (from 01_Core)
+' ============================================
+package "Core (Reference)" #LightGray {
+    class Player {
+        + id: UUID <<PK>>
+        + user_id: UUID <<FK>>
+        + level: Integer
+        + current_xp: BigInteger
+        + gold: Integer
+    }
+}
+
+' ============================================
+' ACHIEVEMENTS
+' ============================================
+package "Achievements" #LightGreen {
+    
+    class Achievement {
+        + id: UUID <<PK>>
+        + name: String
+        + description: String
+        + category: AchievementCategory
+        + condition_type: String
+        + condition_value: Integer
+        + reward_xp: Integer
+        + reward_gold: Integer
+        + reward_item_blueprint_id: UUID
+        + icon_key: String
+        + is_hidden: Boolean = false
+        --
+        ' condition_type examples:
+        ' "kill_monster", "reach_level",
+        ' "collect_item", "win_boss"
+    }
+    
+    class PlayerAchievement {
+        + id: UUID <<PK>>
+        + player_id: UUID <<FK>>
+        + achievement_id: UUID <<FK>>
+        + progress: Integer = 0
+        + is_completed: Boolean = false
+        + completed_at: DateTime
+        --
+        + updateProgress(amount: int): void
+        + checkCompletion(): Boolean
+    }
+}
+
+' ============================================
+' QUESTS
+' ============================================
+package "Quests" #LightYellow {
+    
+    class Quest {
+        + id: UUID <<PK>>
+        + name: String
+        + description: String
+        + quest_type: QuestType
+        + objective_type: String
+        + objective_target: Integer
+        + reward_xp: Integer
+        + reward_gold: Integer
+        + reward_item_blueprint_id: UUID
+        + is_repeatable: Boolean = false
+        + reset_period_hours: Integer
+        --
+        ' objective_type examples:
+        ' "kill_monsters", "complete_dungeon",
+        ' "use_spell", "win_battles"
+    }
+    
+    class PlayerQuest {
+        + id: UUID <<PK>>
+        + player_id: UUID <<FK>>
+        + quest_id: UUID <<FK>>
+        + progress: Integer = 0
+        + is_completed: Boolean = false
+        + assigned_at: DateTime
+        + completed_at: DateTime
+        + expires_at: DateTime
+        --
+        + updateProgress(amount: int): void
+        + checkCompletion(): Boolean
+        + isExpired(): Boolean
+    }
+    
+    note "Daily/Weekly Quest Flow:\n\n1. System assigns quests at reset\n2. Player actions update progress\n3. Completion triggers rewards\n4. Quest resets after period" as N_QuestFlow
+}
+
+' ============================================
+' LEADERBOARDS
+' ============================================
+package "Leaderboards" #LightBlue {
+    
+    class LeaderboardEntry {
+        + id: UUID <<PK>>
+        + player_id: UUID <<FK>>
+        + leaderboard_type: LeaderboardType
+        + score: BigInteger
+        + rank: Integer
+        + metadata: JSON
+        + updated_at: DateTime
+        --
+        ' metadata examples:
+        ' boss_speedrun: {"boss_id": X, "time_ms": Y}
+        ' achievements: {"total": N, "rare": M}
+    }
+    
+    class LeaderboardService <<Service>> {
+        --
+        + getTop100(type: LeaderboardType): List[Entry]
+        + getPlayerRank(player_id, type): Integer
+        + updateScore(player_id, type, score): void
+        + recalculateRanks(type): void
+    }
+    
+    note "Leaderboard Types (CDC):\n\n1. GLOBAL_LEVEL - Niveau/XP total\n2. ACHIEVEMENTS_COUNT - Succès\n3. BOSS_SPEEDRUN - Temps par boss\n4. TOTAL_MONSTERS_KILLED" as N_LeaderboardTypes
+}
+
+' ============================================
+' DUNGEON (Preview for Phase 16)
+' ============================================
+package "Dungeons (Future)" #LightGray {
+    
+    class Dungeon {
+        + id: UUID <<PK>>
+        + name: String
+        + description: String
+        + level_requirement: Integer
+        + recommended_level: Integer
+        + monster_sequence: List[UUID]
+        + boss_blueprint_id: UUID <<FK>>
+        + background_key: String
+        + unlock_condition: String
+    }
+    
+    class PlayerDungeonProgress {
+        + player_id: UUID <<FK>>
+        + dungeon_id: UUID <<FK>>
+        + is_unlocked: Boolean = false
+        + best_clear_time_ms: Integer
+        + clear_count: Integer = 0
+        + last_cleared_at: DateTime
+    }
+}
+
+' ============================================
+' RELATIONS
+' ============================================
+
+' Player → Achievements
+Player "1" *-- "0..*" PlayerAchievement : tracks >
+PlayerAchievement "*" -- "1" Achievement : for >
+
+' Player → Quests
+Player "1" *-- "0..*" PlayerQuest : active >
+PlayerQuest "*" -- "1" Quest : assigned >
+
+' Player → Leaderboards
+Player "1" -- "0..*" LeaderboardEntry : ranked in >
+
+' Player → Dungeons
+Player "1" *-- "0..*" PlayerDungeonProgress : progress >
+PlayerDungeonProgress "*" -- "1" Dungeon : for >
+
+' Notes
+N_QuestFlow .. Quest
+N_LeaderboardTypes .. LeaderboardEntry
+
+@enduml

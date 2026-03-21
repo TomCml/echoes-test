@@ -9,4 +9,4 @@ def eff_build_gauge(b: Battle, src: Entity, tgt: Entity, p: Dict[str, Any]):
         return
     g = p["gauge"]; amt = int(p.get("amount", 1))
     src.gauges[g] = src.gauges.get(g, 0) + amt
-    b.log.append(f"{src.name} gains {amt} {g} (total {src.gauges[g]}).")
+    b.add_log(f"{src.name} gains {amt} {g} (total {src.gauges[g]}).")

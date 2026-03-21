@@ -1,0 +1,155 @@
+@startuml Echoes_01_Core_Domain
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam ranksep 40
+skinparam nodesep 30
+
+title Echoes - 01. Core Domain (Identity & Equipment)
+
+' ============================================
+' ENUMS
+' ============================================
+package "Enums" {
+    enum EquipmentSlot {
+        WEAPON_PRIMARY
+        WEAPON_SECONDARY
+        HEAD
+        ARMOR
+        ARTIFACT
+        BLESSING
+        CONSUMABLE
+    }
+    
+    enum ItemType {
+        WEAPON
+        HEAD
+        ARMOR
+        ARTIFACT
+        BLESSING
+        CONSUMABLE
+    }
+    
+    enum Rarity {
+        COMMON
+        UNCOMMON
+        RARE
+        EPIC
+        LEGENDARY
+    }
+}
+
+' ============================================
+' VALUE OBJECTS
+' ============================================
+package "Value Objects" {
+    class StatsBlock <<ValueObject>> {
+        + MAX_HP: Integer
+        + HP: Integer
+        + AD: Integer
+        + AP: Integer
+        + ARMOR: Integer
+        + MR: Integer
+        + SPEED: Integer
+        + CRIT_CHANCE: Float
+        + CRIT_DAMAGE: Float = 1.5
+        --
+        + add(other: StatsBlock): StatsBlock
+        + scale(level: int, scaling: StatsScaling): StatsBlock
+        + toDict(): Dict[str, Any]
+    }
+    
+    class StatsScaling <<ValueObject>> {
+        + hp_per_level: Float
+        + ad_per_level: Float
+        + ap_per_level: Float
+        + armor_per_level: Float
+        + mr_per_level: Float
+    }
+    
+    class PlayerEquipmentLoadout <<ValueObject>> {
+        + weapon_primary_id: UUID
+        + weapon_secondary_id: UUID
+        + head_id: UUID
+        + armor_id: UUID
+        + artifact_id: UUID
+        + blessing_id: UUID
+        + consumable_id: UUID
+        --
+        + getTotalBonusStats(): StatsBlock
+        + getAllSpells(): List[Spell]
+        + isSlotEmpty(slot: EquipmentSlot): Boolean
+    }
+}
+
+' ============================================
+' CORE ENTITIES
+' ============================================
+package "Core Domain" {
+    class User {
+        + id: UUID <<PK>>
+        + twitch_id: String <<unique>>
+        + username: String
+        + created_at: DateTime
+        + is_profile_public: Boolean = false
+        --
+        ' RGPD: Uniquement twitch_id + username
+    }
+    
+    class Player {
+        + id: UUID <<PK>>
+        + user_id: UUID <<FK>>
+        + level: Integer = 1
+        + current_xp: BigInteger = 0
+        + gold: Integer = 0
+        + stat_points: Integer = 0
+        --
+        + gainXp(amount: int): LevelUpResult
+        + addGold(amount: int): void
+        + getTotalStats(): StatsBlock
+        + getEquippedSpells(): List[Spell]
+    }
+}
+
+' ============================================
+' ITEM SYSTEM
+' ============================================
+package "Item System" {
+    abstract class ItemBlueprint {
+        + id: UUID <<PK>>
+        + name: String
+        + description: String
+        + item_type: ItemType
+        + rarity: Rarity
+        + base_stats: StatsBlock
+        + stats_scaling: StatsScaling
+        + level_requirement: Integer = 1
+        + max_level: Integer = 100
+        --
+        + getStatsAtLevel(level: int): StatsBlock
+    }
+    
+    class ItemInstance {
+        + id: UUID <<PK>>
+        + blueprint_id: UUID <<FK>>
+        + owner_id: UUID <<FK>>
+        + item_level: Integer = 1
+        + item_xp: Integer = 0
+        + equipped_slot: EquipmentSlot
+        + is_equipped: Boolean = false
+        --
+        + getCurrentStats(): StatsBlock
+        + addXp(amount: int): LevelUpResult
+    }
+}
+
+' ============================================
+' RELATIONS
+' ============================================
+User "1" -- "1" Player : owns >
+Player "1" *-- "1" PlayerEquipmentLoadout : has >
+Player "1" *-- "0..*" ItemInstance : inventory >
+ItemInstance "*" -- "1" ItemBlueprint : based on >
+ItemBlueprint "1" *-- "1" StatsBlock : base_stats >
+ItemBlueprint "1" *-- "1" StatsScaling : scaling >
+
+@enduml

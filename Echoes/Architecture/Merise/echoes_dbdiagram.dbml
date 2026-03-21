@@ -1,0 +1,423 @@
+// Echoes MLD - Format dbdiagram.io
+// Coller ce contenu sur https://dbdiagram.io/d
+
+// ==========================================
+// CORE DOMAIN
+// ==========================================
+
+Table users {
+  id uuid [pk]
+  twitch_id varchar(50) [unique, not null]
+  username varchar(100) [not null]
+  is_profile_public boolean [default: false]
+  created_at timestamp [default: `now()`]
+  updated_at timestamp
+}
+
+Table players {
+  id uuid [pk]
+  user_id uuid [ref: - users.id, not null]
+  level integer [not null, default: 1]
+  current_xp bigint [not null, default: 0]
+  xp_to_next_level bigint [not null]
+  gold integer [not null, default: 0]
+  stat_points_available integer [default: 0]
+  created_at timestamp [default: `now()`]
+}
+
+Table player_equipment_loadout {
+  id uuid [pk]
+  player_id uuid [ref: - players.id, not null]
+  weapon_primary_id uuid [ref: > item_instances.id]
+  weapon_secondary_id uuid [ref: > item_instances.id]
+  head_id uuid [ref: > item_instances.id]
+  armor_id uuid [ref: > item_instances.id]
+  artifact_id uuid [ref: > item_instances.id]
+  blessing_id uuid [ref: > item_instances.id]
+  consumable_id uuid [ref: > item_instances.id]
+}
+
+// ==========================================
+// ITEMS
+// ==========================================
+
+Table item_blueprints {
+  id uuid [pk]
+  name varchar(100) [not null]
+  description text
+  item_type item_type_enum [not null]
+  rarity rarity_enum [not null, default: 'COMMON']
+  level_requirement integer [default: 1]
+  max_level integer [default: 100]
+  is_tradeable boolean [default: true]
+  base_max_hp integer [default: 0]
+  base_ad integer [default: 0]
+  base_ap integer [default: 0]
+  base_armor integer [default: 0]
+  base_mr integer [default: 0]
+  base_speed integer [default: 0]
+  base_crit_chance decimal [default: 0]
+  scaling_hp_per_level decimal [default: 0]
+  scaling_ad_per_level decimal [default: 0]
+  scaling_ap_per_level decimal [default: 0]
+  scaling_armor_per_level decimal [default: 0]
+  scaling_mr_per_level decimal [default: 0]
+}
+
+Table weapon_blueprints {
+  id uuid [pk, ref: - item_blueprints.id]
+  damage_type damage_type_enum [not null, default: 'PHYSICAL']
+}
+
+Table equipment_blueprints {
+  id uuid [pk, ref: - item_blueprints.id]
+  slot equipment_slot_enum [not null]
+  passive_effects jsonb [default: '[]']
+}
+
+Table consumable_blueprints {
+  id uuid [pk, ref: - item_blueprints.id]
+  effects jsonb [not null, default: '[]']
+  uses_per_combat integer [default: 1]
+}
+
+Table item_instances {
+  id uuid [pk]
+  blueprint_id uuid [ref: > item_blueprints.id, not null]
+  owner_id uuid [ref: > players.id, not null]
+  item_level integer [not null, default: 1]
+  item_xp integer [default: 0]
+  item_xp_to_next_level integer
+  is_equipped boolean [default: false]
+  equipped_slot equipment_slot_enum
+  acquired_at timestamp [default: `now()`]
+}
+
+// ==========================================
+// SPELLS
+// ==========================================
+
+Table spells {
+  id uuid [pk]
+  weapon_blueprint_id uuid [ref: > weapon_blueprints.id, not null]
+  name varchar(100) [not null]
+  description text
+  spell_type spell_type_enum [not null, default: 'BASIC']
+  spell_order integer [default: 1, note: '1, 2 ou 3']
+  cooldown_turns integer [default: 0]
+  echo_cost integer [default: 0]
+  effects jsonb [not null, default: '[]', note: 'List[EffectPayload]']
+}
+
+// ==========================================
+// MONSTERS
+// ==========================================
+
+Table loot_tables {
+  id uuid [pk]
+  name varchar(100) [not null]
+}
+
+Table monster_blueprints {
+  id uuid [pk]
+  name varchar(100) [not null]
+  description text
+  base_level integer [not null, default: 1]
+  ai_behavior varchar(50) [default: 'basic']
+  loot_table_id uuid [ref: > loot_tables.id]
+  xp_reward integer [not null]
+  gold_reward_min integer [not null]
+  gold_reward_max integer [not null]
+  is_boss boolean [default: false]
+  sprite_key varchar(100)
+  base_max_hp integer [not null]
+  base_ad integer [default: 0]
+  base_ap integer [default: 0]
+  base_armor integer [default: 0]
+  base_mr integer [default: 0]
+  base_speed integer [default: 10]
+  scaling_hp_per_level decimal [default: 0]
+  scaling_ad_per_level decimal [default: 0]
+  scaling_armor_per_level decimal [default: 0]
+}
+
+Table monster_abilities {
+  id uuid [pk]
+  monster_blueprint_id uuid [ref: > monster_blueprints.id, not null]
+  name varchar(100) [not null]
+  cooldown integer [default: 0]
+  priority integer [default: 1]
+  condition_expr varchar(200)
+  effects jsonb [not null, default: '[]']
+}
+
+Table loot_table_entries {
+  id uuid [pk]
+  loot_table_id uuid [ref: > loot_tables.id, not null]
+  item_blueprint_id uuid [ref: > item_blueprints.id, not null]
+  weight integer [not null, default: 100]
+  min_quantity integer [default: 1]
+  max_quantity integer [default: 1]
+  min_player_level integer [default: 1]
+}
+
+// ==========================================
+// COMBAT
+// ==========================================
+
+Table combat_sessions {
+  id uuid [pk]
+  player_id uuid [ref: > players.id, not null]
+  monster_blueprint_id uuid [ref: > monster_blueprints.id, not null]
+  monster_level integer [not null]
+  status combat_status_enum [default: 'PENDING']
+  turn_count integer [default: 0]
+  current_turn_entity varchar(20)
+  player_current_hp integer [not null]
+  player_max_hp integer [not null]
+  player_echo_current integer [default: 0]
+  player_echo_max integer [default: 100]
+  player_statuses jsonb [default: '{}']
+  player_gauges jsonb [default: '{}']
+  monster_current_hp integer [not null]
+  monster_max_hp integer [not null]
+  monster_statuses jsonb [default: '{}']
+  started_at timestamp [default: `now()`]
+  ended_at timestamp
+}
+
+Table combat_spell_cooldowns {
+  id uuid [pk]
+  combat_session_id uuid [ref: > combat_sessions.id, not null]
+  spell_id uuid [ref: > spells.id, not null]
+  remaining_turns integer [not null]
+  
+  indexes {
+    (combat_session_id, spell_id) [unique]
+  }
+}
+
+Table combat_logs {
+  id uuid [pk]
+  combat_session_id uuid [ref: > combat_sessions.id, not null]
+  turn integer [not null]
+  actor varchar(20) [not null]
+  action_type varchar(50)
+  spell_id uuid
+  damage_dealt integer
+  damage_type damage_type_enum
+  was_critical boolean [default: false]
+  echo_gained integer [default: 0]
+  message text
+  created_at timestamp [default: `now()`]
+}
+
+Table status_definitions {
+  code varchar(50) [pk]
+  display_name varchar(100) [not null]
+  description text
+  icon_key varchar(100)
+  is_debuff boolean [default: true]
+  is_stackable boolean [default: false]
+  max_stacks integer [default: 1]
+  tick_trigger tick_trigger_enum
+  tick_effect jsonb
+}
+
+// ==========================================
+// DUNGEONS
+// ==========================================
+
+Table dungeons {
+  id uuid [pk]
+  name varchar(100) [not null]
+  description text
+  level_requirement integer [default: 1]
+  recommended_level integer
+  boss_blueprint_id uuid [ref: > monster_blueprints.id]
+  background_key varchar(100)
+}
+
+Table dungeon_monster_sequence {
+  id uuid [pk]
+  dungeon_id uuid [ref: > dungeons.id, not null]
+  monster_blueprint_id uuid [ref: > monster_blueprints.id, not null]
+  sequence_order integer [not null]
+  monster_level_override integer
+}
+
+Table player_dungeon_progress {
+  id uuid [pk]
+  player_id uuid [ref: > players.id, not null]
+  dungeon_id uuid [ref: > dungeons.id, not null]
+  is_unlocked boolean [default: false]
+  best_clear_time_ms integer
+  clear_count integer [default: 0]
+  last_cleared_at timestamp
+  
+  indexes {
+    (player_id, dungeon_id) [unique]
+  }
+}
+
+// ==========================================
+// PROGRESSION
+// ==========================================
+
+Table achievements {
+  id uuid [pk]
+  name varchar(100) [not null]
+  description text
+  category achievement_category_enum
+  condition_type varchar(50) [not null]
+  condition_value integer [not null]
+  condition_target_id uuid
+  reward_xp integer [default: 0]
+  reward_gold integer [default: 0]
+  reward_item_blueprint_id uuid [ref: > item_blueprints.id]
+  icon_key varchar(100)
+  is_hidden boolean [default: false]
+}
+
+Table player_achievements {
+  id uuid [pk]
+  player_id uuid [ref: > players.id, not null]
+  achievement_id uuid [ref: > achievements.id, not null]
+  progress integer [default: 0]
+  is_completed boolean [default: false]
+  completed_at timestamp
+  
+  indexes {
+    (player_id, achievement_id) [unique]
+  }
+}
+
+Table quests {
+  id uuid [pk]
+  name varchar(100) [not null]
+  description text
+  quest_type quest_type_enum [not null]
+  objective_type varchar(50) [not null]
+  objective_target integer [not null]
+  objective_target_id uuid
+  reward_xp integer [default: 0]
+  reward_gold integer [default: 0]
+  reward_item_blueprint_id uuid [ref: > item_blueprints.id]
+  is_repeatable boolean [default: false]
+  reset_period_hours integer
+}
+
+Table player_quests {
+  id uuid [pk]
+  player_id uuid [ref: > players.id, not null]
+  quest_id uuid [ref: > quests.id, not null]
+  progress integer [default: 0]
+  is_completed boolean [default: false]
+  assigned_at timestamp [default: `now()`]
+  completed_at timestamp
+  expires_at timestamp
+  
+  indexes {
+    (player_id, quest_id) [unique]
+  }
+}
+
+Table leaderboard_entries {
+  id uuid [pk]
+  player_id uuid [ref: > players.id, not null]
+  leaderboard_type leaderboard_type_enum [not null]
+  score bigint [not null]
+  rank integer
+  metadata jsonb
+  updated_at timestamp [default: `now()`]
+  
+  indexes {
+    (player_id, leaderboard_type) [unique]
+    (leaderboard_type, score) [name: 'idx_leaderboard_ranking']
+  }
+}
+
+// ==========================================
+// ENUMS (pour référence)
+// ==========================================
+
+Enum item_type_enum {
+  WEAPON
+  HEAD
+  ARMOR
+  ARTIFACT
+  BLESSING
+  CONSUMABLE
+}
+
+Enum rarity_enum {
+  COMMON
+  UNCOMMON
+  RARE
+  EPIC
+  LEGENDARY
+}
+
+Enum damage_type_enum {
+  PHYSICAL
+  MAGIC
+  TRUE
+  MIXED
+  STASIS
+}
+
+Enum spell_type_enum {
+  BASIC
+  SKILL
+  ULTIMATE
+}
+
+Enum equipment_slot_enum {
+  WEAPON_PRIMARY
+  WEAPON_SECONDARY
+  HEAD
+  ARMOR
+  ARTIFACT
+  BLESSING
+  CONSUMABLE
+}
+
+Enum combat_status_enum {
+  PENDING
+  IN_PROGRESS
+  PLAYER_TURN
+  MONSTER_TURN
+  VICTORY
+  DEFEAT
+  ABANDONED
+}
+
+Enum tick_trigger_enum {
+  ON_TURN_START
+  ON_TURN_END
+  ON_HIT
+  ON_DAMAGED
+  IMMEDIATE
+}
+
+Enum quest_type_enum {
+  DAILY
+  WEEKLY
+  STORY
+  EVENT
+}
+
+Enum achievement_category_enum {
+  COMBAT
+  EXPLORATION
+  COLLECTION
+  SOCIAL
+  MASTERY
+}
+
+Enum leaderboard_type_enum {
+  GLOBAL_LEVEL
+  ACHIEVEMENTS_COUNT
+  BOSS_SPEEDRUN
+  TOTAL_MONSTERS_KILLED
+}

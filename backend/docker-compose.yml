@@ -1,0 +1,35 @@
+services:
+  #--------- DB Postgres ---------
+  db:
+    image: postgres:16-alpine
+    container_name: echoes_db
+    ports:
+      - "5432:5432"
+    env_file: .env
+    volumes:
+      - postgres_data_echoes_dev:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  #--------- Backend ---------
+  backend:
+    build:
+      context: .
+      dockerfile: dockerfile
+    container_name: echoes_backend
+    volumes:
+      - .:/app
+    ports:
+      - '6000:6000'
+    env_file: .env
+    environment:
+      - DB_HOST=db
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data_echoes_dev:

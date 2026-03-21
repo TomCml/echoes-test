@@ -1,6 +1,6 @@
 fastapi
+requests
 uvicorn[standard]
-infisicalsdk
 pydantic
 sqlalchemy
 alembic

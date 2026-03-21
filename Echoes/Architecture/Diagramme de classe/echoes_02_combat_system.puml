@@ -1,0 +1,207 @@
+@startuml Echoes_02_Combat_System
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam ranksep 40
+skinparam nodesep 30
+
+title Echoes - 02. Combat System (Battle & Effects Engine)
+
+' ============================================
+' ENUMS
+' ============================================
+package "Enums" {
+    enum CombatStatus {
+        PENDING
+        IN_PROGRESS
+        PLAYER_TURN
+        MONSTER_TURN
+        VICTORY
+        DEFEAT
+        ABANDONED
+    }
+    
+    enum TickTrigger {
+        ON_TURN_START
+        ON_TURN_END
+        ON_HIT
+        ON_DAMAGED
+        IMMEDIATE
+    }
+    
+    enum DamageType {
+        PHYSICAL
+        MAGIC
+        TRUE
+        MIXED
+        STASIS
+    }
+}
+
+' ============================================
+' VALUE OBJECTS
+' ============================================
+package "Value Objects" {
+    class StatsBlock <<ValueObject>> {
+        + MAX_HP: Integer
+        + HP: Integer
+        + AD: Integer
+        + AP: Integer
+        + ARMOR: Integer
+        + MR: Integer
+        + SPEED: Integer
+        + CRIT_CHANCE: Float
+    }
+    
+    class EffectPayload <<ValueObject>> {
+        + opcode: String
+        + order: Integer = 0
+        + params: Dict[str, Any]
+        --
+        ' Ex: {"opcode": "damage", 
+        '      "params": {"formula": "AD*1.5"}}
+    }
+    
+    class StatusInstance <<ValueObject>> {
+        + remaining: Integer
+        + stacks: Integer = 1
+        --
+        ' Runtime state in Entity.statuses[code]
+    }
+    
+    class CombatLogEntry <<ValueObject>> {
+        + turn: Integer
+        + message: String
+        + timestamp: DateTime
+    }
+}
+
+' ============================================
+' EFFECT ENGINE (Opcode System)
+' ============================================
+package "Effect Engine" <<Rectangle>> #LightBlue {
+    
+    class EffectRegistry <<Singleton>> {
+        - registry: Dict[String, EffectFn]
+        --
+        + register(opcode: String): Decorator
+        + get(opcode: String): EffectFn
+        + run_effects(battle, src, tgt, effects): void
+    }
+    
+    class StatusDefinition {
+        + code: String <<PK>>
+        + display_name: String
+        + description: String
+        + is_debuff: Boolean
+        + max_stacks: Integer
+        + tick: TickDefinition
+    }
+    
+    class TickDefinition <<ValueObject>> {
+        + trigger: TickTrigger
+        + effect: EffectPayload
+    }
+    
+    class StatusEngine <<Service>> {
+        --
+        + end_turn(battle, who: Entity): void
+        + apply_status(battle, target, code, duration): void
+        + remove_status(battle, target, code): void
+        + has_status(entity, code): Boolean
+    }
+    
+    note "Opcodes enregistrés:\n\n@register('damage')\n@register('apply_status')\n@register('build_gauge')\n@register('bonus_damage_if_target_has_status')\n@register('heal')\n@register('shield')\n@register('modify_stat')" as N_Opcodes
+}
+
+' ============================================
+' COMBAT ENTITIES
+' ============================================
+package "Combat Entities" {
+    
+    class Entity {
+        + id: UUID
+        + name: String
+        + stats: StatsBlock
+        + statuses: Dict[String, StatusInstance]
+        + gauges: Dict[String, Integer]
+        + cds: Dict[String, Integer]
+        --
+        ' gauges["echo"] = Echo resource
+        ' cds[spell_id] = cooldown remaining
+    }
+    
+    class PlayerEntity {
+        + player_id: UUID <<FK>>
+        + loadout: PlayerEquipmentLoadout
+        --
+        ' Created from Player at combat start
+    }
+    
+    class MonsterEntity {
+        + blueprint_id: UUID <<FK>>
+        + ai_behavior: String
+        + loot_table_id: UUID
+        --
+        ' Created from MonsterBlueprint
+    }
+}
+
+' ============================================
+' BATTLE SESSION
+' ============================================
+package "Battle Session" {
+    
+    class Battle {
+        + id: UUID <<PK>>
+        + player_id: UUID <<FK>>
+        + monster_blueprint_id: UUID <<FK>>
+        + status: CombatStatus
+        + turn: Integer = 0
+        + log: List[CombatLogEntry]
+        + status_defs: Dict[String, StatusDefinition]
+        + rng: Random
+        --
+        + start(): void
+        + execute_spell(caster, spell, target): void
+        + next_turn(): void
+        + end_turn(who: Entity): void
+        + is_finished(): Boolean
+        + get_winner(): Entity
+    }
+}
+
+' ============================================
+' RELATIONS
+' ============================================
+PlayerEntity --|> Entity
+MonsterEntity --|> Entity
+
+Battle "1" *-- "1" PlayerEntity : player >
+Battle "1" *-- "1" MonsterEntity : monster >
+Battle "1" *-- "0..*" CombatLogEntry : log >
+Battle "1" -- "*" StatusDefinition : loads defs >
+
+StatusEngine ..> Battle : operates on >
+StatusEngine ..> StatusDefinition : uses >
+EffectRegistry ..> EffectPayload : executes >
+StatusDefinition "1" *-- "0..1" TickDefinition : tick >
+
+Entity "1" *-- "1" StatsBlock : stats >
+
+N_Opcodes .. EffectRegistry
+
+' ============================================
+' FLUX NOTE
+' ============================================
+note bottom of Battle
+  **Combat Flow:**
+  1. Battle.start() → create entities
+  2. Battle.execute_spell(caster, spell, target)
+     → EffectRegistry.run_effects(effects)
+  3. StatusEngine.end_turn(battle, caster)
+     → tick statuses, decrement cooldowns
+  4. Battle.next_turn()
+  5. Repeat until is_finished()
+end note
+
+@enduml

@@ -1,0 +1,225 @@
+@startuml Echoes_03_Blueprints
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam ranksep 40
+skinparam nodesep 30
+
+title Echoes - 03. Blueprints (Weapons, Spells, Monsters)
+
+' ============================================
+' ENUMS
+' ============================================
+package "Enums" {
+    enum DamageType {
+        PHYSICAL
+        MAGIC
+        TRUE
+        MIXED
+        STASIS
+    }
+    
+    enum SpellType {
+        BASIC
+        SKILL
+        ULTIMATE
+    }
+    
+    enum ItemType {
+        WEAPON
+        HEAD
+        ARMOR
+        ARTIFACT
+        BLESSING
+        CONSUMABLE
+    }
+    
+    enum EquipmentSlot {
+        WEAPON_PRIMARY
+        WEAPON_SECONDARY
+        HEAD
+        ARMOR
+        ARTIFACT
+        BLESSING
+        CONSUMABLE
+    }
+}
+
+' ============================================
+' VALUE OBJECTS
+' ============================================
+package "Value Objects" {
+    class StatsBlock <<ValueObject>> {
+        + MAX_HP: Integer
+        + AD: Integer
+        + AP: Integer
+        + ARMOR: Integer
+        + MR: Integer
+        + SPEED: Integer
+        + CRIT_CHANCE: Float
+    }
+    
+    class StatsScaling <<ValueObject>> {
+        + hp_per_level: Float
+        + ad_per_level: Float
+        + ap_per_level: Float
+        + armor_per_level: Float
+        + mr_per_level: Float
+    }
+    
+    class EffectPayload <<ValueObject>> {
+        + opcode: String
+        + order: Integer = 0
+        + params: Dict[str, Any]
+    }
+    
+    class LootDrop <<ValueObject>> {
+        + item_blueprint_id: UUID
+        + quantity: Integer
+    }
+}
+
+' ============================================
+' ITEM BLUEPRINTS
+' ============================================
+package "Item Blueprints" #LightGreen {
+    
+    abstract class ItemBlueprint {
+        + id: UUID <<PK>>
+        + name: String
+        + description: String
+        + item_type: ItemType
+        + rarity: Rarity
+        + base_stats: StatsBlock
+        + stats_scaling: StatsScaling
+        + level_requirement: Integer = 1
+        + max_level: Integer = 100
+        --
+        + getStatsAtLevel(level: int): StatsBlock
+    }
+    
+    class WeaponBlueprint {
+        + damage_type: DamageType
+        --
+        ' Has exactly 3 Spells
+    }
+    
+    class EquipmentBlueprint {
+        + slot: EquipmentSlot
+        + passive_effects: List[EffectPayload]
+    }
+    
+    class ConsumableBlueprint {
+        + effects: List[EffectPayload]
+        + uses_per_combat: Integer = 1
+    }
+}
+
+' ============================================
+' SPELLS
+' ============================================
+package "Spells" #LightYellow {
+    
+    class Spell {
+        + id: UUID <<PK>>
+        + weapon_blueprint_id: UUID <<FK>>
+        + name: String
+        + description: String
+        + spell_type: SpellType
+        + cooldown_turns: Integer = 0
+        + echo_cost: Integer = 0
+        + effects: List[EffectPayload]
+        --
+        + isUltimate(): Boolean
+    }
+    
+    note "Spell.effects exemple:\n\n[\n  {opcode: 'damage',\n   params: {formula: 'AD*1.5'}},\n  {opcode: 'apply_status',\n   params: {status_code: 'BURN'}},\n  {opcode: 'build_gauge',\n   params: {gauge: 'echo', amount: 5}}\n]" as N_SpellEffects
+}
+
+' ============================================
+' MONSTER BLUEPRINTS
+' ============================================
+package "Monster Blueprints" #LightCoral {
+    
+    class MonsterBlueprint {
+        + id: UUID <<PK>>
+        + name: String
+        + base_level: Integer
+        + base_stats: StatsBlock
+        + stats_scaling: StatsScaling
+        + ai_behavior: String
+        + loot_table_id: UUID <<FK>>
+        + xp_reward: Integer
+        + gold_reward_min: Integer
+        + gold_reward_max: Integer
+        + is_boss: Boolean = false
+        + sprite_key: String
+        --
+        + createEntity(level: int): MonsterEntity
+        + getStatsAtLevel(level: int): StatsBlock
+    }
+    
+    class MonsterAbility {
+        + id: UUID <<PK>>
+        + monster_blueprint_id: UUID <<FK>>
+        + name: String
+        + cooldown: Integer
+        + priority: Integer
+        + condition: String
+        + effects: List[EffectPayload]
+        --
+        ' AI uses this to decide actions
+    }
+}
+
+' ============================================
+' LOOT SYSTEM
+' ============================================
+package "Loot System" {
+    
+    class LootTable {
+        + id: UUID <<PK>>
+        + name: String
+        --
+        + roll(rng: Random): List[LootDrop]
+    }
+    
+    class LootTableEntry {
+        + loot_table_id: UUID <<FK>>
+        + item_blueprint_id: UUID <<FK>>
+        + weight: Integer
+        + min_quantity: Integer = 1
+        + max_quantity: Integer = 1
+    }
+}
+
+' ============================================
+' RELATIONS
+' ============================================
+
+' Item Hierarchy
+WeaponBlueprint --|> ItemBlueprint
+EquipmentBlueprint --|> ItemBlueprint
+ConsumableBlueprint --|> ItemBlueprint
+
+' Stats
+ItemBlueprint "1" *-- "1" StatsBlock : base_stats >
+ItemBlueprint "1" *-- "1" StatsScaling : scaling >
+MonsterBlueprint "1" *-- "1" StatsBlock : base_stats >
+MonsterBlueprint "1" *-- "1" StatsScaling : scaling >
+
+' Spells & Effects
+WeaponBlueprint "1" *-- "3" Spell : has exactly >
+Spell "1" *-- "1..*" EffectPayload : effects >
+MonsterBlueprint "1" *-- "0..*" MonsterAbility : abilities >
+MonsterAbility "1" *-- "1..*" EffectPayload : effects >
+EquipmentBlueprint "1" *-- "0..*" EffectPayload : passive >
+ConsumableBlueprint "1" *-- "1..*" EffectPayload : effects >
+
+' Loot
+MonsterBlueprint "*" -- "1" LootTable : drops >
+LootTable "1" *-- "1..*" LootTableEntry : contains >
+LootTableEntry "*" -- "1" ItemBlueprint : can drop >
+
+N_SpellEffects .. Spell
+
+@enduml

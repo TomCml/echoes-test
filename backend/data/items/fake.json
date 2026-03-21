@@ -1,0 +1,42 @@
+{
+  "id": "fake",
+  "name": "Fake Item",
+  "type": "WEAPON",
+  "slot": "weapon_1",
+  "rarity": "COMMON",
+  "category": "Test",
+  "tags": [],
+  "sprite_url": "/sprites/fake.webp",
+  "base_stats": {
+    "AD": 10
+  },
+  "stats_scaling": {
+    "ad_per_level": 1.0
+  },
+  "passives": [],
+  "spells": [
+    {
+      "code": "frappe_basique",
+      "name": "Frappe Basique",
+      "cooldown_turns": 0,
+      "echo_cost": 0,
+      "target": "single_enemy",
+      "flags": [
+        "direct",
+        "can_crit",
+        "physical"
+      ],
+      "effects": [
+        {
+          "opcode": "damage",
+          "params": {
+            "formula": "S_AD * 1.0",
+            "label": "frappe basique",
+            "variance": 0.05,
+            "can_crit": true
+          }
+        }
+      ]
+    }
+  ]
+}

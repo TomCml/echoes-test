@@ -1,10 +1,22 @@
 {
   "id": "couperet_noir",
   "name": "Couperet noir",
+  "type": "WEAPON",
+  "slot": "weapon_1",
+  "rarity": "RARE",
   "category": "Offensif",
-  "tags": ["armor_pen"],
+  "tags": [
+    "armor_pen"
+  ],
   "sprite_url": "/sprites/couperet_noir.webp",
-
+  "base_stats": {
+    "AD": 35,
+    "CRIT_CHANCE": 0.08
+  },
+  "stats_scaling": {
+    "ad_per_level": 3.0,
+    "crit_chance_per_level": 0.005
+  },
   "passives": [
     {
       "name": "Écho Lacérant",
@@ -12,7 +24,10 @@
       "effects": [
         {
           "opcode": "bonus_damage_if_target_has_status",
-          "params": { "status_code": "laceration", "bonus_pct": 0.1 }
+          "params": {
+            "status_code": "laceration",
+            "bonus_pct": 0.1
+          }
         },
         {
           "opcode": "build_gauge",
@@ -25,14 +40,18 @@
       ]
     }
   ],
-
   "spells": [
     {
       "code": "coup_peret",
       "name": "Coup-peret",
       "cooldown_turns": 3,
+      "echo_cost": 1,
       "target": "single_enemy",
-      "flags": ["direct", "can_crit", "physical"],
+      "flags": [
+        "direct",
+        "can_crit",
+        "physical"
+      ],
       "effects": [
         {
           "opcode": "damage",
@@ -49,6 +68,7 @@
       "code": "entaille_profonde",
       "name": "Entaille Profonde",
       "cooldown_turns": 11,
+      "echo_cost": 1,
       "target": "single_enemy",
       "effects": [
         {
@@ -65,8 +85,13 @@
       "code": "execution",
       "name": "Exécution",
       "cooldown_turns": 13,
+      "echo_cost": 3,
       "target": "single_enemy",
-      "flags": ["direct", "cannot_crit", "physical"],
+      "flags": [
+        "direct",
+        "cannot_crit",
+        "physical"
+      ],
       "effects": [
         {
           "opcode": "damage",

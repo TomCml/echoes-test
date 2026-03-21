@@ -1,5 +1,5 @@
 """
-Battle Routes - Endpoints pour le système de combat.
+Battle Routes - Endpoints du système de combat.
 """
 import logging
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -16,76 +16,112 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
-@router.post("/simulate/{item_id}")
-def simulate(item_id: str) -> Dict[str, Any]:
-    """Simulate an item effect (WIP)"""
-    result = battle_service.simulate_item_effect(item_id)
-    if not result:
-        raise HTTPException(status_code=404, detail="Item not found")
-    return result
-
+# ─── Outils de calcul (sans persistance) ────────────────
+# IMPORTANT: ces routes statiques DOIVENT être avant /{battle_id}
+# sinon FastAPI matche "damages-calculation" comme un battle_id
 
 @router.get("/damages-calculation")
 def get_damages_calculation(
-    crit: bool, 
-    item_id: str = Query(..., description="ID of the item/weapon (JSON)"),
-    spell_code: str = Query(..., description="Code of the spell to use"),
-    player_id: int = Query(1, description="ID of the attacker"),
-    target_id: int = Query(2, description="ID of the target"),
-    db: Session = Depends(get_db)
+    crit: bool,
+    item_id: str = Query(..., description="ID de l'item/weapon (JSON)"),
+    spell_code: str = Query(..., description="Code du sort"),
+    player_id: int = Query(1, description="ID de l'attaquant"),
+    target_id: int = Query(2, description="ID de la cible"),
+    db: Session = Depends(get_db),
 ):
-    """Calculate damage for a spell attack"""
-    # 1. Fetch Player Data via repository
+    """Calcule les dégâts d'un sort (damage_service, sans persistance)."""
     player = player_repo.get_by_id(db, player_id)
     if not player:
         raise HTTPException(status_code=404, detail="Attacker (Player) not found")
 
     target = player_repo.get_by_id(db, target_id)
     if not target:
-        # Fallback: créer un joueur vide si pas trouvé
-        logger.warning(f"Target {target_id} not found, using empty Player")
         from app.models.player import Player
         target = Player()
 
-    # 2. Load Item from JSON via repository
     item = item_repo.load_item(item_id)
     if not item:
         raise HTTPException(status_code=404, detail="Item not found")
-    
-    # 3. Find the spell in the item
+
     spell = None
     for s in item.get("spells", []):
         if s.get("code") == spell_code:
             spell = s
             break
-    
+
     if not spell:
         raise HTTPException(status_code=404, detail=f"Spell '{spell_code}' not found in item")
 
-    # 4. Business Logic via service
-    result = damage_service.calculate_damage(
-        player=player,
-        target=target,
-        item=item,
-        spell=spell,
-        crit=crit
+    return damage_service.calculate_damage(
+        player=player, target=target, item=item, spell=spell, crit=crit,
     )
 
+
+@router.post("/simulate")
+def simulate_spell(
+    player_id: int = Query(..., description="ID de l'attaquant"),
+    target_id: int = Query(..., description="ID de la cible"),
+    item_id: str = Query(..., description="ID de l'item/weapon (JSON)"),
+    spell_code: str = Query(..., description="Code du sort"),
+    db: Session = Depends(get_db),
+):
+    """Simule un lancer de sort PvP (engine, sans persistance)."""
+    result = battle_service.simulate_spell(db, player_id, target_id, item_id, spell_code)
+    if "error" in result:
+        raise HTTPException(status_code=404, detail=result["error"])
     return result
 
 
+# ─── Combat persisté ────────────────────────────────────
+
 @router.post("/start")
-def start_battle_endpoint(
-    player_id: int = Query(..., description="ID of the attacker"),
-    target_id: int = Query(..., description="ID of the target"),
-    item_id: str = Query(..., description="ID of the item/weapon (JSON)"),
-    spell_code: str = Query(..., description="Code of the spell to use"),
-    db: Session = Depends(get_db)
+def start_battle(
+    player_id: int = Query(..., description="ID du joueur"),
+    monster_id: int = Query(..., description="ID du monstre"),
+    monster_level: int = Query(1, description="Niveau du monstre"),
+    db: Session = Depends(get_db),
 ):
-    """Start a battle between two players using the combat engine."""
-    result = battle_service.start_battle(db, player_id, target_id, item_id, spell_code)
-    
+    """Commence un nouveau combat Player vs Monster."""
+    result = battle_service.start_battle(db, player_id, monster_id, monster_level)
+    if "error" in result:
+        raise HTTPException(status_code=400, detail=result["error"])
+    return result
+
+
+@router.post("/{battle_id}/turn")
+def execute_turn(
+    battle_id: int,
+    spell_code: str = Query(..., description="Code du sort à lancer"),
+    item_id: str = Query(..., description="ID de l'item équipé"),
+    db: Session = Depends(get_db),
+):
+    """Exécute un tour complet (player + monster)."""
+    result = battle_service.execute_turn(db, battle_id, spell_code, item_id)
+    if "error" in result:
+        status = 404 if "not found" in result["error"].lower() else 400
+        raise HTTPException(status_code=status, detail=result["error"])
+    return result
+
+
+@router.get("/{battle_id}")
+def get_battle(
+    battle_id: int,
+    db: Session = Depends(get_db),
+):
+    """Retourne l'état courant d'un combat."""
+    result = battle_service.get_battle_state(db, battle_id)
     if "error" in result:
         raise HTTPException(status_code=404, detail=result["error"])
-    
+    return result
+
+
+@router.post("/{battle_id}/abandon")
+def abandon_battle(
+    battle_id: int,
+    db: Session = Depends(get_db),
+):
+    """Abandonne un combat en cours."""
+    result = battle_service.abandon_battle(db, battle_id)
+    if "error" in result:
+        raise HTTPException(status_code=400, detail=result["error"])
     return result

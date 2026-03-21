@@ -13,4 +13,4 @@ def eff_apply_status(b: Battle, src: Entity, tgt: Entity, p: Dict[str, Any]):
         duration = int(p["duration_turns"])
         apply_status(b, tgt, code, duration)
     else:
-        b.log.append(f"{tgt.name} resisted {p.get('status_code')}.")
+        b.add_log(f"{tgt.name} resisted {p.get('status_code')}.")
