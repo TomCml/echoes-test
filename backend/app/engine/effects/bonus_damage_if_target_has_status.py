@@ -9,4 +9,8 @@ def eff_bonus(b: Battle, src: Entity, tgt: Entity, p: Dict[str, Any]):
     bonus_pct = float(p.get("bonus_pct", 0.0))
     if code in tgt.statuses:
         extra = percent_bonus_from_ad(b, src, bonus_pct)
-        apply_damage(b, tgt, extra, f"bonus {int(bonus_pct*100)}% ({code})")
+        apply_damage(
+            b, tgt, extra, f"bonus {int(bonus_pct*100)}% ({code})",
+            source=src,
+            damage_type="physical",
+        )

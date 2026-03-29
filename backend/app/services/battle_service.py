@@ -23,6 +23,11 @@ from sqlalchemy.orm import Session
 
 from app.engine.domain import Battle, Entity, Stats, CombatStatus, CombatLogEntry
 from app.engine.combat import run_effects
+from app.schemas.combat_events import (
+    SpellCastEvent,
+    MonsterActionEvent,
+    BattleEndEvent,
+)
 from app.engine.status_engine import start_turn, end_turn
 # Importer les effects pour enregistrer les opcodes
 from app.engine import effects as _effects  # noqa: F401
@@ -210,7 +215,7 @@ def _generate_echo(entity: Entity, spell: Dict[str, Any], battle: Battle) -> Non
     if is_ultimate:
         # Ultimate consomme tout l'écho
         entity.gauges["echo"] = 0
-        battle.add_log(f"💥 {entity.name} unleashes an ECHO spell! Gauge reset to 0.")
+        battle.add_log(f"{entity.name} unleashes an ECHO spell! Gauge reset to 0.")
     else:
         # Les sorts classiques génèrent de l'écho (0-5)
         # On utilise 'echo_cost' du json temporairement, ou une nouvelle clé 'echo_gain'
@@ -319,6 +324,12 @@ def _execute_monster_ability(
 ) -> None:
     """Exécute une ability du monstre."""
     name = ability.get("name", "Attack")
+    battle.emit(MonsterActionEvent(
+        turn=0, sequence=0,
+        source=monster.id,
+        action_name=name,
+        target=target.id,
+    ))
     battle.add_log(f"{monster.name} uses {name}!")
     run_effects(battle, monster, target, ability.get("effects", []))
     cd = ability.get("cooldown", 0)
@@ -329,8 +340,14 @@ def _execute_monster_ability(
 def _monster_basic_attack(battle: Battle, monster: Entity, target: Entity) -> None:
     """Attaque de base du monstre (dégâts = AD)."""
     from app.engine.combat import apply_damage
+    battle.emit(MonsterActionEvent(
+        turn=0, sequence=0,
+        source=monster.id,
+        action_name="Basic Attack",
+        target=target.id,
+    ))
     battle.add_log(f"{monster.name} attacks!")
-    apply_damage(battle, target, float(monster.stats.AD), label="basic attack")
+    apply_damage(battle, target, float(monster.stats.AD), label="basic attack", source=monster)
 
 
 # ─────────────────────────────────────────────────────────
@@ -366,6 +383,10 @@ def _serialize_battle(battle: Battle, session_id: Optional[int] = None) -> Dict[
         "log": [
             {"turn": entry.turn, "message": entry.message}
             for entry in battle.log
+        ],
+        # ─── T2: Structured events for Phaser ────────
+        "events": [
+            evt.model_dump() for evt in battle.events
         ],
     }
     if session_id is not None:
@@ -509,6 +530,13 @@ def execute_turn(
         return {"error": echo_error, "battle": _serialize_battle(battle, battle_id)}
 
     # Execute spell
+    battle.emit(SpellCastEvent(
+        turn=0, sequence=0,
+        source=battle.player.id,
+        spell_code=spell_code,
+        spell_name=spell.get("name", spell_code),
+        target=battle.monster.id,
+    ))
     battle.add_log(f"{battle.player.name} casts {spell.get('name', spell_code)}!")
     _generate_echo(battle.player, spell, battle)
     enriched_effects = _inject_spell_context(spell)
@@ -521,6 +549,11 @@ def execute_turn(
     if battle.is_finished():
         winner = battle.get_winner()
         battle.add_log(f"{winner.name} wins!")
+        battle.emit(BattleEndEvent(
+            turn=0, sequence=0,
+            winner=winner.id,
+            result="VICTORY" if winner.id == battle.player.id else "DEFEAT",
+        ))
         combat_session_repo.save_battle(db, battle_id, battle, log_count_before)
         return {"success": True, "battle": _serialize_battle(battle, battle_id)}
 
@@ -542,6 +575,11 @@ def execute_turn(
     if battle.is_finished():
         winner = battle.get_winner()
         battle.add_log(f"{winner.name} wins!")
+        battle.emit(BattleEndEvent(
+            turn=0, sequence=0,
+            winner=winner.id,
+            result="VICTORY" if winner.id == battle.player.id else "DEFEAT",
+        ))
         combat_session_repo.save_battle(db, battle_id, battle, log_count_before)
         return {"success": True, "battle": _serialize_battle(battle, battle_id)}
 
