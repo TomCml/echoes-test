@@ -1,3 +1,12 @@
+"""
+Engine Domain — Classes runtime du moteur de combat.
+
+Aligné sur le diagramme UML v4 Opcode Engine :
+- StatsBlock complet (9 stats)
+- CombatStatus enum
+- CombatLogEntry structuré
+- Battle player/monster avec gestion d'état
+"""
 from dataclasses import dataclass, field
 from enum import StrEnum
 from typing import Dict, Any, List, Set
@@ -20,6 +29,14 @@ class CombatStatus(StrEnum):
 
 @dataclass
 class Stats:
+    """
+    StatsBlock complet — compatible avec les formules du moteur.
+
+    Les préfixes dans eval_formula :
+      - S_AD, S_AP, S_ARMOR ... → stats du caster (src)
+      - T_AD, T_AP, T_ARMOR ... → stats de la cible (tgt)
+      - Sans préfixe → stats du caster (rétro-compatible)
+    """
     MAX_HP: int
     HP: int
     AD: int
@@ -33,7 +50,7 @@ class Stats:
 
 @dataclass
 class CombatLogEntry:
-    """Entrée structurée du journal de combat (legacy text log)."""
+    """Entrée structurée du journal de combat."""
     turn: int
     message: str
 
@@ -42,7 +59,13 @@ class CombatLogEntry:
 
 @dataclass
 class Entity:
+    """
+    État runtime d'une entité en combat.
 
+    - statuses: Dict[code → {remaining, stacks}]
+    - gauges:   Dict[name → value]  (ex: gauges["echo"])
+    - cds:      Dict[spell_code → remaining turns]
+    """
     id: str
     name: str
     stats: Stats
@@ -60,7 +83,16 @@ class Entity:
 
 @dataclass
 class Battle:
-  
+    """
+    Session de combat — orchestre les entités et le moteur d'effets.
+
+    Flux :
+      1. start()       → status = IN_PROGRESS, turn = 1
+      2. execute_spell(caster, spell, target) → run_effects
+      3. end_turn(who)  → tick statuses, décrementer cooldowns
+      4. next_turn()    → incrémenter turn, alterner PLAYER_TURN / MONSTER_TURN
+      5. Répéter jusqu'à is_finished()
+    """
     player: Entity
     monster: Entity
     turn: int = 0
@@ -68,23 +100,6 @@ class Battle:
     status_defs: Dict[str, Any] = field(default_factory=dict)
     log: List[CombatLogEntry] = field(default_factory=list)
     rng: random.Random = field(default_factory=random.Random)
-
-    # ─── Event Sourcing (T2) ─────────────────────────
-    events: List[Any] = field(default_factory=list)
-    _event_seq: int = field(default=0, repr=False)
-
-    def emit(self, event) -> None:
-       
-        event.turn = self.turn
-        event.sequence = self._event_seq
-        self._event_seq += 1
-        self.events.append(event)
-
-    def reset_sequence(self) -> None:
-        """Remet le compteur de séquence à 0 (début de tour)."""
-        self._event_seq = 0
-
-    # ─── Legacy log ──────────────────────────────────
 
     def other(self, who: "Entity") -> "Entity":
         """Retourne l'adversaire de `who`."""
@@ -103,7 +118,6 @@ class Battle:
     def next_turn(self) -> None:
         """Passe au tour suivant en alternant les joueurs."""
         self.turn += 1
-        self.reset_sequence()
         if self.status == CombatStatus.PLAYER_TURN:
             self.status = CombatStatus.MONSTER_TURN
         elif self.status == CombatStatus.MONSTER_TURN:

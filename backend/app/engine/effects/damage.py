@@ -67,10 +67,5 @@ def eff_damage(b: Battle, src: Entity, tgt: Entity, p: Dict[str, Any]):
         amount = phys_part + magic_part
     # "true" → no mitigation
 
-    # 5. Apply (now passes source, damage_type, is_crit for event emission)
-    apply_damage(
-        b, tgt, amount, label,
-        source=src,
-        damage_type=damage_type,
-        is_crit=is_crit,
-    )
+    # 5. Apply
+    apply_damage(b, tgt, amount, label)

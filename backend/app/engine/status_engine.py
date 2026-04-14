@@ -7,7 +7,6 @@ Hooks :
 """
 from app.engine.domain import Battle, Entity
 from app.engine.combat import run_effects
-from app.schemas.combat_events import StatusTickEvent, StatusExpiredEvent
 
 
 def start_turn(b: Battle, who: Entity):
@@ -19,12 +18,6 @@ def start_turn(b: Battle, who: Entity):
         defn = b.status_defs.get(code)
         if defn and defn.get("tick", {}).get("trigger") == "on_turn_start":
             b.add_log(f"🔄 {who.name}: status {code} ticks (start)")
-            b.emit(StatusTickEvent(
-                turn=0, sequence=0,
-                target=who.id,
-                status_code=code,
-                effect_type=defn["tick"]["effect"].get("opcode", "unknown"),
-            ))
             run_effects(b, who, b.other(who), [defn["tick"]["effect"]])
 
 
@@ -41,12 +34,6 @@ def end_turn(b: Battle, who: Entity):
         defn = b.status_defs.get(code)
         if defn and defn.get("tick", {}).get("trigger") == "on_turn_end":
             b.add_log(f"🔄 {who.name}: status {code} ticks (end)")
-            b.emit(StatusTickEvent(
-                turn=0, sequence=0,
-                target=who.id,
-                status_code=code,
-                effect_type=defn["tick"]["effect"].get("opcode", "unknown"),
-            ))
             run_effects(b, who, b.other(who), [defn["tick"]["effect"]])
 
     # Decrement durations + remove expired
@@ -55,11 +42,6 @@ def end_turn(b: Battle, who: Entity):
         if who.statuses[code]["remaining"] <= 0:
             del who.statuses[code]
             b.add_log(f"{who.name} loses status {code}.")
-            b.emit(StatusExpiredEvent(
-                turn=0, sequence=0,
-                target=who.id,
-                status_code=code,
-            ))
 
     # Tick cooldowns
     for k in list(who.cds.keys()):

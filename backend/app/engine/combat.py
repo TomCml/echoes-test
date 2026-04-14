@@ -5,18 +5,11 @@ Le cœur du système d'effets :
 - register(opcode) : décore une fonction pour l'enregistrer
 - run_effects()    : exécute une liste d'EffectPayload sur le Battle
 - eval_formula()   : évalue une expression mathématique avec les stats
-- apply_damage()   : applique des dégâts à une entité + émet DamageEvent
-- apply_heal()     : applique un soin à une entité + émet HealEvent
-- apply_status()   : applique un statut à une entité + émet StatusAppliedEvent
+- apply_damage()   : applique des dégâts à une entité
+- apply_status()   : applique un statut à une entité
 """
 from typing import Dict, Any, Callable, List
 from app.engine.domain import Battle, Entity
-from app.schemas.combat_events import (
-    DamageEvent,
-    HealEvent,
-    StatusAppliedEvent,
-    EntityDeathEvent,
-)
 
 EffectFn = Callable[[Battle, Entity, Entity, Dict[str, Any]], None]
 REGISTRY: Dict[str, EffectFn] = {}
@@ -65,118 +58,19 @@ def eval_formula(expr: str, src: Entity, tgt: Entity) -> float:
     return float(eval(expr, {"__builtins__": {}}, scope))
 
 
-def apply_damage(
-    b: Battle,
-    target: Entity,
-    amount: float,
-    label: str = "damage",
-    *,
-    source: Entity | None = None,
-    damage_type: str = "physical",
-    is_crit: bool = False,
-) -> int:
-    """
-    Applique des dégâts à une entité (minimum 1).
-    Émet un DamageEvent + potentiellement un EntityDeathEvent.
-
-    Returns:
-        Le montant de dégâts effectivement appliqué.
-    """
+def apply_damage(b: Battle, target: Entity, amount: float, label: str = "damage"):
+    """Applique des dégâts à une entité (minimum 1)."""
     val = max(1, int(round(amount)))
     target.stats.HP = max(0, target.stats.HP - val)
-
-    # Legacy text log
     b.add_log(f"{target.name} takes {val} ({label}). HP {target.stats.HP}/{target.stats.MAX_HP}")
 
-    # Structured event
-    src_id = source.id if source else "unknown"
-    b.emit(DamageEvent(
-        turn=0, sequence=0,  # Overridden by emit()
-        source=src_id,
-        target=target.id,
-        amount=val,
-        damage_type=damage_type,
-        is_crit=is_crit,
-        label=label,
-        target_hp_after=target.stats.HP,
-        target_max_hp=target.stats.MAX_HP,
-    ))
 
-    # Death check
-    if not target.is_alive:
-        b.emit(EntityDeathEvent(
-            turn=0, sequence=0,
-            target=target.id,
-            killer=src_id,
-        ))
-
-    return val
-
-
-def apply_heal(
-    b: Battle,
-    target: Entity,
-    amount: float,
-    *,
-    source: Entity | None = None,
-) -> int:
-    """
-    Applique un soin à une entité (cap à MAX_HP).
-    Émet un HealEvent.
-
-    Returns:
-        Le montant de soin effectivement appliqué.
-    """
-    val = max(0, int(round(amount)))
-    old_hp = target.stats.HP
-    target.stats.HP = min(target.stats.MAX_HP, target.stats.HP + val)
-    actual = target.stats.HP - old_hp
-
-    b.add_log(f"{target.name} heals {actual}. HP {target.stats.HP}/{target.stats.MAX_HP}")
-
-    src_id = source.id if source else target.id
-    b.emit(HealEvent(
-        turn=0, sequence=0,
-        source=src_id,
-        target=target.id,
-        amount=actual,
-        target_hp_after=target.stats.HP,
-        target_max_hp=target.stats.MAX_HP,
-    ))
-
-    return actual
-
-
-def apply_status(
-    b: Battle,
-    target: Entity,
-    code: str,
-    duration: int,
-    stacks_inc: int = 1,
-    *,
-    source: Entity | None = None,
-) -> None:
-    """
-    Applique ou empile un statut sur une entité.
-    Émet un StatusAppliedEvent.
-    """
+def apply_status(b: Battle, target: Entity, code: str, duration: int, stacks_inc: int = 1):
+    """Applique ou empile un statut sur une entité."""
     inst = target.statuses.get(code)
     if inst:
         inst["stacks"] = inst.get("stacks", 1) + stacks_inc
         inst["remaining"] = max(inst["remaining"], duration)
-        new_stacks = inst["stacks"]
     else:
         target.statuses[code] = {"remaining": duration, "stacks": stacks_inc}
-        new_stacks = stacks_inc
-
     b.add_log(f"{target.name} gains {code} ({duration}t).")
-
-    src_id = source.id if source else "unknown"
-    b.emit(StatusAppliedEvent(
-        turn=0, sequence=0,
-        source=src_id,
-        target=target.id,
-        status_code=code,
-        duration=duration,
-        stacks=new_stacks,
-    ))
